@@ -10,14 +10,16 @@
 
     #include "./interface/ICore.hpp"
 
-class Core : public GUI::ICore {
-    public:
-        Core();
-        ~Core();
-        void init(GUI::GraphicalLib lib, GUI::Vector2f windowSize);
-        void run();
-    private:
-        bool _running;
+namespace GUI {
+    class Core : public GUI::ICore {
+        public:
+            Core();
+            ~Core();
+            void init(GUI::GraphicalLib lib, GUI::Vector2f windowSize);
+            void run();
+        private:
+            bool _running;
+    };
 };
 
 #endif /* !CORE_HPP_ */
