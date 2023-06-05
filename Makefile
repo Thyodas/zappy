@@ -17,7 +17,8 @@ all: title zappy_server zappy_gui zappy_ai
 
 zappy_server:
 	@printf "\e[48;5;196m                COMPILING SERVER              \e[0m\n"
-	#@make -C $(SERVER_DIR) all && cp -f $(SERVER_DIR)/$(SERVER_NAME) .
+	@cmake $(SERVER_DIR) -B ./build/server && make -C ./build/server -j
+	@cp ./build/server/zappy_server .
 
 zappy_gui:
 	@printf "\e[48;5;196m                 COMPILING GUI                \e[0m\n"

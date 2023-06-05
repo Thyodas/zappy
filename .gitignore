@@ -3,5 +3,12 @@ zappy_gui
 zappy_ai
 zappy_server
 *.o
+*.a
 .DS_Store
 .idea/
+CMakeFiles/
+cmake-build-debug/
+CMakeCache.txt
+cmake_install.cmake
+server/**/Makefile
+build/
