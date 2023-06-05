@@ -1,0 +1,7 @@
+*.pdf
+zappy_gui
+zappy_ai
+zappy_server
+*.o
+.DS_Store
+.idea/
