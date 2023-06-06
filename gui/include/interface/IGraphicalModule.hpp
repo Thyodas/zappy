@@ -9,8 +9,10 @@
     #define IGRAPHICALMODULE_HPP_
 
     #include <unordered_map>
+    #include <memory>
     #include <string>
     #include "Vector3f.hpp"
+    #include "ICamera.hpp"
     #include "Model.hpp"
 
 namespace GUI {
@@ -50,7 +52,7 @@ namespace GUI {
         public:
             virtual ~IGraphicalModule() = default;
             virtual void loadModels(std::unordered_map<ModelEntity, modelConfig> models) = 0;
-            virtual void drawModel(ModelEntity model, Vector2f position, float scale, Vector3f rotation) = 0;
+            virtual void drawModel(ModelEntity model, Vector3f position, float scale, Vector3f rotation) = 0;
             // virtual void clear(C_Color color) = 0;
             virtual void init(GUI::Vector2i size) = 0;
             virtual void close() = 0;
@@ -59,7 +61,8 @@ namespace GUI {
             virtual bool isKeyPressed(GUI::Key key) = 0;
             virtual bool isInteraction() = 0;
             virtual GUI::Vector2i getMousePosition() = 0;
-            virtual void draw() = 0;
+            virtual void preDraw(std::shared_ptr<ICamera> camera) = 0;
+            virtual void postDraw() = 0;
     };
 };
 

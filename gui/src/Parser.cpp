@@ -6,6 +6,7 @@
 */
 
 #include "Parser.hpp"
+#include <string>
 
 GUI::Parser::Parser(const std::string& path)
 {
@@ -34,12 +35,18 @@ GUI::config GUI::Parser::parseConfig()
         config.models.reserve(models.getLength());
         for (int i = 0; i < models.getLength(); ++i) {
             libconfig::Setting &setting = models[i];
-            if (setting["name"] == "golem") {
+
+            std::string name = setting["name"];
+            std::string modelPath = setting["modelPath"];
+            std::string texturePath = setting["texturePath"];
+
+            if (name == "golem") {
+                std::cout << "inside condition" << std::endl;
                 config.models.insert({
                     GUI::ModelEntity::GOLEM,
                     (GUI::modelConfig){
-                        setting["modelPath"],
-                        setting["texturePath"]
+                        modelPath,
+                        texturePath
                     }
                 });
             }

@@ -23,7 +23,7 @@ namespace GUI {
         public:
             GraphicalFactory();
             ~GraphicalFactory();
-            std::shared_ptr<GUI::IGraphicalModule> createModule(GraphicalLib lib);
+            static std::shared_ptr<GUI::IGraphicalModule> createModule(GraphicalLib lib);
     };
 };
 

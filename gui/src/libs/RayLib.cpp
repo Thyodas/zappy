@@ -66,17 +66,21 @@ void GUI::RayLib::loadModels(std::unordered_map<ModelEntity, modelConfig> models
     }
 }
 
-void GUI::RayLib::drawModel(ModelEntity model, Vector2f position, float scale, Vector3f rotation)
+void GUI::RayLib::drawModel(ModelEntity model, Vector3f position, float scale, Vector3f rotation)
 {
+    DrawModelEx(_models[model].model, {position.x, position.y, position.z}, {0, 1, 0}, rotation.x, {scale, scale, scale}, WHITE);
 }
 
-void GUI::RayLib::draw()
+void GUI::RayLib::preDraw(std::shared_ptr<ICamera> camera)
 {
     BeginDrawing();
+    // Todo: add clear(color) function
     ClearBackground(RAYWHITE);
+    BeginMode3D(std::dynamic_pointer_cast<RayLibCamera>(camera)->camera);
+}
 
-    // BeginMode3D(camera);
-    // EndMode3D();
-
+void GUI::RayLib::postDraw()
+{
+    EndMode3D();
     EndDrawing();
 }

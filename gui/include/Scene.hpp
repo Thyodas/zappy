@@ -8,17 +8,18 @@
 #ifndef SCENE_HPP_
     #define SCENE_HPP_
 
-    #include "Camera.hpp"
+    #include "ICamera.hpp"
+    #include "RayLibCamera.hpp"
 
 class Scene {
     public:
-        Scene() {};
+        Scene() : _camera(std::make_shared<GUI::RayLibCamera>()) {};
         ~Scene() = default;
-        GUI::Camera& getCamera() {
-            return camera;
+        std::shared_ptr<GUI::ICamera>& getCamera() {
+            return _camera;
         };
     private:
-        GUI::Camera camera;
+        std::shared_ptr<GUI::ICamera> _camera;
         // TODO: add a list of objects
 };
 

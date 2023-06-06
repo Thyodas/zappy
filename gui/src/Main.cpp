@@ -11,7 +11,7 @@
 int main(int argc, char **argv)
 {
     std::unique_ptr<GUI::ICore> core = std::make_unique<GUI::Core>();
-    core->init(GUI::GraphicalLib::RAYLIB, {1920, 1080});
+    core->init(GUI::GraphicalLib::RAYLIB, {800, 600});
     core->run();
     return 0;
 }

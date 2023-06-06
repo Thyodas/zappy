@@ -12,6 +12,7 @@
 
     #include "raylib.h"
     #include "IGraphicalModule.hpp"
+    #include "RayLibCamera.hpp"
 
 namespace GUI {
     struct ModelData {
@@ -31,8 +32,9 @@ namespace GUI {
             bool isInteraction();
             GUI::Vector2i getMousePosition();
             void loadModels(std::unordered_map<ModelEntity, modelConfig> models);
-            void drawModel(ModelEntity model, Vector2f position, float scale, Vector3f rotation);
-            void draw();
+            void drawModel(ModelEntity model, Vector3f position, float scale, Vector3f rotation);
+            void preDraw(std::shared_ptr<ICamera> camera);
+            void postDraw();
         private:
             std::unordered_map<ModelEntity, ModelData> _models;
             std::unordered_map<GUI::Key, KeyboardKey> _keys;
