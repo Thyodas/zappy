@@ -6,11 +6,12 @@
 */
 
 #include "Core.hpp"
+#include <memory>
 
 int main(int argc, char **argv)
 {
-    Core core;
-    core.init(GUI::GraphicalLib::RAYLIB, {1920, 1080});
-    core.run();
+    std::unique_ptr<GUI::ICore> core = std::make_unique<GUI::Core>();
+    core->init(GUI::GraphicalLib::RAYLIB, {1920, 1080});
+    core->run();
     return 0;
 }

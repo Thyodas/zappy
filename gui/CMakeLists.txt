@@ -9,6 +9,9 @@ project(${TARGET})
 set(SOURCE
     Main.cpp
     Core.cpp
+    GraphicalFactory.cpp
+    Parser.cpp
+    libs/RayLib.cpp
 )
 
 list(TRANSFORM SOURCE PREPEND "src/")
@@ -23,7 +26,10 @@ set_target_properties(${TARGET} PROPERTIES
 )
 
 target_include_directories(${TARGET} PUBLIC ./include/)
+target_include_directories(${TARGET} PUBLIC ./include/interface)
+target_include_directories(${TARGET} PUBLIC ./include/libs)
 
 target_link_libraries(${TARGET} raylib)
 target_link_libraries(${TARGET} pthread)
 target_link_libraries(${TARGET} dl)
+target_link_libraries(${TARGET} config++)

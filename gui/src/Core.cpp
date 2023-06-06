@@ -5,20 +5,30 @@
 ** Core
 */
 
+#include "Parser.hpp"
 #include "Core.hpp"
 
-Core::Core() : _running(true)
+GUI::Core::Core() : _running(true)
+{
+    IParser *parser = new Parser("config.cfg");
+    _config = parser->parseConfig();
+    delete parser;
+
+}
+
+GUI::Core::~Core()
 {
 }
 
-Core::~Core()
+void GUI::Core::init(GUI::GraphicalLib lib, GUI::Vector2i windowSize)
 {
+    _windowSize = windowSize;
+    _module->init(windowSize);
+    _module->loadModels(_config.models);
 }
 
-void Core::init(GUI::GraphicalLib lib, GUI::Vector2f windowSize)
+void GUI::Core::run()
 {
-}
-
-void Core::run()
-{
+    while (_running) {
+    }
 }

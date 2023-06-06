@@ -1,0 +1,58 @@
+/*
+** EPITECH PROJECT, 2023
+** gui
+** File description:
+** Parser
+*/
+
+#include "Parser.hpp"
+
+GUI::Parser::Parser(const std::string& path)
+{
+    try {
+        _config.readFile(path.c_str());
+    } catch (const libconfig::FileIOException &e) {
+        std::cerr << "Error while reading file." << std::endl;
+        exit(84);
+    } catch (const libconfig::ParseException &e) {
+        std::cerr << "Parse error at " << e.getFile() << ":" << e.getLine() << " - " << e.getError() << std::endl;
+        exit(84);
+    }
+}
+
+GUI::Parser::~Parser()
+{
+}
+
+GUI::config GUI::Parser::parseConfig()
+{
+    GUI::config config;
+    try {
+        libconfig::Setting &configSetting = _config.getRoot();
+        libconfig::Setting &models = configSetting["models"];
+
+        config.models.reserve(models.getLength());
+        for (int i = 0; i < models.getLength(); ++i) {
+            libconfig::Setting &setting = models[i];
+            if (setting["name"] == "golem") {
+                config.models.insert({
+                    GUI::ModelEntity::GOLEM,
+                    (GUI::modelConfig){
+                        setting["modelPath"],
+                        setting["texturePath"]
+                    }
+                });
+            }
+        }
+    } catch (const libconfig::SettingNotFoundException &e) {
+        std::cerr << "Setting not found." << std::endl;
+        exit(84);
+    } catch (const libconfig::SettingTypeException &e) {
+        std::cerr << "Setting type error." << std::endl;
+        exit(84);
+    } catch (const libconfig::SettingException &e) {
+        std::cerr << "Setting error." << std::endl;
+        exit(84);
+    }
+    return config;
+}
