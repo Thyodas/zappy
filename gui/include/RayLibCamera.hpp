@@ -11,7 +11,8 @@
     #include "IGraphicalModule.hpp"
     #include "Vector3f.hpp"
     #include "ICamera.hpp"
-    #include <raylib.h>
+    #include "raymath.h"
+    #include "raylib.h"
 
 namespace GUI {
     class RayLibCamera : public GUI::ICamera {
@@ -35,6 +36,15 @@ namespace GUI {
             };
             Vector3f getTarget() const {
                 return (GUI::Vector3f){camera.target.x, camera.target.y, camera.target.z};
+            };
+            void rotateX(float angle) {
+                camera.position = Vector3RotateByAxisAngle(camera.position, (Vector3){ 0.0f, 1.0f, 0.0f }, angle);
+            };
+            void rotateY(float angle) {
+                camera.position = Vector3RotateByAxisAngle(camera.position, (Vector3){ 1.0f, 0.0f, 0.0f }, angle);
+            };
+            void zoom(float value) {
+                camera.position = Vector3Add(camera.position, (Vector3){ 0.0f, 0.0f, value });
             };
 
             Camera camera;

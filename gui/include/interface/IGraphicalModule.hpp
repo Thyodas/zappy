@@ -24,7 +24,11 @@ namespace GUI {
         SPACE,
         ESCAPE,
         R,
-        F
+        F,
+        Z,
+        Q,
+        S,
+        D
     };
 
     enum C_Color {

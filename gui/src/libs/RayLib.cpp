@@ -17,6 +17,17 @@ GUI::RayLib::RayLib()
     _keys[GUI::Key::ESCAPE]         = KeyboardKey::KEY_ESCAPE;
     _keys[GUI::Key::R]              = KeyboardKey::KEY_R;
     _keys[GUI::Key::F]              = KeyboardKey::KEY_F;
+    _keys[GUI::Key::LEFT]           = KeyboardKey::KEY_LEFT;
+    _keys[GUI::Key::RIGHT]          = KeyboardKey::KEY_RIGHT;
+    _keys[GUI::Key::UP]             = KeyboardKey::KEY_UP;
+    _keys[GUI::Key::DOWN]           = KeyboardKey::KEY_DOWN;
+    _keys[GUI::Key::Z]              = KeyboardKey::KEY_Z;
+    _keys[GUI::Key::Q]              = KeyboardKey::KEY_Q;
+    _keys[GUI::Key::S]              = KeyboardKey::KEY_S;
+    _keys[GUI::Key::D]              = KeyboardKey::KEY_D;
+
+    for (auto &key : _keys)
+        _pressedKeys[key.first] = false;
 }
 
 GUI::RayLib::~RayLib()
@@ -31,6 +42,11 @@ void GUI::RayLib::init(GUI::Vector2i size)
 
 void GUI::RayLib::close()
 {
+    for (auto& model : _models) {
+        UnloadModel(model.second.model);
+        UnloadTexture(model.second.texture);
+    }
+    CloseWindow();
 }
 
 void GUI::RayLib::display()
@@ -39,10 +55,20 @@ void GUI::RayLib::display()
 
 void GUI::RayLib::handleEvents()
 {
+    for (auto &key : _keys) {
+        if (IsKeyDown(key.second))
+            _pressedKeys[key.first] = true;
+    }
 }
 
 bool GUI::RayLib::isKeyPressed(GUI::Key key)
 {
+    for (auto &pressedKey : _pressedKeys) {
+        if (pressedKey.first == key && pressedKey.second == true) {
+            pressedKey.second = false;
+            return true;
+        }
+    }
     return false;
 }
 

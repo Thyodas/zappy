@@ -9,10 +9,16 @@
     #define MODEL_HPP_
 
 namespace GUI {
+    /*
+    ** @brief Enum of all the models
+    */
     enum ModelEntity {
         GOLEM
     };
 
+    /*
+    ** @brief Structure to contain model relative data parsed by an IParser
+    */
     struct modelConfig {
         std::string modelPath;
         std::string texturePath;

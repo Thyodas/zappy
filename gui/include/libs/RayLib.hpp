@@ -13,6 +13,7 @@
     #include "raylib.h"
     #include "IGraphicalModule.hpp"
     #include "RayLibCamera.hpp"
+    #include <vector>
 
 namespace GUI {
     struct ModelData {
@@ -38,6 +39,7 @@ namespace GUI {
         private:
             std::unordered_map<ModelEntity, ModelData> _models;
             std::unordered_map<GUI::Key, KeyboardKey> _keys;
+            std::unordered_map<GUI::Key, bool> _pressedKeys;
             GUI::Vector2i _mousePosition;
     };
 };

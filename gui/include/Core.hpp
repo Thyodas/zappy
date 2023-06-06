@@ -23,6 +23,7 @@ namespace GUI {
             void init(GUI::GraphicalLib lib, GUI::Vector2i windowSize);
             void run();
         private:
+            void handleUserInput();
             bool _running;
             GUI::Vector2i _windowSize;
             GUI::config _config;
