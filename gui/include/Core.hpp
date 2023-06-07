@@ -14,6 +14,7 @@
     #include "ICore.hpp"
     #include "GraphicalFactory.hpp"
     #include "Scene.hpp"
+    #include "IMap.hpp"
 
 namespace GUI {
     class Core : public GUI::ICore {
@@ -29,6 +30,7 @@ namespace GUI {
             GUI::config _config;
             std::shared_ptr<IGraphicalModule> _module;
             std::shared_ptr<Scene> _scene;
+            std::shared_ptr<IMap> _map;
     };
 };
 

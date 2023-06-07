@@ -11,6 +11,8 @@ set(SOURCE
     Core.cpp
     GraphicalFactory.cpp
     Parser.cpp
+    Map.cpp
+    Cell.cpp
     libs/RayLib.cpp
 )
 

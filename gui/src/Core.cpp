@@ -6,14 +6,14 @@
 */
 
 #include "Parser.hpp"
+#include "Map.hpp"
 #include "Core.hpp"
 
-GUI::Core::Core() : _running(true), _scene(std::make_shared<Scene>())
+GUI::Core::Core() : _running(true), _scene(std::make_shared<Scene>()), _map(std::make_shared<Map>(GUI::Vector2i{10, 10}))
 {
     IParser *parser = new Parser("config.cfg");
     _config = parser->parseConfig();
     delete parser;
-
 }
 
 GUI::Core::~Core()

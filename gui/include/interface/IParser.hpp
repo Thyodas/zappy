@@ -19,7 +19,7 @@ namespace GUI {
 
     class IParser {
         public:
-            ~IParser() = default;
+            virtual ~IParser() = default;
             virtual config parseConfig() = 0;
     };
 };
