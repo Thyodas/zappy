@@ -13,6 +13,7 @@ namespace GUI {
         public:
             Vector3f(float xx, float yy, float zz) : x(xx), y(yy), z(zz) {};
             Vector3f() : x(0), y(0), z(0) {};
+            Vector3f(const Vector3f &other) = default;
             ~Vector3f() = default;
 
             Vector3f operator+(const Vector3f &other) const

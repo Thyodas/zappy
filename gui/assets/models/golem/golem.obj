@@ -1,6 +1,6 @@
 # Blender v2.79 (sub 0) OBJ File: 'Fire_Golem.blend'
 # www.blender.org
-mtllib Fire_Golem_OBJ.mtl
+mtllib golem.mtl
 o LOW_POLY1_meshId0_name
 v 0.719047 5.250945 -0.678147
 v 0.674465 5.086650 -0.629038

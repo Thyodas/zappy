@@ -18,6 +18,7 @@ namespace GUI {
         public:
             Parser(const std::string& path);
             ~Parser();
+            GUI::ModelEntity getModelEntity(const std::string& name);
             config parseConfig();
         protected:
         private:

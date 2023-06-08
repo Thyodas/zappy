@@ -25,6 +25,7 @@ namespace GUI {
             void run();
         private:
             void handleUserInput();
+            void draw();
             bool _running;
             GUI::Vector2i _windowSize;
             GUI::config _config;

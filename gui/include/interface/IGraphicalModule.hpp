@@ -37,8 +37,6 @@ namespace GUI {
         C_BLUE,
         C_BLACK,
         C_YELLOW,
-        C_MAGENTA,
-        C_CYAN,
         C_WHITE
     };
 
@@ -57,7 +55,7 @@ namespace GUI {
             virtual ~IGraphicalModule() = default;
             virtual void loadModels(std::unordered_map<ModelEntity, modelConfig> models) = 0;
             virtual void drawModel(ModelEntity model, Vector3f position, float scale, Vector3f rotation) = 0;
-            // virtual void clear(C_Color color) = 0;
+            virtual void clear(C_Color color) = 0;
             virtual void init(GUI::Vector2i size) = 0;
             virtual void close() = 0;
             virtual void display() = 0;
@@ -67,6 +65,7 @@ namespace GUI {
             virtual GUI::Vector2i getMousePosition() = 0;
             virtual void preDraw(std::shared_ptr<ICamera> camera) = 0;
             virtual void postDraw() = 0;
+            virtual GUI::Vector3f getModelSize(ModelEntity model) = 0;
     };
 };
 

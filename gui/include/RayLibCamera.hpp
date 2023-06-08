@@ -37,14 +37,35 @@ namespace GUI {
             Vector3f getTarget() const {
                 return (GUI::Vector3f){camera.target.x, camera.target.y, camera.target.z};
             };
-            void rotateX(float angle) {
-                camera.position = Vector3RotateByAxisAngle(camera.position, (Vector3){ 0.0f, 1.0f, 0.0f }, angle);
+            void rotateY(float distance) {
+                float translatedY = camera.position.y - camera.target.y;
+                float translatedZ = camera.position.z - camera.target.z;
+
+                float angle = distance * 0.1f;
+
+                float rotatedY = translatedY * cos(angle) - translatedZ * sin(angle);
+                float rotatedZ = translatedY * sin(angle) + translatedZ * cos(angle);
+
+                camera.position.y = rotatedY + camera.target.y;
+                camera.position.z = rotatedZ + camera.target.z;
             };
-            void rotateY(float angle) {
-                camera.position = Vector3RotateByAxisAngle(camera.position, (Vector3){ 1.0f, 0.0f, 0.0f }, angle);
+            void rotateX(float distance) {
+                float translatedX = camera.position.x - camera.target.x;
+                float translatedZ = camera.position.z - camera.target.z;
+
+                float angle = distance / sqrt(translatedX * translatedX + translatedZ * translatedZ);
+                float rotatedX = translatedX * cos(angle) + translatedZ * sin(angle);
+                float rotatedZ = -translatedX * sin(angle) + translatedZ * cos(angle);
+
+                camera.position.x = rotatedX + camera.target.x;
+                camera.position.z = rotatedZ + camera.target.z;
             };
             void zoom(float value) {
-                camera.position = Vector3Add(camera.position, (Vector3){ 0.0f, 0.0f, value });
+                camera.position = {
+                    camera.position.x = (1 - value) * camera.position.x + value * camera.target.x,
+                    camera.position.y = (1 - value) * camera.position.y + value * camera.target.y,
+                    camera.position.z = (1 - value) * camera.position.z + value * camera.target.z
+                };
             };
 
             Camera camera;

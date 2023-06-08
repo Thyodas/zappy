@@ -6,13 +6,16 @@
 */
 
 #include "Map.hpp"
+#include <iostream>
 
 GUI::Map::Map(GUI::Vector2i ssize) : _size(ssize)
 {
-    _map.reserve(ssize.y * ssize.x);
+    int count = 0;
+    _map.reserve(ssize.y);
     for (int i = 0; i < ssize.y; i++) {
         _map[i].reserve(ssize.x);
         for (int j = 0; j < ssize.x; j++) {
+            count++;
             _map[i][j] = std::make_shared<GUI::Cell>((GUI::Vector2i){j, i});
         }
     }

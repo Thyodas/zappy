@@ -25,6 +25,16 @@ GUI::Parser::~Parser()
 {
 }
 
+GUI::ModelEntity GUI::Parser::getModelEntity(const std::string& name)
+{
+    if (name == "golem")
+        return GUI::ModelEntity::GOLEM;
+    else if (name == "grass_block")
+        return GUI::ModelEntity::GRASS_BLOCK;
+    else
+        throw std::runtime_error("Invalid model name given");
+}
+
 GUI::config GUI::Parser::parseConfig()
 {
     GUI::config config;
@@ -40,16 +50,13 @@ GUI::config GUI::Parser::parseConfig()
             std::string modelPath = setting["modelPath"];
             std::string texturePath = setting["texturePath"];
 
-            if (name == "golem") {
-                std::cout << "inside condition" << std::endl;
-                config.models.insert({
-                    GUI::ModelEntity::GOLEM,
-                    (GUI::modelConfig){
-                        modelPath,
-                        texturePath
-                    }
-                });
-            }
+            config.models.insert({
+                this->getModelEntity(name),
+                (GUI::modelConfig){
+                    modelPath,
+                    texturePath
+                }
+            });
         }
     } catch (const libconfig::SettingNotFoundException &e) {
         std::cerr << "Setting not found." << std::endl;

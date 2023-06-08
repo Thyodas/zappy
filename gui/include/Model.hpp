@@ -13,7 +13,8 @@ namespace GUI {
     ** @brief Enum of all the models
     */
     enum ModelEntity {
-        GOLEM
+        GOLEM,
+        GRASS_BLOCK
     };
 
     /*
