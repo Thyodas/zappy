@@ -7,6 +7,8 @@
 
 #include "Parser.hpp"
 #include <string>
+#include <map>
+#include <string>
 
 GUI::Parser::Parser(const std::string& path)
 {
@@ -27,12 +29,23 @@ GUI::Parser::~Parser()
 
 GUI::ModelEntity GUI::Parser::getModelEntity(const std::string& name)
 {
-    if (name == "golem")
-        return GUI::ModelEntity::GOLEM;
-    else if (name == "grass_block")
-        return GUI::ModelEntity::GRASS_BLOCK;
-    else
-        throw std::runtime_error("Invalid model name given");
+    std::map<GUI::ModelEntity, std::string> models = {
+        {GUI::ModelEntity::GOLEM, "golem"},
+        {GUI::ModelEntity::GRASS_BLOCK, "grass_block"},
+        {GUI::ModelEntity::FOOD, "food"},
+        {GUI::ModelEntity::LINEMATE, "linemate"},
+        {GUI::ModelEntity::DERAUMERE, "deraumere"},
+        {GUI::ModelEntity::SIBUR, "sibur"},
+        {GUI::ModelEntity::MENDIANE, "mendiane"},
+        {GUI::ModelEntity::PHIRAS, "phiras"},
+        {GUI::ModelEntity::THYSTAME, "thystame"}
+    };
+
+    for (auto &model : models) {
+        if (model.second == name)
+            return model.first;
+    }
+    throw std::runtime_error("Model not found.");
 }
 
 GUI::config GUI::Parser::parseConfig()

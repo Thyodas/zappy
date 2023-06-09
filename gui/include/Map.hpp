@@ -18,14 +18,20 @@
 namespace GUI {
     class Map : public IMap {
         public:
-            Map(GUI::Vector2i ssize);
+            Map(int ssize);
             ~Map();
-            GUI::Vector2i getSize() const;
+            int getSize() const;
             std::shared_ptr<GUI::ICell>& getCell(GUI::Vector2i pos);
+            bool selectionMode() const;
+            void setSelectionMode(bool selectionMode);
+            GUI::Vector2i getSelectionBlock() const;
+            void setSelectionBlock(GUI::Vector2i selectionBlock);
         protected:
         private:
-            GUI::Vector2i _size;
+            int _size;
             std::vector<std::vector<std::shared_ptr<GUI::ICell>>> _map;
+            bool _selectionMode;
+            GUI::Vector2i _selectionBlock;
     };
 };
 
