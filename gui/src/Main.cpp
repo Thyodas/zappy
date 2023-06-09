@@ -10,8 +10,9 @@
 
 int main(int argc, char **argv)
 {
-    std::unique_ptr<GUI::ICore> core = std::make_unique<GUI::Core>();
+    GUI::ICore *core = new GUI::Core();
     core->init(GUI::GraphicalLib::RAYLIB, {800, 600});
     core->run();
+    delete core;
     return 0;
 }
