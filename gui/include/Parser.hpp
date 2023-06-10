@@ -12,6 +12,8 @@
     #include "IParser.hpp"
     #include "Model.hpp"
     #include <iostream>
+    #include <map>
+    #include <string>
 
 namespace GUI {
     class Parser : public GUI::IParser {
@@ -23,6 +25,7 @@ namespace GUI {
         protected:
         private:
             libconfig::Config _config;
+            std::map<GUI::ModelEntity, std::string> _models;
     };
 };
 

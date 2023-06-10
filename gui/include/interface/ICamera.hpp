@@ -13,7 +13,7 @@
 namespace GUI {
     class ICamera {
         public:
-            ~ICamera() = default;
+            virtual ~ICamera() = default;
             virtual void setPosition(Vector3f pos) = 0;
             virtual void setTarget(Vector3f target) = 0;
             virtual void rotateX(float angle) = 0;

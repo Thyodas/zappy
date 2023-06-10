@@ -6,18 +6,27 @@
 */
 
 #include "Parser.hpp"
-#include <string>
 
 GUI::Parser::Parser(const std::string& path)
 {
+    _models = {
+        {GUI::ModelEntity::GOLEM, "golem"},
+        {GUI::ModelEntity::GRASS_BLOCK, "grass_block"},
+        {GUI::ModelEntity::FOOD, "food"},
+        {GUI::ModelEntity::LINEMATE, "linemate"},
+        {GUI::ModelEntity::DERAUMERE, "deraumere"},
+        {GUI::ModelEntity::SIBUR, "sibur"},
+        {GUI::ModelEntity::MENDIANE, "mendiane"},
+        {GUI::ModelEntity::PHIRAS, "phiras"},
+        {GUI::ModelEntity::THYSTAME, "thystame"}
+    };
+
     try {
         _config.readFile(path.c_str());
     } catch (const libconfig::FileIOException &e) {
-        std::cerr << "Error while reading file." << std::endl;
-        exit(84);
+        throw std::runtime_error("Error while reading file.");
     } catch (const libconfig::ParseException &e) {
-        std::cerr << "Parse error at " << e.getFile() << ":" << e.getLine() << " - " << e.getError() << std::endl;
-        exit(84);
+        throw std::runtime_error("Error while parsing file.");
     }
 }
 
@@ -27,12 +36,11 @@ GUI::Parser::~Parser()
 
 GUI::ModelEntity GUI::Parser::getModelEntity(const std::string& name)
 {
-    if (name == "golem")
-        return GUI::ModelEntity::GOLEM;
-    else if (name == "grass_block")
-        return GUI::ModelEntity::GRASS_BLOCK;
-    else
-        throw std::runtime_error("Invalid model name given");
+    for (auto &model : _models) {
+        if (model.second == name)
+            return model.first;
+    }
+    throw std::runtime_error("Model not found.");
 }
 
 GUI::config GUI::Parser::parseConfig()
@@ -59,14 +67,11 @@ GUI::config GUI::Parser::parseConfig()
             });
         }
     } catch (const libconfig::SettingNotFoundException &e) {
-        std::cerr << "Setting not found." << std::endl;
-        exit(84);
+        throw std::runtime_error("Setting not found.");
     } catch (const libconfig::SettingTypeException &e) {
-        std::cerr << "Setting type error." << std::endl;
-        exit(84);
+        throw std::runtime_error("Setting type error.");
     } catch (const libconfig::SettingException &e) {
-        std::cerr << "Setting error." << std::endl;
-        exit(84);
+        throw std::runtime_error("Setting error.");
     }
     return config;
 }

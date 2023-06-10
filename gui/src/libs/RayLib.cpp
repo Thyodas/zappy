@@ -25,6 +25,10 @@ GUI::RayLib::RayLib()
     _keys[GUI::Key::Q]                  = KeyboardKey::KEY_Q;
     _keys[GUI::Key::S]                  = KeyboardKey::KEY_S;
     _keys[GUI::Key::D]                  = KeyboardKey::KEY_D;
+
+    _mouseButtons[GUI::Mouse::BUTTON_LEFT]     = MOUSE_LEFT_BUTTON;
+    _mouseButtons[GUI::Mouse::BUTTON_RIGHT]    = MOUSE_RIGHT_BUTTON;
+
     _colors[GUI::C_Color::C_WHITE]      = WHITE;
     _colors[GUI::C_Color::C_BLACK]      = BLACK;
     _colors[GUI::C_Color::C_BLUE]       = BLUE;
@@ -32,8 +36,12 @@ GUI::RayLib::RayLib()
     _colors[GUI::C_Color::C_GREEN]      = GREEN;
     _colors[GUI::C_Color::C_YELLOW]     = YELLOW;
 
-    for (auto &key : _keys)
+    for (auto &key : _keys) {
         _pressedKeys[key.first] = false;
+        _releasedKeys[key.first] = false;
+    }
+    for (auto &pressedButton : _pressedMouseButtons)
+        _pressedMouseButtons[pressedButton.first] = false;
 }
 
 GUI::RayLib::~RayLib()
@@ -61,9 +69,20 @@ void GUI::RayLib::display()
 
 void GUI::RayLib::handleEvents()
 {
+    Vector2 mousePos = GetMousePosition();
+    _mousePosition = {mousePos.x, mousePos.y};
     for (auto &key : _keys) {
-        if (IsKeyDown(key.second))
+        if (IsKeyDown(key.second)) {
             _pressedKeys[key.first] = true;
+            _releasedKeys[key.first] = false;
+        } else if (IsKeyReleased(key.second)) {
+            _releasedKeys[key.first] = true;
+            _pressedKeys[key.first] = false;
+        }
+    }
+    for (auto &mouseButton : _mouseButtons) {
+        if (IsMouseButtonDown(mouseButton.second))
+            _pressedMouseButtons[mouseButton.first] = true;
     }
 }
 
@@ -78,12 +97,7 @@ bool GUI::RayLib::isKeyPressed(GUI::Key key)
     return false;
 }
 
-bool GUI::RayLib::isInteraction()
-{
-    return false;
-}
-
-GUI::Vector2i GUI::RayLib::getMousePosition()
+GUI::Vector2f GUI::RayLib::getMousePosition()
 {
     return _mousePosition;
 }
@@ -130,4 +144,38 @@ GUI::Vector3f GUI::RayLib::getModelSize(ModelEntity model)
 void GUI::RayLib::clear(GUI::C_Color color)
 {
     ClearBackground(_colors[color]);
+}
+void GUI::RayLib::drawGrid(int size, float spacing)
+{
+    DrawGrid(size, spacing);
+}
+
+GUI::Vector3f GUI::RayLib::mousePosFromGrid(GUI::Vector2i position, int cellSize, int numberOfCells) {
+    float x = static_cast<float>(position.x) * cellSize - (cellSize * numberOfCells) / 2.0f;
+    float z = static_cast<float>(position.y) * cellSize - (cellSize * numberOfCells) / 2.0f;
+    float y = 0;
+
+    return GUI::Vector3f(x, y, z);
+}
+
+bool GUI::RayLib::isMouseButtonPressed(GUI::Mouse button)
+{
+    for (auto &pressedMouseButton : _pressedMouseButtons) {
+        if (pressedMouseButton.first == button && pressedMouseButton.second == true) {
+            pressedMouseButton.second = false;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool GUI::RayLib::isKeyReleased(GUI::Key key)
+{
+    for (auto &releasedKey : _releasedKeys) {
+        if (releasedKey.first == key && releasedKey.second == true) {
+            releasedKey.second = false;
+            return true;
+        }
+    }
+    return false;
 }

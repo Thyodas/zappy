@@ -13,6 +13,7 @@
     #include <string>
     #include "Vector3f.hpp"
     #include "ICamera.hpp"
+    #include "Vector2i.hpp"
     #include "Model.hpp"
 
 namespace GUI {
@@ -31,6 +32,11 @@ namespace GUI {
         D
     };
 
+    enum Mouse {
+        BUTTON_LEFT,
+        BUTTON_RIGHT
+    };
+
     enum C_Color {
         C_RED,
         C_GREEN,
@@ -45,11 +51,6 @@ namespace GUI {
         float y;
     };
 
-    struct Vector2i {
-        int x;
-        int y;
-    };
-
     class IGraphicalModule {
         public:
             virtual ~IGraphicalModule() = default;
@@ -61,11 +62,14 @@ namespace GUI {
             virtual void display() = 0;
             virtual void handleEvents() = 0;
             virtual bool isKeyPressed(GUI::Key key) = 0;
-            virtual bool isInteraction() = 0;
-            virtual GUI::Vector2i getMousePosition() = 0;
+            virtual bool isKeyReleased(GUI::Key key) = 0;
+            virtual GUI::Vector2f getMousePosition() = 0;
             virtual void preDraw(std::shared_ptr<ICamera> camera) = 0;
             virtual void postDraw() = 0;
             virtual GUI::Vector3f getModelSize(ModelEntity model) = 0;
+            virtual void drawGrid(int size, float spacing) = 0;
+            virtual bool isMouseButtonPressed(GUI::Mouse button) = 0;
+            virtual GUI::Vector3f mousePosFromGrid(GUI::Vector2i position, int cellSize, int numberOfCells) = 0;
     };
 };
 

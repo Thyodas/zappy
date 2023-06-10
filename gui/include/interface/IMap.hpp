@@ -17,8 +17,12 @@ namespace GUI {
     class IMap {
         public:
             virtual ~IMap() = default;
-            virtual GUI::Vector2i getSize() const = 0;
+            virtual int getSize() const = 0;
             virtual std::shared_ptr<GUI::ICell>& getCell(GUI::Vector2i pos) = 0;
+            virtual bool selectionMode() const = 0;
+            virtual void setSelectionMode(bool selectionMode) = 0;
+            virtual GUI::Vector2i getSelectionBlock() const = 0;
+            virtual void setSelectionBlock(GUI::Vector2i block) = 0;
     };
 };
 
