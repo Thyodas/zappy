@@ -14,7 +14,7 @@
 namespace GUI {
     class ICore {
         public:
-            virtual ~ICore() = 0;
+            virtual ~ICore() = default;
 
             virtual void init(GraphicalLib lib, GUI::Vector2i windowSize) = 0;
             virtual void run() = 0;
