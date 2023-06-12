@@ -9,8 +9,19 @@
     #define ICELL_HPP_
 
     #include "IGraphicalModule.hpp"
+    #include <vector>
 
 namespace GUI {
+    enum Object {
+        OBJ_FOOD,
+        OBJ_LINEMATE,
+        OBJ_DERAUMERE,
+        OBJ_SIBUR,
+        OBJ_MENDIANE,
+        OBJ_PHIRAS,
+        OBJ_THYSTAME
+    };
+
     class ICell {
         public:
             virtual ~ICell() = default;

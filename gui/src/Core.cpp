@@ -14,6 +14,25 @@ GUI::Core::Core() : _running(true), _scene(std::make_shared<Scene>()), _map(std:
     IParser *parser = new Parser("config.cfg");
     _config = parser->parseConfig();
     delete parser;
+
+    _objectsMap = {
+        {GUI::Object::OBJ_FOOD, "food"},
+        {GUI::Object::OBJ_LINEMATE, "linemate"},
+        {GUI::Object::OBJ_DERAUMERE, "deraumere"},
+        {GUI::Object::OBJ_SIBUR, "sibur"},
+        {GUI::Object::OBJ_MENDIANE, "mendiane"},
+        {GUI::Object::OBJ_PHIRAS, "phiras"},
+        {GUI::Object::OBJ_THYSTAME, "thystame"},
+    };
+    _models = {
+        GUI::ModelEntity::FOOD,
+        GUI::ModelEntity::LINEMATE,
+        GUI::ModelEntity::DERAUMERE,
+        GUI::ModelEntity::SIBUR,
+        GUI::ModelEntity::MENDIANE,
+        GUI::ModelEntity::PHIRAS,
+        GUI::ModelEntity::THYSTAME,
+    };
 }
 
 GUI::Core::~Core()
@@ -114,8 +133,26 @@ void GUI::Core::drawGround()
 
 void GUI::Core::draw()
 {
-    _module->preDraw(_scene->getCamera());
+    _module->preDraw();
+    _module->enable3DMode(_scene->getCamera());
     this->drawGround();
     _module->drawGrid(_map->getSize(), _module->getModelSize(ModelEntity::GRASS_BLOCK).x);
+    _module->disable3DMode();
+    if (_map->selectionMode())
+        this->drawCellDetails(_map->getCell(_map->getSelectionBlock()));
     _module->postDraw();
+}
+
+void GUI::Core::drawCellDetails(std::shared_ptr<ICell> cell)
+{
+    _module->drawRectangle((Vector2f){0, 0}, (Vector2f){static_cast<float>(30 * _windowSize.x / 100), static_cast<float>(_windowSize.y)}, GUI::C_Color::C_BLACK);
+    std::string position = "Position: " + std::to_string(cell->getPos().x) + ", " + std::to_string(cell->getPos().y);
+    _module->drawText(position, (Vector2f){10, 10}, 20, GUI::C_Color::C_WHITE);
+    int index = 0;
+    for (auto &i : _objectsMap) {
+        _module->drawText(i.second, (Vector2f){10, static_cast<float>(_windowSize.y / _objectsMap.size() * index + 40)}, 20, GUI::C_Color::C_WHITE);
+        // TO DO: get real value
+        _module->drawText("3", (Vector2f){200, static_cast<float>(_windowSize.y / _objectsMap.size() * index + 40)}, 20, GUI::C_Color::C_WHITE);
+        index++;
+    }
 }

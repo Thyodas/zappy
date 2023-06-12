@@ -123,16 +123,14 @@ void GUI::RayLib::drawModel(ModelEntity model, Vector3f position, float scale, V
     DrawModelEx(_models[model].model, {position.x, position.y, position.z}, {0, 1, 0}, rotation.x, {scale, scale, scale}, WHITE);
 }
 
-void GUI::RayLib::preDraw(std::shared_ptr<ICamera> camera)
+void GUI::RayLib::preDraw()
 {
     BeginDrawing();
     this->clear(GUI::C_Color::C_WHITE);
-    BeginMode3D(std::dynamic_pointer_cast<RayLibCamera>(camera)->camera);
 }
 
 void GUI::RayLib::postDraw()
 {
-    EndMode3D();
     EndDrawing();
 }
 
@@ -145,6 +143,7 @@ void GUI::RayLib::clear(GUI::C_Color color)
 {
     ClearBackground(_colors[color]);
 }
+
 void GUI::RayLib::drawGrid(int size, float spacing)
 {
     DrawGrid(size, spacing);
@@ -178,4 +177,24 @@ bool GUI::RayLib::isKeyReleased(GUI::Key key)
         }
     }
     return false;
+}
+
+void GUI::RayLib::drawText(std::string text, GUI::Vector2f position, int fontSize, GUI::C_Color color)
+{
+    DrawText(text.c_str(), position.x, position.y, fontSize, _colors[color]);
+}
+
+void GUI::RayLib::drawRectangle(GUI::Vector2f position, GUI::Vector2f size, GUI::C_Color color)
+{
+    DrawRectangle(position.x, position.y, size.x, size.y, _colors[color]);
+}
+
+void GUI::RayLib::enable3DMode(std::shared_ptr<GUI::ICamera> camera)
+{
+    BeginMode3D(std::dynamic_pointer_cast<RayLibCamera>(camera)->camera);
+}
+
+void GUI::RayLib::disable3DMode()
+{
+    EndMode3D();
 }

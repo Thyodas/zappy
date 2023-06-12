@@ -10,6 +10,7 @@
 
     #include "ICell.hpp"
     #include "IGraphicalModule.hpp"
+    #include <vector>
 
 namespace GUI {
     class Cell : public GUI::ICell {
@@ -17,9 +18,11 @@ namespace GUI {
             Cell(GUI::Vector2i pos);
             ~Cell();
             GUI::Vector2i getPos() const;
+            std::vector<Object> getObjects() const;
         protected:
         private:
             GUI::Vector2i _pos;
+            std::vector<Object> _objects;
     };
 };
 

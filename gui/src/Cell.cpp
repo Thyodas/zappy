@@ -19,3 +19,8 @@ GUI::Vector2i GUI::Cell::getPos() const
 {
     return _pos;
 }
+
+std::vector<GUI::Object> GUI::Cell::getObjects() const
+{
+    return _objects;
+}
