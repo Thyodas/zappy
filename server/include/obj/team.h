@@ -15,7 +15,9 @@ typedef struct player_s player_t;
 
 typedef struct team_s {
     char *name;
-    size_t slots_available;
 
-    player_vector_t user_vector;
+    player_vector_t player_vector;
 } team_t;
+
+team_t *create_team(const char *name);
+void free_team(team_t *team);

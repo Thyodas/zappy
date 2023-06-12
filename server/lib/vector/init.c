@@ -37,3 +37,22 @@ int vector_free_content(vector_template_t *array)
     array->len = 0;
     return 0;
 }
+
+int vector_free_content_with_function(vector_template_t *array,
+    void (*free_func)(void *data))
+{
+    if (array->content == NULL)
+        return -1;
+    for (size_t i = 0; i < array->len; ++i)
+        free_func(array->content[i]);
+    free(array->content);
+    array->content = NULL;
+    array->len = 0;
+    return 0;
+}
+
+int vector_apply_on_element(vector_template_t *array)
+{
+    if (array->content == NULL)
+        return -1;
+}

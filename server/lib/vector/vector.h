@@ -88,6 +88,18 @@ int vector_init(vector_template_t *array, size_t element_size);
 int vector_free_content(vector_template_t *array);
 
 /**
+ * @brief Frees the content of the array, not the struct passed as parameter.
+ * All the structures added via pointer are also freed using free_func.
+ * @note The container can be reused as it is re-init after freeing its
+ * elements.
+ * @param array The array. It MUST have been init with vector_init.
+ * @param free_func The function that will be used to free each element.
+ * @return -1 in case of error else 0
+ */
+int vector_free_content_with_function(vector_template_t *array,
+    void (*free_func)(void *data));
+
+/**
  * Safely write to a file.
  * This function is similar to fwrite but returns an error if EOF was reached
  * or if the buffer wasn't fully written.

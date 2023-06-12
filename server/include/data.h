@@ -31,6 +31,15 @@
 #define C_YELLOW "\033[1m\033[33m"
 #define C_RESET "\033[0m"
 
+#define HELP_MSG "USAGE: ./zappy_server -p port -x width -y height -n name1 "\
+    "name2 ... -c clientsNb -f freq\n"\
+    "port\tis the port number\n"\
+    "width\tis the width of the world\n"\
+    "height\tis the height of the world\n"\
+    "nameX\tis the name of the team X\n"\
+    "clientsNb\tis the number of authorized clients per team\n"\
+    "freq\tis the reciprocal of time unit for execution of actions"
+
 #define LOG_ERROR(msg) C_RED "[ERROR] " C_RESET msg
 #define LOG_WARNING(msg) C_YELLOW "[WARNING] " C_RESET msg
 #define LOG_INFO(msg) C_CYAN "[INFO] " C_RESET msg
@@ -50,11 +59,16 @@ typedef struct database_s {
 } database_t;
 
 typedef struct myteams_s {
+    int sockfd;
+    uint32_t port;
+    uint32_t width;
+    uint32_t height;
+    uint32_t clients_nb;
+    double freq;
     time_t current_timestamp;
     fd_set readfds;
     fd_set writefds;
     fd_set errorfds;
-    int sockfd;
     database_t db;
 } zappy_t;
 
@@ -64,7 +78,7 @@ int bind_tcp_socket(int sockfd, uint16_t port);
 int listen_tcp_socket(int sockfd, int queue_size);
 
 // init.c
-void init_myteams(int argc, char **argv);
+int init_zappy(int argc, char **argv);
 
 // hub.c
 void hub(zappy_t *data);

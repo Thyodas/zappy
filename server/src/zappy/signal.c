@@ -20,21 +20,22 @@ static void handle_sigpipe(__attribute__((unused)) int nb)
         "Socket will be safely closed.\n"), strerror(errno));
 }
 
-static int free_myteams(zappy_t *data)
+static int free_zappy(zappy_t *data)
 {
     connection_vector_t *cons = &data->db.connection_vector;
     for (size_t i = 0; i < cons->len; ++i)
         delete_connection_by_pos(cons, 0);
     close(data->sockfd);
     vector_free_content(vectorize(&data->db.connection_vector));
-    vector_free_content(vectorize(&data->db.team_vector));
+    vector_free_content_with_function(vectorize(&data->db.team_vector),
+        (void (*)(void *))&free_team);
     return 0;
 }
 
 static void handle_sigint(__attribute__((unused)) int nb)
 {
     printf("\n" LOG_INFO("Server stopping.\n"));
-    free_myteams(MYTEAMS_DATA);
+    free_zappy(MYTEAMS_DATA);
     exit(0);
 }
 
