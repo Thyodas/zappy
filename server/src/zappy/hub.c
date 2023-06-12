@@ -15,7 +15,8 @@ static void fd_config(zappy_t *ftp, int *nfds)
     for (size_t i = 0 ; i < ftp->db.connection_vector.len ; ++i) {
         FD_SET(ftp->db.connection_vector.content[i]->fd, &ftp->readfds);
         FD_SET(ftp->db.connection_vector.content[i]->fd, &ftp->errorfds);
-        if (ftp->db.connection_vector.content[i]->res_vector.len != 0)
+        if (buffer_get_read_len(
+            &ftp->db.connection_vector.content[i]->res_buffer) != 0)
             FD_SET(ftp->db.connection_vector.content[i]->fd, &ftp->writefds);
     }
     FD_SET(ftp->sockfd, &ftp->readfds);

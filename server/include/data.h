@@ -79,7 +79,6 @@ void handle_event_connection_request(zappy_t *data, connection_t *con);
 
 // response.c
 int send_response(connection_t *con, void *data, size_t len);
-int send_error(connection_t *con, int code, char *message);
 void handle_event_connection_response(zappy_t *data, connection_t *con);
 
 // signal.c

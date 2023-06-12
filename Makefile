@@ -17,7 +17,7 @@ all: title zappy_server zappy_gui zappy_ai
 
 zappy_server:
 	@printf "\e[48;5;196m                COMPILING SERVER              \e[0m\n"
-	@cmake $(SERVER_DIR) -B ./build/server && make -C ./build/server -j
+	@cmake $(SERVER_DIR) -B ./build/server && cmake --build ./build/server -j --target all
 	@cp ./build/server/zappy_server .
 
 zappy_gui:
@@ -39,9 +39,11 @@ fclean:
 	@rm -f $(SERVER_NAME)
 	@rm -f $(CLIENT_NAME)
 
-tests_run: title
-	@printf "Not implemented\n"
-	#-make -C tests all
+tests_run: title zappy_server
+	@./build/server/unit_tests
+	@gcovr build --exclude server/tests/
+
+
 
 re: fclean all
 

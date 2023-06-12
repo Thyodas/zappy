@@ -18,32 +18,14 @@
 
 #include "com/request.h"
 #include "com/response.h"
-
-typedef struct request_buffer_s {
-    size_t len;
-    size_t pos;
-    char *buffer;
-} request_buffer_t;
-
-typedef struct response_buffer_s {
-    size_t len;
-    size_t pos;
-    char *buffer;
-} response_buffer_t;
-
-typedef struct {
-    size_t len;
-    size_t element_size;
-    response_buffer_t **content;
-} response_buffer_vector_t;
+#include "buffer/buffer.h"
 
 typedef struct connection_s {
     player_t *player;
     int fd;
     unsigned long last_activity;
-    request_buffer_t req_buffer;
-    response_buffer_vector_t res_vector;
-    size_t buffer_read;
+    string_buffer_t req_buffer;
+    string_buffer_t res_buffer;
     struct sockaddr_in p_address;
 } connection_t;
 

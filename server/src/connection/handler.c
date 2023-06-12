@@ -33,6 +33,8 @@ connection_t *create_connection(void)
         .fd = -1,
         .last_activity = time(NULL),
     };
+    buffer_init(&new_con->req_buffer);
+    buffer_init(&new_con->res_buffer);
     return new_con;
 }
 
@@ -44,8 +46,11 @@ void delete_connection(connection_t *con)
     printf(LOG_INFO("Connection from [%s:%hu] closed.\n"),
         inet_ntoa(con->p_address.sin_addr),
         ntohs(con->p_address.sin_port));
-    con->player->session = NULL;
+    if (con->player != NULL)
+        con->player->session = NULL;
     close(con->fd);
+    buffer_free_content(&con->req_buffer);
+    buffer_free_content(&con->res_buffer);
     free(con);
 }
 
