@@ -100,6 +100,16 @@ int vector_free_content_with_function(vector_template_t *array,
     void (*free_func)(void *data));
 
 /**
+ * @brief Frees the vector content but not the user added content.
+ * It only frees the internal array.
+ * @note The container can be reused as it is re-init after freeing its
+ * elements.
+ * @param array The array. It MUST have been init with vector_init.
+ * @return -1 in case of error else 0
+ */
+int vector_free(vector_template_t *array);
+
+/**
  * Safely write to a file.
  * This function is similar to fwrite but returns an error if EOF was reached
  * or if the buffer wasn't fully written.

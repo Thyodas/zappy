@@ -51,8 +51,11 @@ int vector_free_content_with_function(vector_template_t *array,
     return 0;
 }
 
-int vector_apply_on_element(vector_template_t *array)
+int vector_free(vector_template_t *array)
 {
     if (array->content == NULL)
         return -1;
+    free(array->content);
+    vector_init(array, array->element_size);
+    return 0;
 }

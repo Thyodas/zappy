@@ -29,6 +29,10 @@ static int free_zappy(zappy_t *data)
     vector_free_content(vectorize(&data->db.connection_vector));
     vector_free_content_with_function(vectorize(&data->db.team_vector),
         (void (*)(void *))&free_team);
+    vector_free_content_with_function(vectorize(&data->db.player_vector),
+        (void (*)(void *))&free_player);
+    hdestroy_r(&data->gui_cmd_map);
+    hdestroy_r(&data->ai_cmd_map);
     return 0;
 }
 

@@ -32,6 +32,7 @@ connection_t *create_connection(void)
         .player = NULL,
         .fd = -1,
         .last_activity = time(NULL),
+        .command = NULL,
     };
     buffer_init(&new_con->req_buffer);
     buffer_init(&new_con->res_buffer);

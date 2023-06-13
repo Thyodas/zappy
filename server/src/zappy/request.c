@@ -20,10 +20,10 @@ void handle_event_connection_request(zappy_t *data, connection_t *con)
         delete_connection_by_ptr(&data->db.connection_vector, con);
         return;
     }
-    printf(LOG_INFO("Buffer: '%.*s'\n"), read_bytes, buf);
+    printf(LOG_INFO("Buffer: '%.*s'\n"), (int)read_bytes, buf);
     char *command = buffer_read_on_newline(&con->req_buffer);
     if (command == NULL)
         return;
-    printf(LOG_INFO("New command: '%s'\n"), command);
-    send_response(con, "ok\n", 3);
+    con->command = command;
+    execute_command(data, con);
 }

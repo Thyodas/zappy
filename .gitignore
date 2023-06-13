@@ -14,3 +14,5 @@ server/**/Makefile
 build/
 server/cmake-build-debug-docker/
 intra_server
+
+server/coding-style-reports.log

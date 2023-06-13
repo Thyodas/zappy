@@ -7,31 +7,37 @@
 
 #include "data.h"
 #include "ctype.h"
+#include "command.h"
 
 zappy_t *MYTEAMS_DATA;
 
 int load_database(database_t *db);
 int parse_arguments(zappy_t *data, int argc, char **argv);
 
-void init_database(zappy_t *data)
+static void init_database(zappy_t *data)
 {
     database_t *db = &data->db;
+    db->player_ids = 0;
     vector_init(vectorize(&db->connection_vector), sizeof(connection_t));
     vector_init(vectorize(&db->team_vector), sizeof(team_t));
 }
 
-void init_data(zappy_t *data)
+static int init_data(zappy_t *data)
 {
     *data = (zappy_t){
         .sockfd = create_tcp_socket(),
         .clients_nb = 5,
-        .width = 9,
-        .height = 9,
+        .width = 10,
+        .height = 10,
         .freq = 1,
         .port = 4242,
     };
     init_database(data);
-    vector_push_back(vectorize(&data->db.team_vector), create_team("GRAPHIC"));
+    vector_push_back(vectorize(&data->db.team_vector),
+        create_team(GRAPHIC_TEAM_NAME, data->clients_nb));
+    if (init_command_map(data))
+        return 1;
+    return 0;
 }
 
 void init_default_values(zappy_t *data)
@@ -40,7 +46,7 @@ void init_default_values(zappy_t *data)
     if (data->db.team_vector.len == 1) {
         for (size_t i = 0; i < 4; ++i) {
             vector_push_back(vectorize(&data->db.team_vector),
-                create_team(default_teams[i]));
+                create_team(default_teams[i], data->clients_nb));
         }
     }
 }
@@ -48,7 +54,8 @@ void init_default_values(zappy_t *data)
 int init_zappy(int argc, char **argv)
 {
     zappy_t ftp;
-    init_data(&ftp);
+    if (init_data(&ftp))
+        return 84;
     if (parse_arguments(&ftp, argc, argv))
         return 84;
     init_default_values(&ftp);

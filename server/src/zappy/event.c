@@ -20,25 +20,22 @@ void handle_event_new_connection(zappy_t *data)
         delete_connection(con);
         return;
     }
-    if (data->db.connection_vector.len >= MAX_CONNECTIONS) {
-        // TODO: error handling
-        //send_error(con, ERROR_SERVICE, "Service currently unavailable");
-        delete_connection(con);
-        return;
-    }
     add_connection(&data->db.connection_vector, con);
+    send_response(con, "WELCOME\n", 8);
     printf(LOG_INFO("Connection from [%s:%hu] opened.\n"),
         inet_ntoa(con->p_address.sin_addr),
         ntohs(con->p_address.sin_port));
 }
 
+/*
+ * TODO: maybe remove this function
+ */
 void handle_event_connection_timeout(zappy_t *data, connection_t *con)
 {
+    return;
     printf(LOG_INFO("Connection from [%s:%hu] timed out.\n"),
         inet_ntoa(con->p_address.sin_addr),
         ntohs(con->p_address.sin_port));
-    // TODO: error handling, maybe remove timeout
-    //send_error(con, ERROR_TIMEOUT, "Connection timed out");
     delete_connection_by_ptr(&data->db.connection_vector, con);
 }
 

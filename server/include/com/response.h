@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <stdarg.h>
+
 #include "types.h"
 
 ssize_t send_data(int fd, void *data, size_t len);

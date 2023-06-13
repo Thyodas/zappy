@@ -26,7 +26,6 @@ int buffer_write(string_buffer_t *buffer, const char *string, uint32_t len)
     return 0;
 }
 
-
 char *buffer_read_on_separator(string_buffer_t *buffer, const char *separator)
 {
     buffer_truncate(buffer);

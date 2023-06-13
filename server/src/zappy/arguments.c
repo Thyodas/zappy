@@ -82,7 +82,8 @@ int parse_team(zappy_t *data, bool team_name_mode, const char *name)
         fprintf(stderr, "Invalid team name, it must not contain \\r or \\n.\n");
         return 1;
     }
-    vector_push_back(vectorize(&data->db.team_vector), create_team(name));
+    vector_push_back(vectorize(&data->db.team_vector),
+        create_team(name, data->clients_nb));
     return 0;
 }
 
@@ -121,8 +122,7 @@ int parse_arguments(zappy_t *data, int argc, char **argv)
 {
     int c;
     bool team_name_mode = false;
-    while (1)
-    {
+    while (1) {
         int option_index = 0;
         c = getopt_long(argc, argv, "-p:x:y:c:f:nh",
             long_options, &option_index);

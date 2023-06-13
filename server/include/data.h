@@ -10,6 +10,7 @@
 #include "obj/player.h"
 #include "connection.h"
 
+#define __USE_GNU
 #include <sys/select.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -21,10 +22,12 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdbool.h>
+#include <search.h>
 
 #define MAX_CONNECTIONS 30
 #define CONNECTION_TIMEOUT 300
-#define BIN_NAME "myteams"
+#define BIN_NAME "zappy"
+#define GRAPHIC_TEAM_NAME "GRAPHIC"
 
 #define C_CYAN "\033[1m\033[36m"
 #define C_RED "\033[1m\033[31m"
@@ -53,12 +56,13 @@
 #include "obj/obj_vector.h"
 
 typedef struct database_s {
+    uint32_t player_ids;
     player_vector_t player_vector;
     team_vector_t team_vector;
     connection_vector_t connection_vector;
 } database_t;
 
-typedef struct myteams_s {
+typedef struct zappy_s {
     int sockfd;
     uint32_t port;
     uint32_t width;
@@ -70,6 +74,8 @@ typedef struct myteams_s {
     fd_set writefds;
     fd_set errorfds;
     database_t db;
+    struct hsearch_data gui_cmd_map;
+    struct hsearch_data ai_cmd_map;
 } zappy_t;
 
 // socket.c
@@ -93,6 +99,8 @@ void handle_event_connection_request(zappy_t *data, connection_t *con);
 
 // response.c
 int send_response(connection_t *con, void *data, size_t len);
+__attribute__((format(printf, 2, 3))) int sendf_response(connection_t *con,
+    const char *format, ...);
 void handle_event_connection_response(zappy_t *data, connection_t *con);
 
 // signal.c
