@@ -23,6 +23,7 @@ namespace GUI {
             virtual void setSelectionMode(bool selectionMode) = 0;
             virtual GUI::Vector2i getSelectionBlock() const = 0;
             virtual void setSelectionBlock(GUI::Vector2i block) = 0;
+            virtual std::vector<std::shared_ptr<GUI::ICell>> getCells() = 0;
     };
 };
 

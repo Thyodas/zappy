@@ -9,6 +9,10 @@
 
 GUI::Cell::Cell(GUI::Vector2i pos) : _pos(pos)
 {
+    // TEST
+    for (int i = 0; i <= 6; i++)
+        _objects[static_cast<GUI::Object>(i)] = 1;
+    // END OF TEST
 }
 
 GUI::Cell::~Cell()

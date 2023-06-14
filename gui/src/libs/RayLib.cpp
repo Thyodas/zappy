@@ -52,6 +52,7 @@ void GUI::RayLib::init(GUI::Vector2i size)
 {
     InitWindow(size.x, size.y, "Zappy");
     SetTargetFPS(60);
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
 }
 
 void GUI::RayLib::close()

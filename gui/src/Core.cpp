@@ -24,6 +24,15 @@ GUI::Core::Core() : _running(true), _scene(std::make_shared<Scene>()), _map(std:
         {GUI::Object::OBJ_PHIRAS, "phiras"},
         {GUI::Object::OBJ_THYSTAME, "thystame"},
     };
+    _objToModels = {
+        {GUI::Object::OBJ_FOOD, GUI::ModelEntity::FOOD},
+        {GUI::Object::OBJ_LINEMATE, GUI::ModelEntity::LINEMATE},
+        {GUI::Object::OBJ_DERAUMERE, GUI::ModelEntity::DERAUMERE},
+        {GUI::Object::OBJ_SIBUR, GUI::ModelEntity::SIBUR},
+        {GUI::Object::OBJ_MENDIANE, GUI::ModelEntity::MENDIANE},
+        {GUI::Object::OBJ_PHIRAS, GUI::ModelEntity::PHIRAS},
+        {GUI::Object::OBJ_THYSTAME, GUI::ModelEntity::THYSTAME},
+    };
     _models = {
         GUI::ModelEntity::FOOD,
         GUI::ModelEntity::LINEMATE,
@@ -137,6 +146,8 @@ void GUI::Core::draw()
     _module->enable3DMode(_scene->getCamera());
     this->drawGround();
     _module->drawGrid(_map->getSize(), _module->getModelSize(ModelEntity::GRASS_BLOCK).x);
+    for (auto &cell : _map->getCells())
+        drawEntities(cell);
     _module->disable3DMode();
     if (_map->selectionMode())
         this->drawCellDetails(_map->getCell(_map->getSelectionBlock()));
@@ -149,14 +160,37 @@ void GUI::Core::drawCellDetails(std::shared_ptr<ICell> cell)
     std::string position = "Position: " + std::to_string(cell->getPos().x) + ", " + std::to_string(cell->getPos().y);
     _module->drawText(position, (Vector2f){10, 10}, 20, GUI::C_Color::C_WHITE);
     int index = 0;
+    std::unordered_map<GUI::Object, int> stock = cell->getObjects();
     for (auto &i : _objectsMap) {
         _module->drawText(i.second, (Vector2f){10, static_cast<float>(_windowSize.y / _objectsMap.size() * index + 40)}, 20, GUI::C_Color::C_WHITE);
         // TO DO: get real value
-        _module->drawText("3", (Vector2f){200, static_cast<float>(_windowSize.y / _objectsMap.size() * index + 40)}, 20, GUI::C_Color::C_WHITE);
+        _module->drawText(std::to_string(stock[i.first]), (Vector2f){200, static_cast<float>(_windowSize.y / _objectsMap.size() * index + 40)}, 20, GUI::C_Color::C_WHITE);
         index++;
     }
 }
 
 void GUI::Core::drawEntities(std::shared_ptr<ICell> cell)
 {
+    float offsetX = 0.25;
+    float offsetZ = 0.25;
+    int count = 0;
+    Vector3f grassSize = _module->getModelSize(ModelEntity::GRASS_BLOCK);
+    for (auto &obj : cell->getObjects()) {
+        if (obj.second >= 1) {
+            Vector3f pos = _module->mousePosFromGrid(cell->getPos(), grassSize.x, _map->getSize());
+            if (count != 0 && count % 3 == 0) {
+                offsetX = 0.25;
+                offsetZ += 0.25;
+            }
+            ModelEntity model = _objToModels[obj.first];
+            Vector3f modelSize = _module->getModelSize(model);
+            pos.z += offsetZ * grassSize.x;
+            pos.x += offsetX * grassSize.x;
+            if (model != ModelEntity::FOOD)
+                pos.y += modelSize.y / 4;
+            _module->drawModel(_objToModels[obj.first], pos, _config.models[model].scale, Vector3f(0, 0, 0));
+            offsetX += 0.25;
+            count++;
+        }
+    }
 }

@@ -19,7 +19,7 @@ namespace GUI {
         OBJ_SIBUR,
         OBJ_MENDIANE,
         OBJ_PHIRAS,
-        OBJ_THYSTAME
+        OBJ_THYSTAME,
     };
 
     class ICell {
