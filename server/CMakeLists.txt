@@ -15,7 +15,7 @@ file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/*.c")
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${INCLUDE})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE vector buffer)
+target_link_libraries(${PROJECT_NAME} PRIVATE vector buffer m)
 
 # Add the criterion library
 find_library(CRITERION_LIB criterion)

@@ -9,13 +9,32 @@
 
 static const ENTRY gui_commands[] = {
     {"msz", &gui_msz},
+    {"bct", &gui_bct},
+    {"mct", &gui_mct},
+    {"tna", &gui_tna},
+    {"ppo", NULL},
+    {"plv", NULL},
+    {"pin", NULL},
+    {"sgt", NULL},
+    {"sst", NULL},
 };
 
 static const ENTRY ai_commands[] = {
-    {"msz", &gui_msz},
+    {"Forward", NULL},
+    {"Right", NULL},
+    {"Left", NULL},
+    {"Look", NULL},
+    {"Inventory", NULL},
+    {"Broadcast", NULL},
+    {"Connect_nbr", NULL},
+    {"Fork", NULL},
+    {"Eject", NULL},
+    {"Take", NULL},
+    {"Set", NULL},
+    {"Incantation", NULL},
 };
 
-static int init_map(struct hsearch_data *map, const ENTRY commands[],
+static int init_hash_map(struct hsearch_data *map, const ENTRY commands[],
     size_t nb_entry)
 {
     ENTRY *command;
@@ -32,10 +51,10 @@ static int init_map(struct hsearch_data *map, const ENTRY commands[],
 
 int init_command_map(zappy_t *zappy)
 {
-    if (init_map(&zappy->gui_cmd_map, gui_commands,
+    if (init_hash_map(&zappy->gui_cmd_map, gui_commands,
         sizeof(gui_commands) / sizeof(ENTRY)))
         return 1;
-    if (init_map(&zappy->ai_cmd_map, ai_commands,
+    if (init_hash_map(&zappy->ai_cmd_map, ai_commands,
         sizeof(ai_commands) / sizeof(ENTRY)))
         return 1;
     return 0;

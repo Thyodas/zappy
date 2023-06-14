@@ -29,6 +29,10 @@
 #define BIN_NAME "zappy"
 #define GRAPHIC_TEAM_NAME "GRAPHIC"
 
+#define RET_OK  0
+#define RET_KO  1
+#define RET_SBP 2
+
 #define C_CYAN "\033[1m\033[36m"
 #define C_RED "\033[1m\033[31m"
 #define C_YELLOW "\033[1m\033[33m"
@@ -54,6 +58,7 @@
 
 #include "obj/team.h"
 #include "obj/obj_vector.h"
+#include "obj/map.h"
 
 typedef struct database_s {
     uint32_t player_ids;
@@ -74,6 +79,7 @@ typedef struct zappy_s {
     fd_set writefds;
     fd_set errorfds;
     database_t db;
+    map_t map;
     struct hsearch_data gui_cmd_map;
     struct hsearch_data ai_cmd_map;
 } zappy_t;
@@ -109,4 +115,4 @@ void signal_handler(void);
 // utils
 player_t *get_user_by_uuid(player_vector_t *user_vector, char *uuid);
 team_t *get_team_by_id(team_vector_t *team_vector, size_t id);
-team_t *get_team_by_name(team_vector_t *team_vector, char *name);
+team_t *get_team_by_name(team_vector_t *team_vector, const char *name);

@@ -10,6 +10,7 @@
 #include "com/types.h"
 #include "vector/vector.h"
 #include "obj/obj_vector.h"
+#include "obj/resource.h"
 
 typedef struct connection_s connection_t;
 typedef struct team_s team_t;
@@ -25,6 +26,11 @@ typedef struct player_s {
 
     connection_t *session;
     team_t *team;
+    struct {
+        uint32_t x;
+        uint32_t y;
+    } pos;
+    resource_t inventory;
 } player_t;
 
 // memory.c

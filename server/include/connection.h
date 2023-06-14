@@ -28,6 +28,7 @@ typedef struct connection_s {
     string_buffer_t res_buffer;
     struct sockaddr_in p_address;
     char *command;
+    char *args;
 } connection_t;
 
 // utils.c

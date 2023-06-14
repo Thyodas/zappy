@@ -16,3 +16,5 @@ server/cmake-build-debug-docker/
 intra_server
 
 server/coding-style-reports.log
+
+server/strings_intra_server.txt

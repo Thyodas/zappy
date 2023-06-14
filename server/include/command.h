@@ -19,3 +19,7 @@ int init_command_map(zappy_t *zappy);
  */
 
 int gui_msz(zappy_t *zappy, connection_t *con);
+int gui_tna(zappy_t *zappy, connection_t *con);
+int gui_bct(zappy_t *zappy, connection_t *con);
+int gui_bct_arg(zappy_t *zappy, connection_t *con, uint32_t x, uint32_t y);
+int gui_mct(zappy_t *zappy, connection_t *con);

@@ -43,7 +43,7 @@ static int parse_double(double *parsed_nb, const char *to_parse)
     return 0;
 }
 
-static int parse_number(uint32_t *parsed_nb, const char *to_parse)
+static int parse_number_print_error(uint32_t *parsed_nb, const char *to_parse)
 {
     char *end;
 
@@ -73,13 +73,16 @@ int parse_team(zappy_t *data, bool team_name_mode, const char *name)
             "\nAre you sure you didn't forget -n?\n", optarg);
         return 0;
     }
-    if (name == NULL || name[0] == '\0'
-        || strspn(name, "\t ") == strlen(name)) {
+    if (name == NULL || *name == '\0' || strspn(name, "\t ") == strlen(name)) {
         fprintf(stderr, "Invalid team name, it must not be empty.\n");
         return 1;
     }
     if (strpbrk(name, "\r\n") != NULL) {
         fprintf(stderr, "Invalid team name, it must not contain \\r or \\n.\n");
+        return 1;
+    }
+    if (get_team_by_name(&data->db.team_vector, name) != NULL) {
+        fprintf(stderr, "Team '%s' already exists.\n", name);
         return 1;
     }
     vector_push_back(vectorize(&data->db.team_vector),
@@ -91,13 +94,13 @@ int handle_options(zappy_t *data, int c, bool *team_name_mode)
 {
     switch (c) {
         case 'p':
-            return (parse_number(&data->port, optarg));
+            return (parse_number_print_error(&data->port, optarg));
         case 'x':
-            return (parse_number(&data->width, optarg));
+            return (parse_number_print_error(&data->width, optarg));
         case 'y':
-            return (parse_number(&data->height, optarg));
+            return (parse_number_print_error(&data->height, optarg));
         case 'c':
-            return (parse_number(&data->clients_nb, optarg));
+            return (parse_number_print_error(&data->clients_nb, optarg));
         case 'f':
             return (parse_double(&data->freq, optarg));
         case 1:

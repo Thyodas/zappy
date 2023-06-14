@@ -6,8 +6,11 @@
 */
 
 #include "command.h"
+#include "utils.h"
 
-static void command_phase(zappy_t *zappy, connection_t *con)
+int login_phase(zappy_t *zappy, connection_t *con);
+
+static struct entry *get_command(zappy_t *zappy, connection_t *con)
 {
     ENTRY *command;
     switch (con->player->type) {
@@ -15,50 +18,53 @@ static void command_phase(zappy_t *zappy, connection_t *con)
             if (!hsearch_r((ENTRY){.key = con->command}, FIND, &command,
                 &zappy->gui_cmd_map)) {
                 send_response(con, "suc\n", 4);
-                return;
+                return NULL;
             }
             break;
         case P_AI:
             if (!hsearch_r((ENTRY){.key = con->command}, FIND, &command,
                 &zappy->ai_cmd_map)) {
                 send_response(con, "ko\n", 3);
-                return;
+                return NULL;
             }
             break;
     }
-    int (*func)(zappy_t *zappy, connection_t *con) = command->data;
-    if (func(zappy, con))
-        send_response(con, "ko\n", 3);
+    return command;
 }
 
-static void login_success(zappy_t *zappy, connection_t *con)
+static void command_error(__attribute__((unused)) zappy_t *zappy,
+    connection_t *con, int code)
 {
-    if (con->player->type == P_AI) {
-        sendf_response(con, "%u\n", con->player->team->available_slots);
-        sendf_response(con, "%u %u\n", zappy->width, zappy->height);
+    switch (code) {
+        case RET_KO:
+            send_response(con, "ko\n", 3);
+            return;
+        case RET_SBP:
+            send_response(con, "sbp\n", 4);
+            return;
+        default:
+            return;
+    }
+}
+
+static void command_phase(zappy_t *zappy, connection_t *con)
+{
+    char *cmd_end = strpbrk(con->command, "\t ");
+    if (cmd_end == NULL)
+        con->args = "";
+    else {
+        con->args = cmd_end + 1;
+        *cmd_end = '\0';
+    }
+    ENTRY *command = get_command(zappy, con);
+    if (command == NULL)
+        return;
+    if (command->data == NULL) {
+        send_response(con, "ko (not implemented)\n", 21);
         return;
     }
-    gui_msz(zappy, con);
-}
-
-static int login_phase(zappy_t *zappy, connection_t *con)
-{
-    team_t *team = get_team_by_name(&zappy->db.team_vector, con->command);
-    if (team == NULL) {
-        return 1;
-    }
-    player_t *player = create_player((player_type_t)team->type,
-        zappy->db.player_ids);
-    if (player == NULL)
-        return 1;
-    if (team_add_player(team, player)) {
-        free_player(player);
-        return 1;
-    }
-    con->player = player;
-    vector_push_back(vectorize(&zappy->db.player_vector), player);
-    login_success(zappy, con);
-    return 0;
+    int (*func)(zappy_t *zappy, connection_t *con) = command->data;
+    command_error(zappy, con, func(zappy, con));
 }
 
 void execute_command(zappy_t *zappy, connection_t *con)
@@ -69,6 +75,7 @@ void execute_command(zappy_t *zappy, connection_t *con)
     if (con->player == NULL) {
         if (login_phase(zappy, con))
             send_response(con, "ko\n", 3);
-    } else
+    } else {
         command_phase(zappy, con);
+    }
 }

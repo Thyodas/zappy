@@ -13,7 +13,7 @@
  * @param name The team's name
  * @return A ptr to the team_t or NULL if it doesn't exist
  */
-team_t *get_team_by_name(team_vector_t *team_vector, char *name)
+team_t *get_team_by_name(team_vector_t *team_vector, const char *name)
 {
     for (size_t i = 0; i < team_vector->len; ++i)
         if (strcmp(team_vector->content[i]->name, name) == 0)

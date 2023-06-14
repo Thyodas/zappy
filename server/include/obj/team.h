@@ -32,4 +32,4 @@ void free_team(team_t *team);
 int team_add_player(team_t *team, player_t *player);
 
 // data.c
-team_t *get_team_by_name(team_vector_t *team_vector, char *name);
+team_t *get_team_by_name(team_vector_t *team_vector, const char *name);

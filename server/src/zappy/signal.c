@@ -20,7 +20,7 @@ static void handle_sigpipe(__attribute__((unused)) int nb)
         "Socket will be safely closed.\n"), strerror(errno));
 }
 
-static int free_zappy(zappy_t *data)
+int free_zappy(zappy_t *data)
 {
     connection_vector_t *cons = &data->db.connection_vector;
     for (size_t i = 0; i < cons->len; ++i)
@@ -33,6 +33,7 @@ static int free_zappy(zappy_t *data)
         (void (*)(void *))&free_player);
     hdestroy_r(&data->gui_cmd_map);
     hdestroy_r(&data->ai_cmd_map);
+    free_map_content(&data->map);
     return 0;
 }
 
