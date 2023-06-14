@@ -30,6 +30,7 @@ namespace GUI {
             void draw();
             void drawGround();
             void drawCellDetails(std::shared_ptr<ICell> cell);
+            void drawEntities(std::shared_ptr<ICell> cell);
             bool _running;
             GUI::Vector2i _windowSize;
             GUI::config _config;

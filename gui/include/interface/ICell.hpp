@@ -9,7 +9,7 @@
     #define ICELL_HPP_
 
     #include "IGraphicalModule.hpp"
-    #include <vector>
+    #include <unordered_map>
 
 namespace GUI {
     enum Object {
@@ -26,6 +26,8 @@ namespace GUI {
         public:
             virtual ~ICell() = default;
             virtual GUI::Vector2i getPos() const = 0;
+            virtual std::unordered_map<GUI::Object, int> getObjects() const = 0;
+            virtual void addObject(GUI::Object object) = 0;
     };
 };
 

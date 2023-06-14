@@ -10,7 +10,7 @@
 
     #include "ICell.hpp"
     #include "IGraphicalModule.hpp"
-    #include <vector>
+    #include <unordered_map>
 
 namespace GUI {
     class Cell : public GUI::ICell {
@@ -18,11 +18,12 @@ namespace GUI {
             Cell(GUI::Vector2i pos);
             ~Cell();
             GUI::Vector2i getPos() const;
-            std::vector<Object> getObjects() const;
+            std::unordered_map<Object, int> getObjects() const;
+            void addObject(GUI::Object object);
         protected:
         private:
             GUI::Vector2i _pos;
-            std::vector<Object> _objects;
+            std::unordered_map<Object, int> _objects;
     };
 };
 

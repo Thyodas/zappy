@@ -156,3 +156,7 @@ void GUI::Core::drawCellDetails(std::shared_ptr<ICell> cell)
         index++;
     }
 }
+
+void GUI::Core::drawEntities(std::shared_ptr<ICell> cell)
+{
+}
