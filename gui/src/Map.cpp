@@ -64,13 +64,3 @@ void GUI::Map::setSelectionBlock(GUI::Vector2i selectionBlock)
 {
     _selectionBlock = selectionBlock;
 }
-
-std::vector<std::shared_ptr<GUI::ICell>> GUI::Map::getCells()
-{
-    std::vector<std::shared_ptr<GUI::ICell>> cells;
-
-    for (int i = 0; i < _size; i++)
-        for (int j = 0; j < _size; j++)
-            cells.push_back(_map[i][j]);
-    return cells;
-}

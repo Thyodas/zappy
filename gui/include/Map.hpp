@@ -26,7 +26,6 @@ namespace GUI {
             void setSelectionMode(bool selectionMode);
             GUI::Vector2i getSelectionBlock() const;
             void setSelectionBlock(GUI::Vector2i selectionBlock);
-            std::vector<std::shared_ptr<GUI::ICell>> getCells();
         protected:
         private:
             int _size;

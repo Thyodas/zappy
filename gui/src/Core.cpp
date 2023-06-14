@@ -146,8 +146,11 @@ void GUI::Core::draw()
     _module->enable3DMode(_scene->getCamera());
     this->drawGround();
     _module->drawGrid(_map->getSize(), _module->getModelSize(ModelEntity::GRASS_BLOCK).x);
-    for (auto &cell : _map->getCells())
-        drawEntities(cell);
+    for (int y = 0; y < _map->getSize(); y++) {
+        for (int x = 0; x < _map->getSize(); x++) {
+            this->drawEntities(_map->getCell((GUI::Vector2i){x, y}));
+        }
+    }
     _module->disable3DMode();
     if (_map->selectionMode())
         this->drawCellDetails(_map->getCell(_map->getSelectionBlock()));
@@ -163,7 +166,6 @@ void GUI::Core::drawCellDetails(std::shared_ptr<ICell> cell)
     std::unordered_map<GUI::Object, int> stock = cell->getObjects();
     for (auto &i : _objectsMap) {
         _module->drawText(i.second, (Vector2f){10, static_cast<float>(_windowSize.y / _objectsMap.size() * index + 40)}, 20, GUI::C_Color::C_WHITE);
-        // TO DO: get real value
         _module->drawText(std::to_string(stock[i.first]), (Vector2f){200, static_cast<float>(_windowSize.y / _objectsMap.size() * index + 40)}, 20, GUI::C_Color::C_WHITE);
         index++;
     }
