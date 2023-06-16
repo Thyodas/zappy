@@ -82,11 +82,11 @@ namespace GUI {
             }
             std::string params = _answer.substr(4);
             std::cout << "string: '" << _answer << "' params: " << _answer.substr(4) << "cmd: " << std::endl;
-            conf = commandHandler[cmd](conf, params);
+            _conf = commandHandler[cmd](_conf, params);
         }
     }
 
     const std::shared_ptr<IConfig> &Coms::getConf() const {
-        return conf;
+        return _conf;
     }
 } // GUI
