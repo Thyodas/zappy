@@ -10,28 +10,40 @@ class ZappyClient:
         self.client_socket = None
 
     def connect(self):
-        print("Machine {} connected on port {}".format(self.machine, self.port))
-        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_socket.connect((self.machine, self.port))
-        self.send(self.name)
+        try:
+            print("Machine {} connected on port {}".format(self.machine, self.port))
+            self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.client_socket.connect((self.machine, self.port))
+            self.send(self.name)
+        except Exception as e:
+            print(f"Error connecting to the server: {e}")
 
     def send(self, message):
-        self.client_socket.sendall(message.encode('utf-8'))
+        try:
+            self.client_socket.sendall(message.encode('utf-8'))
+        except Exception as e:
+            print(f"Error sending message: {e}")
 
     def receive(self):
         data = ""
-        while True:
-            part = self.client_socket.recv(1024)
-            if part:
-                data += part.decode('utf-8')
-                if data.endswith('\n'):
+        try:
+            while True:
+                part = self.client_socket.recv(1024)
+                if part:
+                    data += part.decode('utf-8')
+                    if data.endswith('\n'):
+                        break
+                else:
                     break
-            else:
-                break
+        except Exception as e:
+            print(f"Error receiving data: {e}")
         return data
 
     def close(self):
-        self.client_socket.close()
+        try:
+            self.client_socket.close()
+        except Exception as e:
+            print(f"Error closing the socket: {e}")
 
     def move_forward(self):
         self.send('Forward')
@@ -50,8 +62,12 @@ class ZappyClient:
         response = self.receive()
         print(f'Response: {response}')
         if response:
-            tiles = json.loads(response)
-            return tiles
+            try:
+                tiles = json.loads(response)
+                return tiles
+            except json.JSONDecodeError:
+                print("Error decoding JSON response")
+                return None
         else:
             return None
 
@@ -68,10 +84,13 @@ class DecisionNode:
         self.false_branch = false_branch
 
     def make_decision(self):
-        if self.condition():
-            return self.true_branch.make_decision()
-        else:
-            return self.false_branch.make_decision()
+        try:
+            if self.condition():
+                return self.true_branch.make_decision()
+            else:
+                return self.false_branch.make_decision()
+        except Exception as e:
+            print(f"Error making decision: {e}")
 
 
 class ActionNode:
@@ -79,37 +98,52 @@ class ActionNode:
         self.action = action
 
     def make_decision(self):
-        return self.action()
+        try:
+            return self.action()
+        except Exception as e:
+            print(f"Error executing action: {e}")
 
 
 def is_front_clear():
-    # Get the tiles in front of the player
-    tiles = client.look_around()
-    # Check if the first tile is clear
-    if tiles is not None:
-        return 'player' not in tiles[0]
-    else:
+    try:
+        tiles = client.look_around()
+        if tiles is not None:
+            return 'player' not in tiles[0]
+        else:
+            return False
+    except Exception as e:
+        print(f"Error checking if front is clear: {e}")
         return False
 
 
 def move_forward_action():
-    return client.move_forward()
+    try:
+        return client.move_forward()
+    except Exception as e:
+        print(f"Error moving forward: {e}")
 
 
 def turn_right_action():
-    return client.turn_right()
+    try:
+        return client.turn_right()
+    except Exception as e:
+        print(f"Error turning right: {e}")
 
 
-# Connect to the server
 client = ZappyClient(port=8005, name='JEAN')
 client.connect()
 
-# Construct the decision tree
 root = DecisionNode(is_front_clear, ActionNode(move_forward_action), ActionNode(turn_right_action))
 
-# Use the decision tree in your game loop
 while True:
-    action = root.make_decision()
-    print(action)
-
-client.close()
+    try:
+        action = root.make_decision()
+        print(action)
+    except KeyboardInterrupt:
+        print("\nStopping the game...")
+        client.close()
+        break
+    except Exception as e:
+        print(f"Error in game loop: {e}")
+        client.close()
+        break
