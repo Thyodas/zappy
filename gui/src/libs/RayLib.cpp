@@ -25,6 +25,7 @@ GUI::RayLib::RayLib()
     _keys[GUI::Key::Q]                  = KeyboardKey::KEY_Q;
     _keys[GUI::Key::S]                  = KeyboardKey::KEY_S;
     _keys[GUI::Key::D]                  = KeyboardKey::KEY_D;
+    _keys[GUI::Key::H]                  = KeyboardKey::KEY_H;
 
     _mouseButtons[GUI::Mouse::BUTTON_LEFT]     = MOUSE_LEFT_BUTTON;
     _mouseButtons[GUI::Mouse::BUTTON_RIGHT]    = MOUSE_RIGHT_BUTTON;
@@ -198,4 +199,9 @@ void GUI::RayLib::enable3DMode(std::shared_ptr<GUI::ICamera> camera)
 void GUI::RayLib::disable3DMode()
 {
     EndMode3D();
+}
+
+bool GUI::RayLib::isInteraction()
+{
+    return _pressedKeys.size() > 0 || _pressedMouseButtons.size() > 0 || _pressedMouseButtons.size() > 0;
 }

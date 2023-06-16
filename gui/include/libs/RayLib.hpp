@@ -46,6 +46,7 @@ namespace GUI {
             void drawRectangle(GUI::Vector2f position, GUI::Vector2f size, C_Color color);
             void enable3DMode(std::shared_ptr<ICamera> camera);
             void disable3DMode();
+            bool isInteraction();
         private:
             std::unordered_map<ModelEntity, ModelData> _models;
             std::unordered_map<GUI::Key, KeyboardKey> _keys;

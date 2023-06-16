@@ -9,7 +9,7 @@
 #include "Map.hpp"
 #include "Core.hpp"
 
-GUI::Core::Core() : _running(true), _scene(std::make_shared<Scene>()), _map(std::make_shared<Map>(10))
+GUI::Core::Core() : _running(true), _scene(std::make_shared<Scene>()), _map(std::make_shared<Map>(10)), _drawObjects(true)
 {
     IParser *parser = new Parser("config.cfg");
     _config = parser->parseConfig();
@@ -116,13 +116,18 @@ void GUI::Core::handleUserInput()
     if (_module->isKeyPressed(GUI::Key::S)) {
         _scene->getCamera()->zoom(-0.1);
     }
+    if (_module->isKeyPressed(GUI::Key::H)) {
+        _drawObjects = !_drawObjects;
+    }
 }
 
 void GUI::Core::run()
 {
+    this->draw();
     while (_running) {
         handleUserInput();
-        this->draw();
+        if (_module->isInteraction())
+            this->draw();
     }
     _module->close();
 }
@@ -146,9 +151,11 @@ void GUI::Core::draw()
     _module->enable3DMode(_scene->getCamera());
     this->drawGround();
     _module->drawGrid(_map->getSize(), _module->getModelSize(ModelEntity::GRASS_BLOCK).x);
-    for (int y = 0; y < _map->getSize(); y++) {
-        for (int x = 0; x < _map->getSize(); x++) {
-            this->drawEntities(_map->getCell((GUI::Vector2i){x, y}));
+    if (_drawObjects) {
+        for (int y = 0; y < _map->getSize(); y++) {
+            for (int x = 0; x < _map->getSize(); x++) {
+                this->drawEntities(_map->getCell((GUI::Vector2i){x, y}));
+            }
         }
     }
     _module->disable3DMode();

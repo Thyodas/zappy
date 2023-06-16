@@ -29,7 +29,8 @@ namespace GUI {
         Z,
         Q,
         S,
-        D
+        D,
+        H
     };
 
     enum Mouse {
@@ -74,6 +75,7 @@ namespace GUI {
             virtual void drawRectangle(GUI::Vector2f position, GUI::Vector2f size, C_Color color) = 0;
             virtual void enable3DMode(std::shared_ptr<ICamera> camera) = 0;
             virtual void disable3DMode() = 0;
+            virtual bool isInteraction() = 0;
     };
 };
 
