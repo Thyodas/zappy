@@ -72,14 +72,18 @@ namespace GUI {
     void Coms::handleRequest() {
         if (_answer.empty() || _answer == "WELCOME\n")
             return;
-        std::string cmd = _answer.substr(0, 3);
-        if (commandHandler.find(cmd) == commandHandler.end()) {
-            std::cerr << "Unknown command: " << cmd << std::endl;
-            return;
+        std::string tmp;
+        std::stringstream ss(_answer);
+        while(!std::cin.eof() && std::getline(ss, tmp, '\n')) {
+            std::string cmd = _answer.substr(0, 3);
+            if (commandHandler.find(cmd) == commandHandler.end()) {
+                std::cerr << "Unknown command: " << cmd << std::endl;
+                return;
+            }
+            std::string params = _answer.substr(4);
+            std::cout << "string: '" << _answer << "' params: " << _answer.substr(4) << "cmd: " << std::endl;
+            conf = commandHandler[cmd](conf, params);
         }
-        std::string params = _answer.substr(4);
-        std::cout << "string: '" << _answer << "' params: " << _answer.substr(4) << "cmd: " << std::endl;
-        conf = commandHandler[cmd](conf, params);
     }
 
     const std::shared_ptr<IConfig> &Coms::getConf() const {

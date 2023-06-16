@@ -23,6 +23,8 @@ set(SOURCE
         coms/Player.cpp
         coms/Player.hpp
         coms/IPlayer.hpp
+        coms/Egg.cpp
+        coms/Egg.hpp
         coms/Config.hpp
         )
 

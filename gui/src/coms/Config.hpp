@@ -12,6 +12,7 @@
 #include <vector>
 #include "IConfig.hpp"
 #include "Player.hpp"
+#include "Egg.hpp"
 
 namespace GUI {
 
@@ -24,7 +25,7 @@ namespace GUI {
             std::map<std::pair<int, int>, std::vector<int>> mapContent; // pos{X,Y}, content{q0, q1, q2, q3, q4, q5, q6}
             std::map<int, std::string> teamsName; // teamId, teamName
             std::map<int, std::shared_ptr<IPlayer>> players; // playerId, player
-//            std::map<int, Egg> eggs; // eggId, Egg
+            std::map<int, Egg> eggs; // eggId, Egg
             int timeUnit = 100; // time unit in ms
             bool endGame = true; // true if the game is over
             std::string serverMessage; // message from the server

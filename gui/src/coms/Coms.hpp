@@ -51,22 +51,18 @@ namespace GUI {
          * @param answer
          * @return IConfig conf
          */
-        static std::shared_ptr<IConfig> setMapTile(std::shared_ptr<IConfig> conf, const std::string &answer) {
+        static std::shared_ptr<IConfig> setMapTile(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
-            std::string temp;
-            std::stringstream ss1(answer);
-            while (!std::cin.eof() && std::getline(ss1, temp, '\n')) {
-                if (!verifyNbParam(temp, 9)) continue;
-                std::string tmp;
-                std::stringstream ss(temp);
-                std::vector<std::string> params;
-                while (!std::cin.eof() && std::getline(ss, tmp, ' '))
-                    params.push_back(tmp);
-                std::pair<int, int> pos = {std::stoi(params[0]), std::stoi(params[1])};
-                std::vector<int> content = {std::stoi(params[2]), std::stoi(params[3]), std::stoi(params[4]), std::stoi(params[5]), std::stoi(params[6]), std::stoi(params[7]),
-                                                    std::stoi(params[8])};
-                c->mapContent[pos] = content;
-            }
+            if (!verifyNbParam(answer, 9)) return c;
+            std::string tmp;
+            std::stringstream ss(answer);
+            std::vector<std::string> params;
+            while (!std::cin.eof() && std::getline(ss, tmp, ' '))
+                params.push_back(tmp);
+            std::pair<int, int> pos = {std::stoi(params[0]), std::stoi(params[1])};
+            std::vector<int> content = {std::stoi(params[2]), std::stoi(params[3]), std::stoi(params[4]), std::stoi(params[5]), std::stoi(params[6]), std::stoi(params[7]),
+                                                std::stoi(params[8])};
+            c->mapContent[pos] = content;
             return c;
         }
 
@@ -78,18 +74,14 @@ namespace GUI {
          */
         static std::shared_ptr<IConfig> setTeamsName(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
-            std::string temp;
-            std::stringstream ss1(answer);
-            while (!std::cin.eof() && std::getline(ss1, temp, '\n')) {
-                if (!verifyNbParam(answer, 1)) continue;
+            if (!verifyNbParam(answer, 1)) return c;
                 std::string tmp;
-                std::stringstream ss(temp);
+                std::stringstream ss(answer);
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 int newId = c->teamsName.end()->first + 1;
                 c->teamsName[newId] = params[0];
-            }
             return c;
         }
 
@@ -101,12 +93,9 @@ namespace GUI {
          */
         static std::shared_ptr<IConfig> addPlayer(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
-            std::string temp;
-            std::stringstream ss1(answer);
-            while (!std::cin.eof() && std::getline(ss1, temp, '\n')) {
-                if (!verifyNbParam(answer, 6)) continue;
+            if (!verifyNbParam(answer, 6)) return c;
                 std::string tmp;
-                std::stringstream ss(temp);
+                std::stringstream ss(answer);
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
@@ -118,18 +107,14 @@ namespace GUI {
                 newPlayer->level = std::stoi(params[4]);
                 newPlayer->teamName = params[5];
                 c->players[newPlayer->id] = newPlayer;
-            }
             return c;
         }
 
         static std::shared_ptr<IConfig> setPlayerPos(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
-            std::string temp;
-            std::stringstream ss1(answer);
-            while (!std::cin.eof() && std::getline(ss1, temp, '\n')) {
-                if (!verifyNbParam(answer, 4)) continue;
+            if (!verifyNbParam(answer, 4)) return c;
                 std::string tmp;
-                std::stringstream ss(temp);
+                std::stringstream ss(answer);
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
@@ -137,45 +122,37 @@ namespace GUI {
                 std::pair<int, int> pos = {std::stoi(params[1]), std::stoi(params[2])};
                 int orientation = std::stoi(params[3]);
                 for (auto &player : c->players) {
-                    if (player.second->getId() == id) {
-                        player.second->setPos(pos);
-                        player.second->setOrientation(orientation);
-                    }
+                    if (player.second->getId() != id) continue;
+                    player.second->setPos(pos);
+                    player.second->setOrientation(orientation);
+                    break;
                 }
-            }
             return c;
         }
 
         static std::shared_ptr<IConfig> setPlayerLvl(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
-            std::string temp;
-            std::stringstream ss1(answer);
-            while (!std::cin.eof() && std::getline(ss1, temp, '\n')) {
-                if (!verifyNbParam(answer, 2)) continue;
+            if (!verifyNbParam(answer, 2)) return c;
                 std::string tmp;
-                std::stringstream ss(temp);
+                std::stringstream ss(answer);
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 int id = std::stoi(params[0]);
                 int level = std::stoi(params[1]);
                 for (auto &player : c->players) {
-                    if (player.second->getId() == id) {
-                        player.second->setLevel(level);
-                    }
+                    if (player.second->getId() != id) continue;
+                    player.second->setLevel(level);
+                    break;
                 }
-            }
             return c;
         }
 
         static std::shared_ptr<IConfig> setPlayerInventory(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
-            std::string temp;
-            std::stringstream ss1(answer);
-            while (!std::cin.eof() && std::getline(ss1, temp, '\n')) {
-                if (!verifyNbParam(answer, 10)) continue;
+            if (!verifyNbParam(answer, 10)) return c;
                 std::string tmp;
-                std::stringstream ss(temp);
+                std::stringstream ss(answer);
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
@@ -191,28 +168,23 @@ namespace GUI {
                         {7, std::stoi(params[9])}
                 };
                 for (auto &player : c->players) {
-                    if (player.second->getId() == id) {
-                        player.second->setPos(pos);
-                        player.second->setInventory(inventory);
-                    }
+                    if (player.second->getId() != id) continue;
+                    player.second->setPos(pos);
+                    player.second->setInventory(inventory);
+                    break;
                 }
-            }
             return c;
         }
 
         static std::shared_ptr<IConfig> playerExpulsion(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
-            std::string temp;
-            std::stringstream ss1(answer);
-            while (!std::cin.eof() && std::getline(ss1, temp, '\n')) {
-                if (!verifyNbParam(answer, 2)) continue;
+            if (!verifyNbParam(answer, 2)) return c;
                 std::string tmp;
-                std::stringstream ss(temp);
+                std::stringstream ss(answer);
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 //TODO: idk what to do with this case
-            }
             return c;
         }
 
@@ -223,132 +195,128 @@ namespace GUI {
 
         static std::shared_ptr<IConfig> playerStartIncantation(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
-            std::string temp;
-            std::stringstream ss1(answer);
-            while (!std::cin.eof() && std::getline(ss1, temp, '\n')) {
 //                TODO: variadic number of params
-//                if (!verifyNbParam(answer, 2)) continue;
+// return c (!verifyNbParam(answer, 2)) continue;
                 std::string tmp;
-                std::stringstream ss(temp);
+                std::stringstream ss(answer);
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 std::pair<int, int> pos = {std::stoi(params[0]), std::stoi(params[1])};
                 int level = std::stoi(params[2]);
-                //TODO: verif if there is enough player on the tile
+                //TODO: verify if there is enough player on the tile
                 for (u_long i = 3; i < params.size(); i++) {
                     for (auto &player : c->players) {
-                        if (player.second->getPos() == pos) {
-                            player.second->setInIncantation(true);
-                            player.second->setLevel(level);
-                        }
+                        if (!(player.second->getPos() == pos)) continue;
+                        player.second->setInIncantation(true);
+                        player.second->setLevel(level);
+                        break;
                     }
                 }
-            }
             return c;
         }
 
         static std::shared_ptr<IConfig> playerEndIncantation(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
-            std::string temp;
-            std::stringstream ss1(answer);
-            while (!std::cin.eof() && std::getline(ss1, temp, '\n')) {
-                if (!verifyNbParam(answer, 3)) continue;
-                std::string tmp;
-                std::stringstream ss(temp);
-                std::vector<std::string> params;
-                while (!std::cin.eof() && std::getline(ss, tmp, ' '))
-                    params.push_back(tmp);
-                std::pair<int, int> pos = {std::stoi(params[0]), std::stoi(params[1])};
-                int result = std::stoi(params[2]); // 1 if success, 0 if fail
-                for (u_long i = 3; i < params.size(); i++) {
-                    for (auto &player : c->players) {
-                        if (player.second->getPos() == pos) {
-                            player.second->setInIncantation(result != 1);
-                        }
-                    }
+            if (!verifyNbParam(answer, 3)) return c;
+            std::string tmp;
+            std::stringstream ss(answer);
+            std::vector<std::string> params;
+            while (!std::cin.eof() && std::getline(ss, tmp, ' '))
+                params.push_back(tmp);
+            std::pair<int, int> pos = {std::stoi(params[0]), std::stoi(params[1])};
+            int result = std::stoi(params[2]); // 1 if success, 0 if fail
+            for (u_long i = 3; i < params.size(); i++) {
+                for (auto &player : c->players) {
+                    if (!(player.second->getPos() == pos)) continue;
+                    player.second->setInIncantation(result != 1);
+                    break;
                 }
             }
             return c;
         }
 
-        static std::shared_ptr<IConfig> eggAddByPlayer(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
+        static std::shared_ptr<IConfig> eggLayingByPlayer(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
             return conf;
         }
 
         static std::shared_ptr<IConfig> playerDropResource(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
-            std::string temp;
-            std::stringstream ss1(answer);
-            while (!std::cin.eof() && std::getline(ss1, temp, '\n')) {
-                if (!verifyNbParam(answer, 2)) continue;
+            if (!verifyNbParam(answer, 2)) return c;
                 std::string tmp;
-                std::stringstream ss(temp);
+                std::stringstream ss(answer);
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 int id = std::stoi(params[0]);
                 const int resourceIndex = std::stoi(params[1]);
                 for (auto &player : c->players) {
-                    if (player.second->getId() == id) {
-                        // TODO: refactor this
-                        std::map<int, int> inventory = player.second->getInventory();
-                        int newValue = inventory[resourceIndex] -= 1;
-                        player.second->setInventoryAtIndex(resourceIndex, newValue);
-                    }
+                    if (player.second->getId() != id) continue;
+                    // TODO: refactor this
+                    std::map<int, int> inventory = player.second->getInventory();
+                    int newValue = inventory[resourceIndex] -= 1;
+                    player.second->setInventoryAtIndex(resourceIndex, newValue);
+                    break;
                 }
-            }
             return c;
         }
 
         static std::shared_ptr<IConfig> playerCollectResource(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
-            std::string temp;
-            std::stringstream ss1(answer);
-            while (!std::cin.eof() && std::getline(ss1, temp, '\n')) {
-                if (!verifyNbParam(answer, 2)) continue;
+            if (!verifyNbParam(answer, 2)) return c;
                 std::string tmp;
-                std::stringstream ss(temp);
+                std::stringstream ss(answer);
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 int id = std::stoi(params[0]);
                 const int resourceIndex = std::stoi(params[1]);
                 for (auto &player : c->players) {
-                    if (player.second->getId() == id) {
-                        // TODO: refactor this
-                        std::map<int, int> inventory = player.second->getInventory();
-                        int newValue = inventory[resourceIndex] += 1;
-                        player.second->setInventoryAtIndex(resourceIndex, newValue);
-                    }
+                    if (player.second->getId() != id) continue;
+                    // TODO: refactor this
+                    std::map<int, int> inventory = player.second->getInventory();
+                    int newValue = inventory[resourceIndex] += 1;
+                    player.second->setInventoryAtIndex(resourceIndex, newValue);
+                    break;
                 }
-            }
             return c;
         }
 
         static std::shared_ptr<IConfig> playerDie(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
-            std::string temp;
-            std::stringstream ss1(answer);
-            while (!std::cin.eof() && std::getline(ss1, temp, '\n')) {
-                if (!verifyNbParam(answer, 1)) continue;
+            if (!verifyNbParam(answer, 1)) return c;
                 std::string tmp;
-                std::stringstream ss(temp);
+                std::stringstream ss(answer);
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 int id = std::stoi(params[0]);
                 for (auto &player : c->players) {
-                    if (player.second->getId() == id) {
-                        player.second->setIsAlive(false);
-                    }
+                    if (player.second->getId() != id) continue;
+                    player.second->setIsAlive(false);
+                    break;
                 }
-            }
             return c;
         }
 
         static std::shared_ptr<IConfig> eggLaidByPlayer(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
-            return conf;
+            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            if (!verifyNbParam(answer, 1)) return c;
+            std::string tmp;
+            std::stringstream ss(answer);
+            std::vector<std::string> params;
+            while (!std::cin.eof() && std::getline(ss, tmp, ' '))
+                params.push_back(tmp);
+            int id = std::stoi(params[0]);
+            Egg egg;
+            for (auto &player : c->players) {
+                if (player.second->getId() != id)  continue;
+                egg.pos = player.second->getPos();
+                egg.id = (int)c->eggs.size() + 1;
+                break;
+            }
+            c->eggs[egg.id] = egg;
+            return c;
         }
 
         static std::shared_ptr<IConfig> playerConnectForEgg(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
@@ -356,7 +324,20 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> eggDie(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
-            return conf;
+            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            if (!verifyNbParam(answer, 1)) return c;
+            std::string tmp;
+            std::stringstream ss(answer);
+            std::vector<std::string> params;
+            while (!std::cin.eof() && std::getline(ss, tmp, ' '))
+                params.push_back(tmp);
+            int eggNbr = std::stoi(params[0]);
+            for (auto &egg : c->eggs) {
+                if (egg.second.id != eggNbr)  continue;
+                egg.second.isAlive = false;
+                break;
+            }
+            return c;
         }
 
         static std::shared_ptr<IConfig> setTimeUnit(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
@@ -397,37 +378,25 @@ namespace GUI {
 
         static std::shared_ptr<IConfig> serverMessage(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
-            std::string temp;
-            std::stringstream ss1(answer);
-            while (!std::cin.eof() && std::getline(ss1, temp, '\n')) {
-                if (!verifyNbParam(answer, 2)) continue;
+            if (!verifyNbParam(answer, 2)) return c;
                 std::string tmp;
-                std::stringstream ss(temp);
+                std::stringstream ss(answer);
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 //TODO: implement -------------------------------
-            }
             return c;
         }
 
         static std::shared_ptr<IConfig> unknownCmd(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
-            std::string temp;
-            std::stringstream ss1(answer);
-            while (!std::cin.eof() && std::getline(ss1, temp, '\n')) {
-                if (!verifyNbParam(answer, 0)) continue;
-            }
+            if (!verifyNbParam(answer, 0)) return c;
             return c; //TODO: implement -------------------------------
         }
 
         static std::shared_ptr<IConfig> cmdParameter(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
-            std::string temp;
-            std::stringstream ss1(answer);
-            while (!std::cin.eof() && std::getline(ss1, temp, '\n')) {
-                if (!verifyNbParam(answer, 0)) continue;
-            }
+            if (!verifyNbParam(answer, 0)) return c;
             return c; //TODO: implement -------------------------------
         }
 
@@ -446,7 +415,7 @@ namespace GUI {
             commandHandler.emplace("pbc", playerBroadcast);
             commandHandler.emplace("pic", playerStartIncantation);
             commandHandler.emplace("pie", playerEndIncantation);
-            commandHandler.emplace("pfk", eggAddByPlayer);
+            commandHandler.emplace("pfk", eggLayingByPlayer);
             commandHandler.emplace("pdr", playerDropResource);
             commandHandler.emplace("pgt", playerCollectResource);
             commandHandler.emplace("pdi", playerDie);
@@ -483,7 +452,7 @@ namespace GUI {
         std::unique_ptr<INetwork> _network = std::make_unique<Network>();
         bool _requestToSend = false;
         std::string _request;
-        std::shared_ptr<IConfig> conf = std::make_unique<Config>();
+        std::shared_ptr<IConfig> _conf = std::make_unique<Config>();
         std::map<std::string, cmdHandlerFunct> commandHandler;
 
 
