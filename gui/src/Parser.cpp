@@ -58,11 +58,14 @@ GUI::config GUI::Parser::parseConfig()
             std::string modelPath = setting["modelPath"];
             std::string texturePath = setting["texturePath"];
 
+            float scale = setting["scale"];
+
             config.models.insert({
                 this->getModelEntity(name),
                 (GUI::modelConfig){
                     modelPath,
-                    texturePath
+                    texturePath,
+                    scale
                 }
             });
         }

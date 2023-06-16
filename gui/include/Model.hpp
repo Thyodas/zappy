@@ -30,6 +30,7 @@ namespace GUI {
     struct modelConfig {
         std::string modelPath;
         std::string texturePath;
+        float scale;
     };
 };
 

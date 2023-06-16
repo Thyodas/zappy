@@ -29,12 +29,18 @@ namespace GUI {
             void handleSelection();
             void draw();
             void drawGround();
+            void drawCellDetails(std::shared_ptr<ICell> cell);
+            void drawEntities(std::shared_ptr<ICell> cell);
             bool _running;
             GUI::Vector2i _windowSize;
             GUI::config _config;
             std::shared_ptr<IGraphicalModule> _module;
             std::shared_ptr<Scene> _scene;
             std::shared_ptr<IMap> _map;
+            std::unordered_map<GUI::Object, std::string> _objectsMap;
+            std::unordered_map<GUI::Object, GUI::ModelEntity> _objToModels;
+            std::vector<GUI::ModelEntity> _models;
+            bool _drawObjects;
     };
 };
 

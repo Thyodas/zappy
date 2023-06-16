@@ -32,6 +32,7 @@ namespace GUI {
             std::vector<std::vector<std::shared_ptr<GUI::ICell>>> _map;
             bool _selectionMode;
             GUI::Vector2i _selectionBlock;
+            std::unordered_map<GUI::Object, float> _objectsDensity;
     };
 };
 

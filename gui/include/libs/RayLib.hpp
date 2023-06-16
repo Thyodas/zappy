@@ -36,12 +36,17 @@ namespace GUI {
             GUI::Vector2f getMousePosition();
             void loadModels(std::unordered_map<ModelEntity, modelConfig> models);
             void drawModel(ModelEntity model, Vector3f position, float scale, Vector3f rotation);
-            void preDraw(std::shared_ptr<ICamera> camera);
+            void preDraw();
             void postDraw();
             GUI::Vector3f getModelSize(ModelEntity model);
             void clear(C_Color color);
             void drawGrid(int size, float spacing);
             GUI::Vector3f mousePosFromGrid(GUI::Vector2i position, int cellSize, int numberOfCells);
+            void drawText(std::string text, GUI::Vector2f position, int size, C_Color color);
+            void drawRectangle(GUI::Vector2f position, GUI::Vector2f size, C_Color color);
+            void enable3DMode(std::shared_ptr<ICamera> camera);
+            void disable3DMode();
+            bool isInteraction();
         private:
             std::unordered_map<ModelEntity, ModelData> _models;
             std::unordered_map<GUI::Key, KeyboardKey> _keys;

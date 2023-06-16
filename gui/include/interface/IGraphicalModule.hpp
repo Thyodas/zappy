@@ -29,7 +29,8 @@ namespace GUI {
         Z,
         Q,
         S,
-        D
+        D,
+        H
     };
 
     enum Mouse {
@@ -64,12 +65,17 @@ namespace GUI {
             virtual bool isKeyPressed(GUI::Key key) = 0;
             virtual bool isKeyReleased(GUI::Key key) = 0;
             virtual GUI::Vector2f getMousePosition() = 0;
-            virtual void preDraw(std::shared_ptr<ICamera> camera) = 0;
+            virtual void preDraw() = 0;
             virtual void postDraw() = 0;
             virtual GUI::Vector3f getModelSize(ModelEntity model) = 0;
             virtual void drawGrid(int size, float spacing) = 0;
             virtual bool isMouseButtonPressed(GUI::Mouse button) = 0;
             virtual GUI::Vector3f mousePosFromGrid(GUI::Vector2i position, int cellSize, int numberOfCells) = 0;
+            virtual void drawText(std::string text, GUI::Vector2f position, int size, C_Color color) = 0;
+            virtual void drawRectangle(GUI::Vector2f position, GUI::Vector2f size, C_Color color) = 0;
+            virtual void enable3DMode(std::shared_ptr<ICamera> camera) = 0;
+            virtual void disable3DMode() = 0;
+            virtual bool isInteraction() = 0;
     };
 };
 
