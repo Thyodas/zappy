@@ -5,11 +5,12 @@
 ** Main
 */
 
+#include <iostream>
 #include "Core.hpp"
 #include <memory>
 #include <iostream>
 
-int main(int argc, char **argv)
+int main([[maybe_unused]] int argc, char **argv)
 {
     try {
         std::unique_ptr<GUI::ICore> core = std::make_unique<GUI::Core>();

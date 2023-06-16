@@ -44,9 +44,7 @@ GUI::Core::Core() : _running(true), _scene(std::make_shared<Scene>()), _map(std:
     };
 }
 
-GUI::Core::~Core()
-{
-}
+GUI::Core::~Core() {}
 
 void GUI::Core::init(GUI::GraphicalLib lib, GUI::Vector2i windowSize)
 {
@@ -63,14 +61,11 @@ void GUI::Core::handleZoom()
 {
     if (_module->isKeyPressed(GUI::Key::LEFT)) {
         _scene->getCamera()->rotateX(1);
-    }
-    if (_module->isKeyPressed(GUI::Key::RIGHT)) {
+    } else if (_module->isKeyPressed(GUI::Key::RIGHT)) {
         _scene->getCamera()->rotateX(-1);
-    }
-    if (_module->isKeyPressed(GUI::Key::UP)) {
+    } else if (_module->isKeyPressed(GUI::Key::UP)) {
         _scene->getCamera()->rotateY(1);
-    }
-    if (_module->isKeyPressed(GUI::Key::DOWN)) {
+    } else if (_module->isKeyPressed(GUI::Key::DOWN)) {
         _scene->getCamera()->rotateY(-1);
     }
 }
@@ -109,11 +104,9 @@ void GUI::Core::handleUserInput()
         handleZoom();
     if (_module->isKeyPressed(GUI::Key::ESCAPE)) {
         _running = false;
-    }
-    if (_module->isKeyPressed(GUI::Key::Z)) {
+    } else if (_module->isKeyPressed(GUI::Key::Z)) {
         _scene->getCamera()->zoom(0.1);
-    }
-    if (_module->isKeyPressed(GUI::Key::S)) {
+    } else if (_module->isKeyPressed(GUI::Key::S)) {
         _scene->getCamera()->zoom(-0.1);
     }
     if (_module->isKeyPressed(GUI::Key::H)) {
