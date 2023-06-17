@@ -60,9 +60,15 @@
 #include "obj/obj_vector.h"
 #include "obj/map.h"
 
+typedef struct {
+    uint32_t x;
+    uint32_t y;
+} pos_t;
+
 typedef struct database_s {
     uint32_t player_ids;
-    player_vector_t player_vector;
+    player_vector_t gui_vector;
+    player_vector_t ai_vector;
     team_vector_t team_vector;
     connection_vector_t connection_vector;
 } database_t;
@@ -73,7 +79,7 @@ typedef struct zappy_s {
     uint32_t width;
     uint32_t height;
     uint32_t clients_nb;
-    double freq;
+    uint32_t freq;
     time_t current_timestamp;
     fd_set readfds;
     fd_set writefds;

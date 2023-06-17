@@ -20,8 +20,15 @@ typedef enum {
     P_AI,
 } player_type_t;
 
+typedef enum {
+    NORTH = 1,
+    EAST = 2,
+    SOUTH = 3,
+    WEST = 4,
+} orientation_t;
+
 typedef struct player_s {
-    size_t id;
+    uint32_t id;
     player_type_t type;
 
     connection_t *session;
@@ -30,8 +37,13 @@ typedef struct player_s {
         uint32_t x;
         uint32_t y;
     } pos;
+    orientation_t orientation;
+    uint32_t level;
     resource_t inventory;
 } player_t;
+
+// data.c
+player_t *get_player_by_id(player_vector_t *player_vector, uint32_t id);
 
 // memory.c
 player_t *create_player(player_type_t type, uint32_t player_id);

@@ -27,10 +27,13 @@ int buffer_truncate(string_buffer_t *buffer)
 {
     if (buffer->read_bytes <= MAX_READ_BUFFER)
         return 0;
-    char *new_buffer = strndup(buffer->buffer + buffer->read_bytes,
-        buffer->len - buffer->read_bytes);
+    char *new_buffer = malloc(sizeof(char)
+        * (buffer->len - buffer->read_bytes + 1));
     if (new_buffer == NULL)
         return 1;
+    memcpy(new_buffer, buffer->buffer + buffer->read_bytes,
+        buffer->len - buffer->read_bytes);
+    new_buffer[buffer->len - buffer->read_bytes] = '\0';
     free(buffer->buffer);
     buffer->len -= buffer->read_bytes;
     buffer->read_bytes = 0;

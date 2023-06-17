@@ -21,6 +21,7 @@ player_t *create_player(player_type_t type, uint32_t player_id)
         .team = NULL,
         .type = type,
         .id = player_id,
+        .orientation = NORTH,
     };
     return player;
 }

@@ -23,7 +23,8 @@ static const struct option long_options[] = {
     {0, 0, 0, 0}
 };
 
-static int parse_double(double *parsed_nb, const char *to_parse)
+__attribute__((unused)) static int parse_double(double *parsed_nb,
+    const char *to_parse)
 {
     char *end;
 
@@ -102,7 +103,7 @@ int handle_options(zappy_t *data, int c, bool *team_name_mode)
         case 'c':
             return (parse_number_print_error(&data->clients_nb, optarg));
         case 'f':
-            return (parse_double(&data->freq, optarg));
+            return (parse_number_print_error(&data->freq, optarg));
         case 1:
             return (parse_team(data, *team_name_mode, optarg));
         case 'n':

@@ -11,6 +11,7 @@
 static void login_success(zappy_t *zappy, connection_t *con)
 {
     if (con->player->type == P_AI) {
+        server_pnw(zappy, con->player);
         sendf_response(con, "%u\n", con->player->team->available_slots);
         sendf_response(con, "%u %u\n", zappy->width, zappy->height);
         return;
@@ -34,6 +35,7 @@ int login_phase(zappy_t *zappy, connection_t *con)
         return 1;
     }
     con->player = player;
+    player->session = con;
     zappy_add_player(zappy, player);
     login_success(zappy, con);
     return 0;

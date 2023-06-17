@@ -12,11 +12,11 @@ static const ENTRY gui_commands[] = {
     {"bct", &gui_bct},
     {"mct", &gui_mct},
     {"tna", &gui_tna},
-    {"ppo", NULL},
-    {"plv", NULL},
-    {"pin", NULL},
-    {"sgt", NULL},
-    {"sst", NULL},
+    {"ppo", &gui_ppo},
+    {"plv", &gui_plv},
+    {"pin", &gui_pin},
+    {"sgt", &gui_sgt},
+    {"sst", &gui_sst},
 };
 
 static const ENTRY ai_commands[] = {

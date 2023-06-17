@@ -23,16 +23,18 @@ static void init_database(zappy_t *data)
     db->player_ids = 0;
     vector_init(vectorize(&db->connection_vector), sizeof(connection_t));
     vector_init(vectorize(&db->team_vector), sizeof(team_t));
+    vector_init(vectorize(&db->gui_vector), sizeof(player_t));
+    vector_init(vectorize(&db->ai_vector), sizeof(player_t));
 }
 
 static int init_data(zappy_t *data)
 {
     *data = (zappy_t){
         .sockfd = create_tcp_socket(),
-        .clients_nb = 5,
+        .clients_nb = 3,
         .width = 10,
         .height = 10,
-        .freq = 1,
+        .freq = 100,
         .port = 4242,
     };
     srand(time(NULL));

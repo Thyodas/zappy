@@ -23,13 +23,16 @@ static void handle_sigpipe(__attribute__((unused)) int nb)
 int free_zappy(zappy_t *data)
 {
     connection_vector_t *cons = &data->db.connection_vector;
-    for (size_t i = 0; i < cons->len; ++i)
+    size_t con_nb = cons->len;
+    for (size_t i = 0; i < con_nb; ++i)
         delete_connection_by_pos(cons, 0);
     close(data->sockfd);
     vector_free_content(vectorize(&data->db.connection_vector));
     vector_free_content_with_function(vectorize(&data->db.team_vector),
         (void (*)(void *))&free_team);
-    vector_free_content_with_function(vectorize(&data->db.player_vector),
+    vector_free_content_with_function(vectorize(&data->db.gui_vector),
+        (void (*)(void *))&free_player);
+    vector_free_content_with_function(vectorize(&data->db.ai_vector),
         (void (*)(void *))&free_player);
     hdestroy_r(&data->gui_cmd_map);
     hdestroy_r(&data->ai_cmd_map);

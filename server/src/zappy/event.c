@@ -8,6 +8,7 @@
 #include "data.h"
 #include "command.h"
 #include "com/response.h"
+#include "utils.h"
 
 void handle_event_new_connection(zappy_t *data)
 {
@@ -44,5 +45,6 @@ void handle_event_connection_error(zappy_t *data, connection_t *con)
     printf(LOG_WARNING("Error on connection from [%s:%hu].\n"),
         inet_ntoa(con->p_address.sin_addr),
         ntohs(con->p_address.sin_port));
+    zappy_remove_player(data, con->player);
     delete_connection_by_ptr(&data->db.connection_vector, con);
 }

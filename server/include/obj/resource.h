@@ -17,6 +17,16 @@
 #define DENSITY_PHIRAS    0.08
 #define DENSITY_THYSTAME  0.05
 
+typedef enum resource_e {
+    FOOD,
+    LINEMATE,
+    DERAUMERE,
+    SIBUR,
+    MENDIANE,
+    PHIRAS,
+    THYSTAME,
+} resource_type_t;
+
 typedef struct resource_s {
     uint32_t food;
     uint32_t linemate;

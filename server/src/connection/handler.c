@@ -47,8 +47,6 @@ void delete_connection(connection_t *con)
     printf(LOG_INFO("Connection from [%s:%hu] closed.\n"),
         inet_ntoa(con->p_address.sin_addr),
         ntohs(con->p_address.sin_port));
-    if (con->player != NULL)
-        con->player->session = NULL;
     close(con->fd);
     buffer_free_content(&con->req_buffer);
     buffer_free_content(&con->res_buffer);

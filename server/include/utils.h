@@ -11,6 +11,7 @@
 
 // player.c
 int zappy_add_player(zappy_t *zappy, player_t *player);
+int zappy_remove_player(zappy_t *zappy, player_t *player);
 
 // string.c
 char **split_str_to_array(char *str, char *seperators, int *len, int max_arg);

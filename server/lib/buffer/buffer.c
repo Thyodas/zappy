@@ -20,7 +20,7 @@ int buffer_write(string_buffer_t *buffer, const char *string, uint32_t len)
     buffer->buffer = realloc(buffer->buffer, len + buffer->len + 1);
     if (buffer->buffer == NULL)
         return 1;
-    strncpy(buffer->buffer + buffer->len, string, len);
+    memcpy(buffer->buffer + buffer->len, string, len);
     buffer->len += len;
     buffer->buffer[buffer->len] = '\0';
     return 0;

@@ -25,10 +25,15 @@ int gui_bct(zappy_t *zappy, connection_t *con)
 {
     int len;
     char **argv = split_str_to_array(con->args, "\t ", &len, 3);
-    if (len != 2)
+    if (len != 2) {
+        free(argv);
         return RET_SBP;
+    }
     uint32_t x, y;
-    if (parse_number(&x, argv[0]) || parse_number(&y, argv[1]))
+    if (parse_number(&x, argv[0]) || parse_number(&y, argv[1])) {
+        free(argv);
         return RET_SBP;
+    }
+    free(argv);
     return gui_bct_arg(zappy, con, x, y);
 }
