@@ -379,12 +379,7 @@ namespace GUI {
         static std::shared_ptr<IConfig> serverMessage(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 2)) return c;
-                std::string tmp;
-                std::stringstream ss(answer);
-                std::vector<std::string> params;
-                while (!std::cin.eof() && std::getline(ss, tmp, ' '))
-                    params.push_back(tmp);
-                //TODO: implement -------------------------------
+            c->serverMessage = answer;
             return c;
         }
 
