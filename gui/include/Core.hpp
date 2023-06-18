@@ -6,7 +6,7 @@
 */
 
 #ifndef CORE_HPP_
-    #define CORE_HPP_
+#define CORE_HPP_
 
     #include <memory>
 
@@ -42,6 +42,6 @@ namespace GUI {
             std::vector<GUI::ModelEntity> _models;
             bool _drawObjects;
     };
-};
+};  // namespace GUI
 
 #endif /* !CORE_HPP_ */

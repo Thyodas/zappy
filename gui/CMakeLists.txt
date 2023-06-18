@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 project(zappy_gui VERSION 1.0.0 LANGUAGES CXX)
 
 include_directories(include include/interface include/libs)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(SOURCE
         Main.cpp

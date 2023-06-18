@@ -1,6 +1,15 @@
+.idea
+
+Makefile
+
 cmake_install.cmake
 CMakeFiles
+CMakeCache.txt
+
+cmake-build-debug
+build
+
 *.o
 *.a
-CMakeCache.txt
-Makefile
+
+.clang-suggested-fix

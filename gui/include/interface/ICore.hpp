@@ -5,8 +5,7 @@
 ** ICore
 */
 
-#ifndef ICORE_HPP_
-    #define ICORE_HPP_
+#pragma once
 
     #include "IGraphicalModule.hpp"
     #include "GraphicalFactory.hpp"
@@ -21,6 +20,4 @@ namespace GUI {
         protected:
         private:
     };
-};
-
-#endif /* !ICORE_HPP_ */
+};  // namespace GUI
