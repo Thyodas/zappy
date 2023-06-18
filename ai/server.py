@@ -1,7 +1,6 @@
 import socket
 import json
 
-
 class ZappyClient:
     def __init__(self, port, name, machine='localhost'):
         self.port = port
@@ -62,15 +61,7 @@ class ZappyClient:
         self.send('Look\n')
         response = self.receive()
         print(f'Response: {response}')
-        if response:
-            try:
-                tiles = json.loads(response)
-                return tiles
-            except json.JSONDecodeError as e:
-                print(f"Error decoding JSON response : {str(e)}")
-                return None
-        else:
-            return None
+        return response.strip()
 
     def broadcast(self, text):
         self.send('Broadcast {}'.format(text))
@@ -107,8 +98,10 @@ class ActionNode:
 
 def is_front_clear():
     try:
-        tiles = client.look_around()
-        if tiles is not None:
+        tiles_str = client.look_around()
+        if tiles_str is not None:
+            # Parse the string into a list
+            tiles = tiles_str.strip('][').split(', ')
             return 'player' not in tiles[0]
         else:
             return False
