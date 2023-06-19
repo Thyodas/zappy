@@ -40,8 +40,8 @@ namespace GUI {
             void postDraw();
             GUI::Vector3f getModelSize(ModelEntity model);
             void clear(C_Color color);
-            void drawGrid(int size, float spacing);
-            GUI::Vector3f mousePosFromGrid(GUI::Vector2i position, int cellSize, int numberOfCells);
+            void drawGrid(GUI::Vector2i size, float spacing, GUI::C_Color color);
+            GUI::Vector3f mousePosFromGrid(GUI::Vector2i position, int cellSize, GUI::Vector2i numberOfCells);
             void drawText(std::string text, GUI::Vector2f position, int size, C_Color color);
             void drawRectangle(GUI::Vector2f position, GUI::Vector2f size, C_Color color);
             void enable3DMode(std::shared_ptr<ICamera> camera);

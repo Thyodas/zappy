@@ -9,7 +9,7 @@
 #include "Map.hpp"
 #include "Core.hpp"
 
-GUI::Core::Core(GUI::Args args) : _running(true), _scene(std::make_shared<Scene>()), _map(std::make_shared<Map>(10)), _drawObjects(true), _coms(args.machine, args.port)
+GUI::Core::Core(GUI::Args args) : _running(true), _scene(std::make_shared<Scene>()), _map(std::make_shared<Map>((GUI::Vector2i){10, 10})), _drawObjects(true)//, _coms(args.machine, args.port)
 {
     IParser *parser = new Parser("config.cfg");
     _config = parser->parseConfig();
@@ -54,7 +54,7 @@ void GUI::Core::init(GUI::GraphicalLib lib, GUI::Vector2i windowSize)
     _module->loadModels(_config.models);
 
     GUI::Vector3f groundSize = _module->getModelSize(ModelEntity::GRASS_BLOCK);
-    _scene->getCamera()->setPosition(Vector3f(_map->getSize() * groundSize.x / 2, 20, 20));
+    _scene->getCamera()->setPosition(Vector3f(_map->getSize().x * groundSize.x / 2, 20, 20));
 }
 
 void GUI::Core::handleZoom()
@@ -73,19 +73,19 @@ void GUI::Core::handleZoom()
 void GUI::Core::handleSelection()
 {
     GUI::Vector2i currentSelection = _map->getSelectionBlock();
-    int mapSize = _map->getSize();
+    GUI::Vector2i mapSize = _map->getSize();
 
     if (_module->isKeyReleased(GUI::Key::LEFT)) {
-        currentSelection.x = (currentSelection.x - 1 + mapSize) % mapSize;
+        currentSelection.x = (currentSelection.x - 1 + mapSize.x) % mapSize.x;
     }
     if (_module->isKeyReleased(GUI::Key::RIGHT)) {
-        currentSelection.x = (currentSelection.x + 1) % mapSize;
+        currentSelection.x = (currentSelection.x + 1) % mapSize.x;
     }
     if (_module->isKeyReleased(GUI::Key::UP)) {
-        currentSelection.y = (currentSelection.y - 1 + mapSize) % mapSize;
+        currentSelection.y = (currentSelection.y - 1 + mapSize.x) % mapSize.y;
     }
     if (_module->isKeyReleased(GUI::Key::DOWN)) {
-        currentSelection.y = (currentSelection.y + 1) % mapSize;
+        currentSelection.y = (currentSelection.y + 1) % mapSize.y;
     }
 
     _map->setSelectionBlock(currentSelection);
@@ -128,8 +128,8 @@ void GUI::Core::run()
 void GUI::Core::drawGround()
 {
     GUI::Vector3f grassSize = _module->getModelSize(ModelEntity::GRASS_BLOCK);
-    for (int y = -(_map->getSize() * grassSize.x / 2 - (grassSize.x / 2)), yy = 0; y <= (_map->getSize() * grassSize.x / 2 - (grassSize.x / 2)); y += 2, yy++) {
-        for (int x = -(_map->getSize() * grassSize.z / 2 - (grassSize.z / 2)), xx = 0; x <= (_map->getSize() * grassSize.z / 2 - (grassSize.z / 2)); x += 2, xx++) {
+    for (int y = -(_map->getSize().y * grassSize.x / 2 - (grassSize.x / 2)), yy = 0; y <= (_map->getSize().y * grassSize.x / 2 - (grassSize.x / 2)); y += 2, yy++) {
+        for (int x = -(_map->getSize().x * grassSize.z / 2 - (grassSize.z / 2)), xx = 0; x <= (_map->getSize().x * grassSize.z / 2 - (grassSize.z / 2)); x += 2, xx++) {
             if (_map->selectionMode() && _map->getSelectionBlock() == (GUI::Vector2i){xx, yy})
                 continue;
             else
@@ -143,10 +143,10 @@ void GUI::Core::draw()
     _module->preDraw();
     _module->enable3DMode(_scene->getCamera());
     this->drawGround();
-    _module->drawGrid(_map->getSize(), _module->getModelSize(ModelEntity::GRASS_BLOCK).x);
+    _module->drawGrid(_map->getSize(), _module->getModelSize(ModelEntity::GRASS_BLOCK).x, GUI::C_Color::C_RED);
     if (_drawObjects) {
-        for (int y = 0; y < _map->getSize(); y++) {
-            for (int x = 0; x < _map->getSize(); x++) {
+        for (int y = 0; y < _map->getSize().y; y++) {
+            for (int x = 0; x < _map->getSize().x; x++) {
                 this->drawEntities(_map->getCell((GUI::Vector2i){x, y}));
             }
         }
