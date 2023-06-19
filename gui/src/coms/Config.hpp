@@ -31,6 +31,9 @@ namespace GUI {
             std::string serverMessage; // message from the server
             std::string winnerTeam; // name of the winner team
             bool isEnd = false; // true if the game is over
+            bool isInitialized() const {
+                return mapSize.first != 0 && mapSize.second != 0;
+            };
     };
 
 } // GUI
