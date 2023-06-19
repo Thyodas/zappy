@@ -100,7 +100,6 @@ namespace GUI {
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 std::shared_ptr<Player> newPlayer;
-                //TODO: check if playerID is already used
                 newPlayer->id = std::stoi(params[0].substr(1));
                 newPlayer->pos = {std::stoi(params[1]), std::stoi(params[2])};
                 newPlayer->orientation = std::stoi(params[3]);
@@ -203,13 +202,10 @@ namespace GUI {
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 std::pair<int, int> pos = {std::stoi(params[0]), std::stoi(params[1])};
-                int level = std::stoi(params[2]);
-                //TODO: verify if there is enough player on the tile
                 for (u_long i = 3; i < params.size(); i++) {
                     for (auto &player : c->players) {
                         if (!(player.second->getPos() == pos)) continue;
                         player.second->setInIncantation(true);
-                        player.second->setLevel(level);
                         break;
                     }
                 }
@@ -230,6 +226,7 @@ namespace GUI {
                 for (auto &player : c->players) {
                     if (!(player.second->getPos() == pos)) continue;
                     player.second->setInIncantation(result != 1);
+                    player.second->setLevel(result == 1 ? player.second->getLevel() + 1 : player.second->getLevel());
                     break;
                 }
             }
@@ -237,7 +234,20 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> eggLayingByPlayer(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
-            return conf;
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
+            if (!verifyNbParam(answer, 1)) return c;
+            std::string tmp;
+            std::stringstream ss(answer);
+            std::vector<std::string> params;
+            while (!std::cin.eof() && std::getline(ss, tmp, ' '))
+                params.push_back(tmp);
+            int id = std::stoi(params[0]);
+            for (auto &player : c->players) {
+                if (player.second->getId() != id) continue;
+                player.second->setIsLayingEgg(true);
+                break;
+            }
+            return c;
         }
 
         static std::shared_ptr<IConfig> playerDropResource(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
@@ -252,10 +262,8 @@ namespace GUI {
                 const int resourceIndex = std::stoi(params[1]);
                 for (auto &player : c->players) {
                     if (player.second->getId() != id) continue;
-                    // TODO: refactor this
-                    std::map<int, int> inventory = player.second->getInventory();
-                    int newValue = inventory[resourceIndex] -= 1;
-                    player.second->setInventoryAtIndex(resourceIndex, newValue);
+                    player.second->opOnInventoryAtIndex(resourceIndex, -1);
+                    c->mapContent[player.second->getPos()].at(resourceIndex) += 1;
                     break;
                 }
             return c;
@@ -273,10 +281,8 @@ namespace GUI {
                 const int resourceIndex = std::stoi(params[1]);
                 for (auto &player : c->players) {
                     if (player.second->getId() != id) continue;
-                    // TODO: refactor this
-                    std::map<int, int> inventory = player.second->getInventory();
-                    int newValue = inventory[resourceIndex] += 1;
-                    player.second->setInventoryAtIndex(resourceIndex, newValue);
+                    player.second->opOnInventoryAtIndex(resourceIndex, +1);
+                    c->mapContent[player.second->getPos()].at(resourceIndex) -= 1;
                     break;
                 }
             return c;
@@ -313,6 +319,7 @@ namespace GUI {
                 if (player.second->getId() != id)  continue;
                 egg.pos = player.second->getPos();
                 egg.id = (int)c->eggs.size() + 1;
+                player.second->setIsLayingEgg(false);
                 break;
             }
             c->eggs[egg.id] = egg;
@@ -366,13 +373,10 @@ namespace GUI {
             std::vector<std::string> params;
             while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                 params.push_back(tmp);
-            int winnerId = std::stoi(params[0]);
-            //TODO: handle win differently than death
-            for (auto &player : c->players) {
-                if (player.second->getId() == winnerId) {
-                    player.second->setIsAlive(false);
-                }
-            }
+            for (auto &player: c->players)
+                player.second->setIsAlive(false);
+            c->isEnd = true;
+            c->winnerTeam = params[0];
             return c;
         }
 
@@ -383,16 +387,12 @@ namespace GUI {
             return c;
         }
 
-        static std::shared_ptr<IConfig> unknownCmd(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
-            if (!verifyNbParam(answer, 0)) return c;
-            return c; //TODO: implement -------------------------------
+        static std::shared_ptr<IConfig> unknownCmd(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
+            return conf;
         }
 
-        static std::shared_ptr<IConfig> cmdParameter(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
-            if (!verifyNbParam(answer, 0)) return c;
-            return c; //TODO: implement -------------------------------
+        static std::shared_ptr<IConfig> cmdParameter(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
+            return conf;
         }
 
         Coms() = delete;
@@ -429,7 +429,7 @@ namespace GUI {
 
         void init(const std::string &ip, int port);
 
-        void mainLoop();
+        void process();
 
         int connect(const std::string &ip, int port);
         void disconnect();

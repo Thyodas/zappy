@@ -68,11 +68,39 @@ namespace GUI {
         Player::inventory[index] = value;
     }
 
+    void Player::opOnInventoryAtIndex(int index, int value) {
+        Player::inventory[index] += value;
+    }
+
     bool Player::getIsAlive() const {
         return isAlive;
     }
 
     void Player::setIsAlive(bool value) {
         Player::isAlive = value;
+    }
+
+    bool Player::getIsLayingEgg() const {
+        return isLayingEgg;
+    }
+
+    void Player::setIsLayingEgg(bool value) {
+        Player::isLayingEgg = value;
+    }
+
+    bool Player::getIsMoving() const {
+        return isMoving;
+    }
+
+    void Player::setIsMoving(bool value) {
+        Player::isMoving = value;
+    }
+
+    bool Player::getIsEjecting() const {
+        return isEjecting;
+    }
+
+    void Player::setIsEjecting(bool value) {
+        Player::isEjecting = value;
     }
 } // GUI

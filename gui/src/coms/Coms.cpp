@@ -49,15 +49,13 @@ namespace GUI {
         return returnVal;
     }
 
-    void Coms::mainLoop() {
-        while (select()) {
-            receive();
-            handleRequest();
-            send();
-            if (_answer == "tna Team4\n")
-                addRequest("msz\n");
-            reset_fd();
-        }
+    void Coms::process() {
+        if (select() == -1)
+            throw std::runtime_error(">COMS: select failed");
+        receive();
+        handleRequest();
+        send();
+        reset_fd();
     }
 
     void Coms::init(const std::string &ip, int port) {

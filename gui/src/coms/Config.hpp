@@ -29,7 +29,8 @@ namespace GUI {
             int timeUnit = 100; // time unit in ms
             bool endGame = true; // true if the game is over
             std::string serverMessage; // message from the server
-
+            std::string winnerTeam; // name of the winner team
+            bool isEnd = false; // true if the game is over
     };
 
 } // GUI

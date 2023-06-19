@@ -14,7 +14,7 @@
 
 int main([[maybe_unused]] int argc, char **argv)
 {
-    if (argc == 2 && std::string(argv[1]).compare("-help") == 0) {
+    if (argc == 2 && std::string(argv[1]) == "-help") {
         std::cout << HELP_MESSAGE << std::endl;
         return 0;
     }
