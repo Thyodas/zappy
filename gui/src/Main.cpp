@@ -20,7 +20,7 @@ int main([[maybe_unused]] int argc, char **argv)
     }
     try {
         GUI::Args args = GUI::ArgsParser::parseArgs(argc, argv);
-        std::unique_ptr<GUI::ICore> core = std::make_unique<GUI::Core>();
+        std::unique_ptr<GUI::ICore> core = std::make_unique<GUI::Core>(args);
         core->init(GUI::GraphicalLib::RAYLIB, {800, 600});
         core->run();
     } catch (const std::exception &e) {

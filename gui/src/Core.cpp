@@ -9,7 +9,7 @@
 #include "Map.hpp"
 #include "Core.hpp"
 
-GUI::Core::Core() : _running(true), _scene(std::make_shared<Scene>()), _map(std::make_shared<Map>(10)), _drawObjects(true)
+GUI::Core::Core(GUI::Args args) : _running(true), _scene(std::make_shared<Scene>()), _map(std::make_shared<Map>(10)), _drawObjects(true), _coms(args.machine, args.port)
 {
     IParser *parser = new Parser("config.cfg");
     _config = parser->parseConfig();

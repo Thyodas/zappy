@@ -44,6 +44,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 target_include_directories(${PROJECT_NAME} PUBLIC ./include/)
 target_include_directories(${PROJECT_NAME} PUBLIC ./include/interface)
 target_include_directories(${PROJECT_NAME} PUBLIC ./include/libs)
+target_include_directories(${PROJECT_NAME} PUBLIC ./src/coms)
 
 target_link_libraries(${PROJECT_NAME} raylib)
 target_link_libraries(${PROJECT_NAME} pthread)

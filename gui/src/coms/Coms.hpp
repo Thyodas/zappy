@@ -30,7 +30,7 @@ namespace GUI {
          * @return IConfig conf
          */
         static std::shared_ptr<IConfig> setMapSize(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 2)) return c;
             std::string tmp;
             std::stringstream ss(answer);
@@ -52,7 +52,7 @@ namespace GUI {
          * @return IConfig conf
          */
         static std::shared_ptr<IConfig> setMapTile(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 9)) return c;
             std::string tmp;
             std::stringstream ss(answer);
@@ -73,7 +73,7 @@ namespace GUI {
          * @return IConfig conf
          */
         static std::shared_ptr<IConfig> setTeamsName(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 1)) return c;
                 std::string tmp;
                 std::stringstream ss(answer);
@@ -92,7 +92,7 @@ namespace GUI {
          * @return IConfig conf
          */
         static std::shared_ptr<IConfig> addPlayer(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 6)) return c;
                 std::string tmp;
                 std::stringstream ss(answer);
@@ -111,7 +111,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> setPlayerPos(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 4)) return c;
                 std::string tmp;
                 std::stringstream ss(answer);
@@ -131,7 +131,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> setPlayerLvl(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 2)) return c;
                 std::string tmp;
                 std::stringstream ss(answer);
@@ -149,7 +149,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> setPlayerInventory(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 10)) return c;
                 std::string tmp;
                 std::stringstream ss(answer);
@@ -177,7 +177,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerExpulsion(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 2)) return c;
                 std::string tmp;
                 std::stringstream ss(answer);
@@ -194,7 +194,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerStartIncantation(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
 //                TODO: variadic number of params
 // return c (!verifyNbParam(answer, 2)) continue;
                 std::string tmp;
@@ -217,7 +217,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerEndIncantation(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 3)) return c;
             std::string tmp;
             std::stringstream ss(answer);
@@ -241,7 +241,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerDropResource(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 2)) return c;
                 std::string tmp;
                 std::stringstream ss(answer);
@@ -262,7 +262,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerCollectResource(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 2)) return c;
                 std::string tmp;
                 std::stringstream ss(answer);
@@ -283,7 +283,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerDie(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 1)) return c;
                 std::string tmp;
                 std::stringstream ss(answer);
@@ -300,7 +300,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> eggLaidByPlayer(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 1)) return c;
             std::string tmp;
             std::stringstream ss(answer);
@@ -324,7 +324,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> eggDie(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 1)) return c;
             std::string tmp;
             std::stringstream ss(answer);
@@ -341,7 +341,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> setTimeUnit(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 1)) return c;
             std::string tmp;
             std::stringstream ss(answer);
@@ -353,13 +353,13 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> changeTimeUnit(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             setTimeUnit(c, answer);
             return c;
         }
 
         static std::shared_ptr<IConfig> endOfGame(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 1)) return c;
             std::string tmp;
             std::stringstream ss(answer);
@@ -377,20 +377,20 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> serverMessage(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 2)) return c;
             c->serverMessage = answer;
             return c;
         }
 
         static std::shared_ptr<IConfig> unknownCmd(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 0)) return c;
             return c; //TODO: implement -------------------------------
         }
 
         static std::shared_ptr<IConfig> cmdParameter(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            std::shared_ptr<Config> c = dynamic_pointer_cast<Config>(conf);
+            std::shared_ptr<Config> c = std::dynamic_pointer_cast<Config>(conf);
             if (!verifyNbParam(answer, 0)) return c;
             return c; //TODO: implement -------------------------------
         }
