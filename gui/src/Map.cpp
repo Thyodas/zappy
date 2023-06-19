@@ -8,13 +8,13 @@
 #include "Map.hpp"
 #include <iostream>
 
-GUI::Map::Map(int ssize) : _size(ssize), _selectionMode(false), _selectionBlock((GUI::Vector2i){0, 0})
+GUI::Map::Map(GUI::Vector2i ssize) : _size(ssize), _selectionMode(false), _selectionBlock((GUI::Vector2i){0, 0})
 {
     int count = 0;
-    _map.reserve(_size);
-    for (int i = 0; i < _size; i++) {
-        _map[i].reserve(_size);
-        for (int j = 0; j < _size; j++) {
+    _map.reserve(_size.y);
+    for (int i = 0; i < _size.y; i++) {
+        _map[i].reserve(_size.x);
+        for (int j = 0; j < _size.x; j++) {
             count++;
             _map[i][j] = std::make_shared<GUI::Cell>((GUI::Vector2i){j, i});
         }
@@ -35,7 +35,7 @@ GUI::Map::~Map()
 {
 }
 
-int GUI::Map::getSize() const
+GUI::Vector2i GUI::Map::getSize() const
 {
     return _size;
 }
