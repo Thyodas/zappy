@@ -103,4 +103,12 @@ namespace GUI {
     void Player::setIsEjecting(bool value) {
         Player::isEjecting = value;
     }
+
+    const std::pair<int, int> &Player::getNextPos() const {
+        return nextPos;
+    }
+
+    void Player::setNextPos(const std::pair<int, int> &value) {
+        Player::nextPos = value;
+    }
 } // GUI

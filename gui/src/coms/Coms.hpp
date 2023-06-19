@@ -183,7 +183,12 @@ namespace GUI {
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
-                //TODO: idk what to do with this case
+                int id = std::stoi(params[0]);
+                for (auto &player : c->players) {
+                    if (player.second->getId() != id) continue;
+                    player.second->setIsEjecting(true);
+                    break;
+                }
             return c;
         }
 
