@@ -43,7 +43,7 @@ namespace GUI {
             std::unordered_map<GUI::Object, GUI::ModelEntity> _objToModels;
             std::vector<GUI::ModelEntity> _models;
             bool _drawObjects;
-            Coms _coms;
+            // Coms _coms;
     };
 };  // namespace GUI
 
