@@ -24,15 +24,15 @@ namespace GUI {
                 return mapSize.first != 0 && mapSize.second != 0;
             };
 
-        const std::pair<int, int> &getMapSize() const final {
-            return mapSize;
-        }
+            std::pair<int, int> &getMapSize() final {
+                return mapSize;
+            }
 
         void setMapSize(const std::pair<int, int> &value) final {
             Config::mapSize = value;
         }
 
-        const std::map<std::pair<int, int>, std::vector<int>> &getMapContent() const final {
+        std::map<std::pair<int, int>, std::vector<int>> &getMapContent() final {
             return mapContent;
         }
 
@@ -40,7 +40,7 @@ namespace GUI {
             Config::mapContent = value;
         }
 
-        const std::map<int, std::string> &getTeamsName() const final {
+        std::map<int, std::string> &getTeamsName() final {
             return teamsName;
         }
 
@@ -48,7 +48,7 @@ namespace GUI {
             Config::teamsName = value;
         }
 
-        const std::map<int, std::shared_ptr<IPlayer>> &getPlayers() const final {
+        std::map<int, std::shared_ptr<IPlayer>> &getPlayers() final {
             return players;
         }
 
@@ -56,7 +56,7 @@ namespace GUI {
             Config::players = value;
         }
 
-        const std::map<int, Egg> &getEggs() const final {
+        std::map<int, Egg> &getEggs() final {
             return eggs;
         }
 
@@ -64,7 +64,7 @@ namespace GUI {
             Config::eggs = value;
         }
 
-        int getTimeUnit() const final {
+        int getTimeUnit() final {
             return timeUnit;
         }
 
@@ -72,7 +72,7 @@ namespace GUI {
             Config::timeUnit = value;
         }
 
-        bool isEndGame() const final {
+        bool isEndGame() final {
             return endGame;
         }
 
@@ -80,7 +80,7 @@ namespace GUI {
             Config::endGame = value;
         }
 
-        const std::string &getServerMessage() const final {
+        std::string &getServerMessage() final {
             return serverMessage;
         }
 
@@ -88,7 +88,7 @@ namespace GUI {
             Config::serverMessage = value;
         }
 
-        const std::string &getWinnerTeam() const final {
+        std::string &getWinnerTeam() final {
             return winnerTeam;
         }
 
@@ -96,7 +96,7 @@ namespace GUI {
             Config::winnerTeam = value;
         }
 
-        bool isEnd1() const final {
+        bool isEnd1() final {
             return isEnd;
         }
 

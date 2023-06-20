@@ -57,7 +57,7 @@ namespace GUI {
             std::pair<int, int> pos = {std::stoi(params[0]), std::stoi(params[1])};
             std::vector<int> content = {std::stoi(params[2]), std::stoi(params[3]), std::stoi(params[4]), std::stoi(params[5]), std::stoi(params[6]), std::stoi(params[7]),
                                                 std::stoi(params[8])};
-//            conf->getMapContent()[pos] = content; TODO: fix
+            conf->getMapContent()[pos] = content;
             return conf;
         }
 
@@ -75,7 +75,7 @@ namespace GUI {
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 int newId = conf->getTeamsName().end()->first + 1;
-//                conf->getTeamsName()[newId] = params[0]; TODO: fix
+                conf->getTeamsName()[newId] = params[0];
             return conf;
         }
 
@@ -98,7 +98,7 @@ namespace GUI {
                 newPlayer->orientation = std::stoi(params[3]);
                 newPlayer->level = std::stoi(params[4]);
                 newPlayer->teamName = params[5];
-//                conf->getPlayers()[newPlayer->id] = newPlayer; TODO: fix
+                conf->getPlayers()[newPlayer->id] = newPlayer;
             return conf;
         }
 
@@ -253,7 +253,7 @@ namespace GUI {
                 for (auto &player : conf->getPlayers()) {
                     if (player.second->getId() != id) continue;
                     player.second->opOnInventoryAtIndex(resourceIndex, -1);
-//                    conf->getMapContent()[player.second->getPos()].at(resourceIndex) += 1; TODO: fix
+                    conf->getMapContent()[player.second->getPos()].at(resourceIndex) += 1;
                     break;
                 }
             return conf;
@@ -271,7 +271,7 @@ namespace GUI {
                 for (auto &player : conf->getPlayers()) {
                     if (player.second->getId() != id) continue;
                     player.second->opOnInventoryAtIndex(resourceIndex, +1);
-//                    conf->getMapContent()[player.second->getPos()].at(resourceIndex) -= 1; TODO: fix
+                    conf->getMapContent()[player.second->getPos()].at(resourceIndex) -= 1;
                     break;
                 }
             return conf;
@@ -309,7 +309,7 @@ namespace GUI {
                 player.second->setIsLayingEgg(false);
                 break;
             }
-//            conf->getEggs()[egg.id] = egg; TODO: fix
+            conf->getEggs()[egg.id] = egg;
             return conf;
         }
 
@@ -327,7 +327,7 @@ namespace GUI {
             int eggNbr = std::stoi(params[0]);
             for (auto &egg :conf->getEggs()) {
                 if (egg.second.id != eggNbr)  continue;
-//                egg.second.isAlive = false; TODO: fix
+                egg.second.isAlive = false;
                 break;
             }
             return conf;
