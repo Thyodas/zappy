@@ -84,7 +84,7 @@ namespace GUI {
         }
     }
 
-    const std::shared_ptr<Config> &Coms::getConf() const {
+    const std::shared_ptr<IConfig> &Coms::getConf() const {
         return _conf;
     }
 } // GUI

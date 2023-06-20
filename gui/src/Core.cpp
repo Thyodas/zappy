@@ -116,11 +116,10 @@ void GUI::Core::handleUserInput()
 
 void GUI::Core::run()
 {
-    this->_coms.process();
     this->draw();
     while (_running) {
-        this->_coms.handleRequest();
-        std::cout << this->_coms.getConf()->mapSize.first << std::endl;
+        this->_coms.process();
+        std::cout << this->_coms.getConf()->getMapSize().first << std::endl;
         handleUserInput();
         if (_module->isInteraction())
             this->draw();
