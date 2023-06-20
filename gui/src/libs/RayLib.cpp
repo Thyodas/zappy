@@ -146,14 +146,25 @@ void GUI::RayLib::clear(GUI::C_Color color)
     ClearBackground(_colors[color]);
 }
 
-void GUI::RayLib::drawGrid(int size, float spacing)
-{
-    DrawGrid(size, spacing);
+void GUI::RayLib::drawGrid(Vector2i size, float spacing, GUI::C_Color color) {
+    float startX = -(size.x * spacing / 2);
+    float endX = size.x * spacing / 2;
+
+    float startY = -(size.y * spacing / 2);
+    float endY = size.y * spacing / 2;
+
+    for (int x = startX; x <= endX; x += spacing) {
+        DrawLine3D(Vector3{(float)x, 0.0f, startY}, Vector3{(float)x, 0.0f, endY}, _colors[color]);
+    }
+    for (int y = startY; y <= endY; y += spacing) {
+        DrawLine3D(Vector3{startX, 0.0f, (float)y}, Vector3{endX, 0.0f, (float)y}, _colors[color]);
+    }
 }
 
-GUI::Vector3f GUI::RayLib::mousePosFromGrid(GUI::Vector2i position, int cellSize, int numberOfCells) {
-    float x = static_cast<float>(position.x) * cellSize - (cellSize * numberOfCells) / 2.0f;
-    float z = static_cast<float>(position.y) * cellSize - (cellSize * numberOfCells) / 2.0f;
+
+GUI::Vector3f GUI::RayLib::mousePosFromGrid(GUI::Vector2i position, int cellSize, GUI::Vector2i numberOfCells) {
+    float x = static_cast<float>(position.x) * cellSize - (cellSize * numberOfCells.x) / 2.0f;
+    float z = static_cast<float>(position.y) * cellSize - (cellSize * numberOfCells.y) / 2.0f;
     float y = 0;
 
     return GUI::Vector3f(x, y, z);

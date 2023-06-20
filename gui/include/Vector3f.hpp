@@ -29,7 +29,6 @@ namespace GUI {
                 this->y = v.y;
                 this->z = v.z;
                 return *this;
-
             };
             float x;
             float y;

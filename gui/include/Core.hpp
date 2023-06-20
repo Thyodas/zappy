@@ -6,7 +6,7 @@
 */
 
 #ifndef CORE_HPP_
-    #define CORE_HPP_
+#define CORE_HPP_
 
     #include <memory>
 
@@ -15,11 +15,13 @@
     #include "GraphicalFactory.hpp"
     #include "Scene.hpp"
     #include "IMap.hpp"
+    #include "Coms.hpp"
+    #include "ArgsParser.hpp"
 
 namespace GUI {
     class Core : public GUI::ICore {
         public:
-            Core();
+            Core(GUI::Args args);
             ~Core();
             void init(GUI::GraphicalLib lib, GUI::Vector2i windowSize);
             void run();
@@ -41,7 +43,8 @@ namespace GUI {
             std::unordered_map<GUI::Object, GUI::ModelEntity> _objToModels;
             std::vector<GUI::ModelEntity> _models;
             bool _drawObjects;
+            Coms _coms;
     };
-};
+};  // namespace GUI
 
 #endif /* !CORE_HPP_ */
