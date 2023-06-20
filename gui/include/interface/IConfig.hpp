@@ -54,6 +54,8 @@ namespace GUI {
         virtual bool isEnd1() = 0;
 
         virtual void setIsEnd(bool value) = 0;
+
+        virtual bool isInitialized() const = 0;
     };
 
 } // GUI

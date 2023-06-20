@@ -11,9 +11,10 @@
 GUI::Map::Map(GUI::Vector2i ssize) : _size(ssize), _selectionMode(false), _selectionBlock((GUI::Vector2i){0, 0})
 {
     int count = 0;
-    _map.reserve(_size.y);
+    std::cout << _size.x << " " << _size.y << std::endl;
+    _map.resize(_size.y);
     for (int i = 0; i < _size.y; i++) {
-        _map[i].reserve(_size.x);
+        _map[i].resize(_size.x);
         for (int j = 0; j < _size.x; j++) {
             count++;
             _map[i][j] = std::make_shared<GUI::Cell>((GUI::Vector2i){j, i});

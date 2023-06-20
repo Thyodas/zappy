@@ -9,7 +9,7 @@
 #include "Map.hpp"
 #include "Core.hpp"
 
-GUI::Core::Core(GUI::Args args) : _running(true), _scene(std::make_shared<Scene>()), _map(std::make_shared<Map>((GUI::Vector2i){10, 10})), _drawObjects(true), _coms(args.machine, args.port)
+GUI::Core::Core(GUI::Args args) : _running(true), _scene(std::make_shared<Scene>()), _map(nullptr), _drawObjects(true), _coms(args.machine, args.port)
 {
     IParser *parser = new Parser("config.cfg");
     _config = parser->parseConfig();
@@ -52,6 +52,10 @@ void GUI::Core::init(GUI::GraphicalLib lib, GUI::Vector2i windowSize)
     _windowSize = windowSize;
     _module->init(_windowSize);
     _module->loadModels(_config.models);
+
+    while (!this->_coms.getConf()->isInitialized())
+        this->_coms.process();
+    _map = std::make_shared<Map>(GUI::Vector2i(_coms.getConf()->getMapSize().first, _coms.getConf()->getMapSize().second));
 
     GUI::Vector3f groundSize = _module->getModelSize(ModelEntity::GRASS_BLOCK);
     _scene->getCamera()->setPosition(Vector3f(_map->getSize().x * groundSize.x / 2, 20, 20));
@@ -116,10 +120,8 @@ void GUI::Core::handleUserInput()
 
 void GUI::Core::run()
 {
-    this->draw();
     while (_running) {
         this->_coms.process();
-        std::cout << this->_coms.getConf()->getMapSize().first << std::endl;
         handleUserInput();
         if (_module->isInteraction())
             this->draw();
