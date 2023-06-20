@@ -67,15 +67,19 @@ namespace GUI {
          * @param answer
          * @return Config conf
          */
-        static std::shared_ptr<IConfig> setTeamsName(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
+        static std::shared_ptr<IConfig> tnaCommand(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             if (!verifyNbParam(answer, 1)) return conf;
                 std::string tmp;
                 std::stringstream ss(answer);
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
-                int newId = conf->getTeamsName().end()->first + 1;
-                conf->getTeamsName()[newId] = params[0];
+
+                params[0].erase(params[0].size() - 1);
+                auto teams = conf->getTeams();
+                if (teams.find(params[0]) == teams.end()) {
+                    conf->addTeam(params[0]);
+                }
             return conf;
         }
 
@@ -383,7 +387,7 @@ namespace GUI {
 
             commandHandler.emplace("msz", setMapSize);
             commandHandler.emplace("bct", setMapTile);
-            commandHandler.emplace("tna", setTeamsName);
+            commandHandler.emplace("tna", tnaCommand);
             commandHandler.emplace("pnw", addPlayer);
             commandHandler.emplace("ppo", setPlayerPos);
             commandHandler.emplace("plv", setPlayerLvl);

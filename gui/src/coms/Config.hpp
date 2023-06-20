@@ -12,6 +12,7 @@
 #include <vector>
 #include "IConfig.hpp"
 #include "Player.hpp"
+#include "Team.hpp"
 
 namespace GUI {
 
@@ -38,14 +39,6 @@ namespace GUI {
 
         void setMapContent(const std::map<std::pair<int, int>, std::vector<int>> &value) final {
             mapContent = value;
-        }
-
-        std::map<int, std::string> &getTeamsName() final {
-            return teamsName;
-        }
-
-        void setTeamsName(const std::map<int, std::string> &value) final {
-            teamsName = value;
         }
 
         std::map<int, std::shared_ptr<IPlayer>> &getPlayers() final {
@@ -104,10 +97,19 @@ namespace GUI {
             isEnd = value;
         }
 
+        // MY CHANGES
+        std::unordered_map<std::string, std::shared_ptr<GUI::ITeam>> &getTeams() final {
+            return _teams;
+        }
+
+        void addTeam(const std::string &name) final {
+            _teams[name] = std::make_shared<GUI::Team>();
+        }
+        //
+
         public:
             std::pair<int, int> mapSize = {0, 0}; // X, Y
             std::map<std::pair<int, int>, std::vector<int>> mapContent; // pos{X,Y}, content{q0, q1, q2, q3, q4, q5, q6}
-            std::map<int, std::string> teamsName; // teamId, teamName
             std::map<int, std::shared_ptr<IPlayer>> players; // playerId, player
             std::map<int, Egg> eggs; // eggId, Egg
             int timeUnit = 100; // time unit in ms
@@ -115,6 +117,10 @@ namespace GUI {
             std::string serverMessage; // message from the server
             std::string winnerTeam; // name of the winner team
             bool isEnd = false; // true if the game is over
+
+            // MY CHANGES
+            std::unordered_map<std::string, std::shared_ptr<GUI::ITeam>> _teams;
+            //
     };
 
 } // GUI

@@ -17,6 +17,7 @@
     #include "IMap.hpp"
     #include "Coms.hpp"
     #include "ArgsParser.hpp"
+    #include "Team.hpp"
 
 namespace GUI {
     class Core : public GUI::ICore {
@@ -44,6 +45,7 @@ namespace GUI {
             std::vector<GUI::ModelEntity> _models;
             bool _drawObjects;
             Coms _coms;
+            // std::unordered_map<std::string, std::shared_ptr<GUI::ITeam>> _teams;
     };
 };  // namespace GUI
 

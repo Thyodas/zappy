@@ -65,6 +65,7 @@ namespace GUI {
         select();
         send();
         reset_fd();
+        addRequest("tna\n");
     }
 
     void Coms::handleRequest() {
@@ -75,7 +76,6 @@ namespace GUI {
         while(!std::cin.eof() && std::getline(ss, tmp, '\n')) {
             std::string cmd = _answer.substr(0, 3);
             if (commandHandler.find(cmd) == commandHandler.end()) {
-                std::cerr << "Unknown command: " << cmd << std::endl;
                 return;
             }
             std::string params = _answer.substr(4);

@@ -122,6 +122,10 @@ void GUI::Core::run()
 {
     while (_running) {
         this->_coms.process();
+        auto teams = _coms.getConf()->getTeams();
+        for (auto team : teams) {
+            std::cout << team.first << std::endl;
+        }
         handleUserInput();
         if (_module->isInteraction())
             this->draw();

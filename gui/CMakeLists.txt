@@ -27,7 +27,7 @@ set(SOURCE
         coms/Egg.cpp
         coms/Egg.hpp
         coms/Config.hpp
-        )
+)
 
 list(TRANSFORM SOURCE PREPEND "src/")
 
