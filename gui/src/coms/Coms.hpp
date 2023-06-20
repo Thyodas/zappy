@@ -36,8 +36,8 @@ namespace GUI {
             std::vector<std::string> params;
             while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                 params.push_back(tmp);
-//            conf->getMapSize().first = std::stoi(params[0]); TODO: fix
-//            conf->getMapSize().second = std::stoi(params[1]);
+           conf->getMapSize().first = std::stoi(params[0]);
+           conf->getMapSize().second = std::stoi(params[1]);
             return conf;
         }
 

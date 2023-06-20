@@ -79,7 +79,6 @@ namespace GUI {
                 return;
             }
             std::string params = _answer.substr(4);
-            std::cout << "string: '" << _answer << "' params: " << _answer.substr(4) << "cmd: " << std::endl;
             _conf = commandHandler[cmd](_conf, params);
         }
     }

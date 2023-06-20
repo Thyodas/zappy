@@ -65,9 +65,7 @@ namespace GUI {
 
     bool Network::send(std::string message) {
         if (!FD_ISSET(_server_fd, &_writefds)) return false;
-        std::cout << "message: " << message << std::endl;
         write(_server_fd, message.c_str(), message.size());
-        std::cerr << ">NTWK: Message sent" << std::endl;
         return true;
     }
 
@@ -84,7 +82,6 @@ namespace GUI {
                 break;
 
         }
-        std::cerr << ">NTWK: Message received" << std::endl;
         return true;
     }
 } // GUI
