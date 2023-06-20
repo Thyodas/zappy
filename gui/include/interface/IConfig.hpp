@@ -25,13 +25,11 @@ namespace GUI {
         virtual void setEggs(const std::map<int, Egg> &value) = 0;
         virtual int getTimeUnit() = 0;
         virtual void setTimeUnit(int value) = 0;
-        virtual bool isEndGame() = 0;
-        virtual void setEndGame(bool value) = 0;
         virtual std::string &getServerMessage() = 0;
         virtual void setServerMessage(const std::string &value) = 0;
         virtual std::string &getWinnerTeam() = 0;
         virtual void setWinnerTeam(const std::string &value) = 0;
-        virtual bool isEnd1() = 0;
+        virtual bool isEnd() = 0;
         virtual void setIsEnd(bool value) = 0;
         virtual bool isInitialized() const = 0;
 

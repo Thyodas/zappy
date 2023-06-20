@@ -65,14 +65,6 @@ namespace GUI {
             timeUnit = value;
         }
 
-        bool isEndGame() final {
-            return endGame;
-        }
-
-        void setEndGame(bool value) final {
-            endGame = value;
-        }
-
         std::string &getServerMessage() final {
             return serverMessage;
         }
@@ -89,12 +81,12 @@ namespace GUI {
             winnerTeam = value;
         }
 
-        bool isEnd1() final {
-            return isEnd;
+        bool isEnd() final {
+            return _isEnd;
         }
 
         void setIsEnd(bool value) final {
-            isEnd = value;
+            _isEnd = value;
         }
 
         // MY CHANGES
@@ -113,10 +105,9 @@ namespace GUI {
             std::map<int, std::shared_ptr<IPlayer>> players; // playerId, player
             std::map<int, Egg> eggs; // eggId, Egg
             int timeUnit = 100; // time unit in ms
-            bool endGame = true; // true if the game is over
             std::string serverMessage; // message from the server
-            std::string winnerTeam; // name of the winner team
-            bool isEnd = false; // true if the game is over
+            std::string winnerTeam = "none"; // name of the winner team
+            bool _isEnd = false; // true if the game is over
 
             // MY CHANGES
             std::unordered_map<std::string, std::shared_ptr<GUI::ITeam>> _teams;

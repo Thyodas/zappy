@@ -99,6 +99,8 @@ void GUI::Core::handleSelection()
 void GUI::Core::handleUserInput()
 {
     _module->handleEvents();
+    if (_module->isKeyPressed(GUI::Key::ESCAPE)) {
+        _running = false;
     if (_module->isKeyReleased(GUI::Key::R)) {
         _map->setSelectionMode(!_map->selectionMode());
     }
@@ -106,8 +108,6 @@ void GUI::Core::handleUserInput()
         handleSelection();
     else
         handleZoom();
-    if (_module->isKeyPressed(GUI::Key::ESCAPE)) {
-        _running = false;
     } else if (_module->isKeyPressed(GUI::Key::Z)) {
         _scene->getCamera()->zoom(0.1);
     } else if (_module->isKeyPressed(GUI::Key::S)) {
@@ -121,16 +121,31 @@ void GUI::Core::handleUserInput()
 void GUI::Core::run()
 {
     while (_running) {
-        this->_coms.process();
-        auto teams = _coms.getConf()->getTeams();
-        for (auto team : teams) {
-            std::cout << team.first << std::endl;
+        if (_coms.getConf()->isEnd()) {
+            handleEndGame();
+            _running = false;
+            return;
         }
+        _coms.process();
         handleUserInput();
         if (_module->isInteraction())
             this->draw();
     }
     _module->close();
+}
+
+void GUI::Core::handleEndGame()
+{
+    std::string endMessage = "The winner is: " + _coms.getConf()->getWinnerTeam();
+    std::string exitMsg = "Press esc to exit";
+    while (!_module->isKeyPressed(GUI::Key::ESCAPE)) {
+        _module->handleEvents();
+        _module->preDraw();
+        _module->clear(C_Color::C_BLACK);
+        _module->drawText(endMessage, (Vector2f){static_cast<float>((_windowSize.x - endMessage.length() * 25 / 2) / 2), static_cast<float>(_windowSize.y / 2)}, 25, GUI::C_Color::C_GREEN);
+        _module->drawText(exitMsg, (Vector2f){static_cast<float>((_windowSize.x - exitMsg.length() * 25 / 2) / 2), static_cast<float>(_windowSize.y / 2 + 50)}, 25, GUI::C_Color::C_GREEN);
+        _module->postDraw();
+    }
 }
 
 void GUI::Core::drawGround()

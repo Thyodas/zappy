@@ -34,6 +34,7 @@ namespace GUI {
             void drawGround();
             void drawCellDetails(std::shared_ptr<ICell> cell);
             void drawEntities(std::shared_ptr<ICell> cell);
+            void handleEndGame();
             bool _running;
             GUI::Vector2i _windowSize;
             GUI::config _config;
@@ -45,7 +46,6 @@ namespace GUI {
             std::vector<GUI::ModelEntity> _models;
             bool _drawObjects;
             Coms _coms;
-            // std::unordered_map<std::string, std::shared_ptr<GUI::ITeam>> _teams;
     };
 };  // namespace GUI
 
