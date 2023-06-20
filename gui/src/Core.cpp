@@ -124,7 +124,7 @@ void GUI::Core::run()
         if (_coms.getConf()->isEnd()) {
             handleEndGame();
             _running = false;
-            return;
+            break;
         }
         _coms.process();
         handleUserInput();
