@@ -6,9 +6,13 @@
 */
 
 #include "Cell.hpp"
+#include <iostream>
 
-GUI::Cell::Cell(GUI::Vector2i pos) : _pos(pos)
+GUI::Cell::Cell(GUI::Vector2i pos, std::vector<int> objects) : _pos(pos)
 {
+    for (int i = 0; i < GUI::Object::OBJ_LAST_ELEMENT; i++) {
+        _objects[(GUI::Object)i] = objects[i];
+    }
 }
 
 GUI::Cell::~Cell()

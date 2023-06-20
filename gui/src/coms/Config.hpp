@@ -21,7 +21,7 @@ namespace GUI {
             ~Config() final = default;
 
         bool isInitialized() const {
-            return mapSize.first != 0 && mapSize.second != 0;
+            return mapSize.first != 0 && mapSize.second != 0 && (int)mapContent.size() == mapSize.first * mapSize.second;
         };
 
         std::pair<int, int> &getMapSize() final {

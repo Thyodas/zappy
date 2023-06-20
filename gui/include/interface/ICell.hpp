@@ -20,6 +20,7 @@ namespace GUI {
         OBJ_MENDIANE,
         OBJ_PHIRAS,
         OBJ_THYSTAME,
+        OBJ_LAST_ELEMENT
     };
 
     class ICell {

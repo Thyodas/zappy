@@ -55,7 +55,7 @@ void GUI::Core::init(GUI::GraphicalLib lib, GUI::Vector2i windowSize)
 
     while (!this->_coms.getConf()->isInitialized())
         this->_coms.process();
-    _map = std::make_shared<Map>(GUI::Vector2i(_coms.getConf()->getMapSize().first, _coms.getConf()->getMapSize().second));
+    _map = std::make_shared<Map>(GUI::Vector2i(_coms.getConf()->getMapSize().first, _coms.getConf()->getMapSize().second), _coms.getConf()->getMapContent());
 
     GUI::Vector3f groundSize = _module->getModelSize(ModelEntity::GRASS_BLOCK);
     _scene->getCamera()->setPosition(Vector3f(_map->getSize().x * groundSize.x / 2, 20, 20));

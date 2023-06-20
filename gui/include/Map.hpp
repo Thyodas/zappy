@@ -10,6 +10,7 @@
 
     #include <memory>
     #include <vector>
+    #include <map>
 
     #include "IMap.hpp"
     #include "ICell.hpp"
@@ -18,7 +19,7 @@
 namespace GUI {
     class Map : public IMap {
         public:
-            Map(GUI::Vector2i ssize);
+            Map(GUI::Vector2i ssize, std::map<std::pair<int, int>, std::vector<int>>);
             ~Map();
             Vector2i getSize() const;
             std::shared_ptr<GUI::ICell>& getCell(GUI::Vector2i pos);
@@ -32,7 +33,6 @@ namespace GUI {
             std::vector<std::vector<std::shared_ptr<GUI::ICell>>> _map;
             bool _selectionMode;
             GUI::Vector2i _selectionBlock;
-            std::unordered_map<GUI::Object, float> _objectsDensity;
     };
 };
 

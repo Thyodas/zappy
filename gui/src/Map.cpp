@@ -8,28 +8,17 @@
 #include "Map.hpp"
 #include <iostream>
 
-GUI::Map::Map(GUI::Vector2i ssize) : _size(ssize), _selectionMode(false), _selectionBlock((GUI::Vector2i){0, 0})
+GUI::Map::Map(GUI::Vector2i ssize, std::map<std::pair<int, int>, std::vector<int>> mapContent) : _size(ssize), _selectionMode(false), _selectionBlock((GUI::Vector2i){0, 0})
 {
     int count = 0;
-    std::cout << _size.x << " " << _size.y << std::endl;
     _map.resize(_size.y);
     for (int i = 0; i < _size.y; i++) {
         _map[i].resize(_size.x);
         for (int j = 0; j < _size.x; j++) {
             count++;
-            _map[i][j] = std::make_shared<GUI::Cell>((GUI::Vector2i){j, i});
+            _map[i][j] = std::make_shared<GUI::Cell>((GUI::Vector2i){j, i}, mapContent[(std::pair<int, int>){j, i}]);
         }
     }
-
-    _objectsDensity = {
-        {GUI::Object::OBJ_FOOD, 0.5},
-        {GUI::Object::OBJ_LINEMATE, 0.3},
-        {GUI::Object::OBJ_DERAUMERE, 0.15},
-        {GUI::Object::OBJ_SIBUR, 0.1},
-        {GUI::Object::OBJ_MENDIANE, 0.1},
-        {GUI::Object::OBJ_PHIRAS, 0.08},
-        {GUI::Object::OBJ_THYSTAME, 0.05}
-    };
 }
 
 GUI::Map::~Map()
