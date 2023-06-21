@@ -17,7 +17,6 @@
     #include "IMap.hpp"
     #include "Coms.hpp"
     #include "ArgsParser.hpp"
-    #include "Team.hpp"
 
 namespace GUI {
     class Core : public GUI::ICore {

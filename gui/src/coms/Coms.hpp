@@ -11,6 +11,7 @@
 #include <iostream>
 #include <memory>
 #include <functional>
+#include <algorithm>
 #include <map>
 #include <sstream>
 #include "Network.hpp"
@@ -77,7 +78,7 @@ namespace GUI {
 
                 params[0].erase(params[0].size() - 1);
                 auto teams = conf->getTeams();
-                if (teams.find(params[0]) == teams.end()) {
+                if (std::find(teams.begin(), teams.end(), params[0]) == teams.end()) {
                     conf->addTeam(params[0]);
                 }
             return conf;
@@ -105,11 +106,11 @@ namespace GUI {
                 newPlayer->teamName = params[5].erase(params[5].size() - 1, 1);
 
                 auto teams = conf->getTeams();
-                if (teams.find(newPlayer->teamName) == teams.end()) {
-                    conf->addTeam(newPlayer->teamName);
+                if (std::find(teams.begin(), teams.end(), params[0]) == teams.end()) {
+                    conf->addTeam(params[0]);
                 }
 
-                teams[params[5]]->addPlayer(newPlayer->id, newPlayer);
+                conf->addPlayer(newPlayer->id, newPlayer);
             return conf;
         }
 

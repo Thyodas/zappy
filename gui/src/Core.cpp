@@ -222,11 +222,9 @@ void GUI::Core::drawEntities(std::shared_ptr<ICell> cell)
 
 void GUI::Core::drawPlayers()
 {
-    for (auto &team : _coms.getConf()->getTeams()) {
-        for (auto &player : team.second->getPlayers()) {
-            Vector3f pos = _module->mousePosFromGrid((Vector2i){player.second->getPos().first, player.second->getPos().second}, _module->getModelSize(ModelEntity::GRASS_BLOCK).x, _map->getSize());
-            pos.y += _module->getModelSize(ModelEntity::GOLEM).y / 4;
-            _module->drawModel(ModelEntity::GOLEM, pos, _config.models[ModelEntity::GOLEM].scale, Vector3f(0, 0, 0));
-        }
+    for (auto &player : _coms.getConf()->getPlayers()) {
+        Vector3f pos = _module->mousePosFromGrid((Vector2i){player.second->getPos().first, player.second->getPos().second}, _module->getModelSize(ModelEntity::GRASS_BLOCK).x, _map->getSize());
+        pos.y += _module->getModelSize(ModelEntity::GOLEM).y / 4;
+        _module->drawModel(ModelEntity::GOLEM, pos, _config.models[ModelEntity::GOLEM].scale, Vector3f(0, 0, 0));
     }
 }

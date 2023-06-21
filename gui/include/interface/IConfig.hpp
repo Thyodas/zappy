@@ -9,7 +9,7 @@
 
 #include "IPlayer.hpp"
 #include "Egg.hpp"
-#include "ITeam.hpp"
+#include <memory>
 
 namespace GUI {
     class IConfig {
@@ -19,8 +19,6 @@ namespace GUI {
         virtual void setMapSize(const std::pair<int, int> &value) = 0;
         virtual std::map<std::pair<int, int>, std::vector<int>> &getMapContent() = 0;
         virtual void setMapContent(const std::map<std::pair<int, int>, std::vector<int>> &value) = 0;
-        virtual std::map<int, std::shared_ptr<IPlayer>> &getPlayers() = 0;
-        virtual void setPlayers(const std::map<int, std::shared_ptr<IPlayer>> &value) = 0;
         virtual std::map<int, Egg> &getEggs() = 0;
         virtual void setEggs(const std::map<int, Egg> &value) = 0;
         virtual int getTimeUnit() = 0;
@@ -32,9 +30,10 @@ namespace GUI {
         virtual bool isEnd() = 0;
         virtual void setIsEnd(bool value) = 0;
         virtual bool isInitialized() const = 0;
-
-        virtual std::unordered_map<std::string, std::shared_ptr<GUI::ITeam>> &getTeams() = 0;
+        virtual std::vector<std::string> getTeams() const = 0;
         virtual void addTeam(const std::string &name) = 0;
+        virtual void addPlayer(int id, std::shared_ptr<IPlayer> player) = 0;
+        virtual std::map<int, std::shared_ptr<IPlayer>>& getPlayers() = 0;
     };
 
 } // GUI

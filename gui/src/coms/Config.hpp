@@ -12,7 +12,6 @@
 #include <vector>
 #include "IConfig.hpp"
 #include "Player.hpp"
-#include "Team.hpp"
 
 namespace GUI {
 
@@ -81,29 +80,33 @@ namespace GUI {
             _isEnd = value;
         }
 
-        // MY CHANGES
-        std::unordered_map<std::string, std::shared_ptr<GUI::ITeam>> &getTeams() final {
+        std::vector<std::string> getTeams() const {
             return _teams;
         }
 
-        void addTeam(const std::string &name) final {
-            _teams[name] = std::make_shared<GUI::Team>();
+        void addTeam(const std::string &name) {
+            _teams.push_back(name);
         }
-        //
+
+        std::map<int, std::shared_ptr<IPlayer>> &getPlayers() final {
+            return players;
+        }
+
+        void addPlayer(int id, std::shared_ptr<IPlayer> player) {
+            players.insert(std::make_pair(id, player));
+        }
 
         public:
             std::pair<int, int> mapSize = {0, 0}; // X, Y
             std::map<std::pair<int, int>, std::vector<int>> mapContent; // pos{X,Y}, content{q0, q1, q2, q3, q4, q5, q6}
-            std::map<int, std::shared_ptr<IPlayer>> players; // playerId, player
             std::map<int, Egg> eggs; // eggId, Egg
             int timeUnit = 100; // time unit in ms
             std::string serverMessage; // message from the server
             std::string winnerTeam = "none"; // name of the winner team
             bool _isEnd = false; // true if the game is over
 
-            // MY CHANGES
-            std::unordered_map<std::string, std::shared_ptr<GUI::ITeam>> _teams;
-            //
+            std::map<int, std::shared_ptr<IPlayer>> players; // playerId, player
+            std::vector<std::string> _teams;
     };
 
 } // GUI
