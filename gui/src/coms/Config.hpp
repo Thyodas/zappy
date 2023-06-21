@@ -41,14 +41,6 @@ namespace GUI {
             mapContent = value;
         }
 
-        std::map<int, std::shared_ptr<IPlayer>> &getPlayers() final {
-            return players;
-        }
-
-        void setPlayers(const std::map<int, std::shared_ptr<IPlayer>> &value) final {
-            players = value;
-        }
-
         std::map<int, Egg> &getEggs() final {
             return eggs;
         }

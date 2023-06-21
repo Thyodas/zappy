@@ -96,13 +96,20 @@ namespace GUI {
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
-                std::shared_ptr<Player> newPlayer;
-                newPlayer->id = std::stoi(params[0].substr(1));
+                std::shared_ptr<Player> newPlayer = std::make_shared<Player>();
+
+                newPlayer->id = std::stoi(params[0]);
                 newPlayer->pos = {std::stoi(params[1]), std::stoi(params[2])};
                 newPlayer->orientation = std::stoi(params[3]);
                 newPlayer->level = std::stoi(params[4]);
-                newPlayer->teamName = params[5];
-                conf->getPlayers()[newPlayer->id] = newPlayer;
+                newPlayer->teamName = params[5].erase(params[5].size() - 1, 1);
+
+                auto teams = conf->getTeams();
+                if (teams.find(newPlayer->teamName) == teams.end()) {
+                    conf->addTeam(newPlayer->teamName);
+                }
+
+                teams[params[5]]->addPlayer(newPlayer->id, newPlayer);
             return conf;
         }
 
@@ -298,7 +305,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> eggLaidByPlayer(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
-            if (!verifyNbParam(answer, 1)) return conf;
+            if (!verifyNbParam(answer, 4)) return conf;
             std::string tmp;
             std::stringstream ss(answer);
             std::vector<std::string> params;

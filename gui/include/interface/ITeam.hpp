@@ -19,6 +19,7 @@ namespace GUI {
             virtual ~ITeam() = default;
             virtual std::unordered_map<int, std::shared_ptr<IPlayer>>& getPlayers() = 0;
             virtual IPlayer& getPlayerById(int id) = 0;
+            virtual void addPlayer(int id, std::shared_ptr<IPlayer> player) = 0;
     };
 };
 

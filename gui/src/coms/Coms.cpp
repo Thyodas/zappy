@@ -39,6 +39,7 @@ namespace GUI {
     bool Coms::receive() {
         if (_network->receive()) {
             _answer = _network->getAnswer();
+            std::cout << "[Info] Received command " + _answer << std::endl;
             return true;
         }
         return false;

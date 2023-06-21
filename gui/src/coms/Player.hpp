@@ -16,7 +16,7 @@ namespace GUI {
 
     class Player final : public IPlayer {
     public:
-        Player() = default;
+        Player() {};
         Player(const Player &player) = default;
         Player(int id, std::string teamName = "", int orientation = 1,
                int level = 1) {

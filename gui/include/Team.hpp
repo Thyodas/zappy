@@ -21,6 +21,9 @@ namespace GUI {
             IPlayer& getPlayerById(int id) {
                 return *_players[id];
             };
+            void addPlayer(int id, std::shared_ptr<IPlayer> player) {
+                _players.insert(std::make_pair(id, player));
+            };
         protected:
         private:
             std::unordered_map<int, std::shared_ptr<IPlayer>> _players;
