@@ -99,15 +99,14 @@ void GUI::Core::handleSelection()
 void GUI::Core::handleUserInput()
 {
     _module->handleEvents();
-    if (_module->isKeyPressed(GUI::Key::ESCAPE)) {
+    if (_module->isKeyPressed(GUI::Key::ESCAPE))
         _running = false;
-    if (_module->isKeyReleased(GUI::Key::R)) {
-        _map->setSelectionMode(!_map->selectionMode());
-    }
     if (_map->selectionMode())
         handleSelection();
     else
         handleZoom();
+    if (_module->isKeyReleased(GUI::Key::R)) {
+        _map->setSelectionMode(!_map->selectionMode());
     } else if (_module->isKeyPressed(GUI::Key::Z)) {
         _scene->getCamera()->zoom(0.1);
     } else if (_module->isKeyPressed(GUI::Key::S)) {
@@ -174,6 +173,7 @@ void GUI::Core::draw()
             }
         }
     }
+    this->drawPlayers();
     _module->disable3DMode();
     if (_map->selectionMode())
         this->drawCellDetails(_map->getCell(_map->getSelectionBlock()));
@@ -216,6 +216,17 @@ void GUI::Core::drawEntities(std::shared_ptr<ICell> cell)
             _module->drawModel(_objToModels[obj.first], pos, _config.models[model].scale, Vector3f(0, 0, 0));
             offsetX += 0.25;
             count++;
+        }
+    }
+}
+
+void GUI::Core::drawPlayers()
+{
+    for (auto &team : _coms.getConf()->getTeams()) {
+        for (auto &player : team.second->getPlayers()) {
+            Vector3f pos = _module->mousePosFromGrid((Vector2i){player.second->getPos().first, player.second->getPos().second}, _module->getModelSize(ModelEntity::GRASS_BLOCK).x, _map->getSize());
+            pos.y += _module->getModelSize(ModelEntity::GOLEM).y / 4;
+            _module->drawModel(ModelEntity::GOLEM, pos, _config.models[ModelEntity::GOLEM].scale, Vector3f(0, 0, 0));
         }
     }
 }

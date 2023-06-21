@@ -34,6 +34,7 @@ namespace GUI {
             void drawGround();
             void drawCellDetails(std::shared_ptr<ICell> cell);
             void drawEntities(std::shared_ptr<ICell> cell);
+            void drawPlayers();
             void handleEndGame();
             bool _running;
             GUI::Vector2i _windowSize;
