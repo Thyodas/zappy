@@ -1,7 +1,17 @@
 import argparse
 import socket
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+
+
+@dataclass
+class Ressources:
+    FoodCount: int = 0
+    LinemateCount: int = 0
+    SiburCount: int = 0
+    PhirasCount: int = 0
+    MendianeCount: int = 0
+    ThystameCount: int = 0
 
 
 @dataclass
@@ -10,6 +20,13 @@ class PlayerInfo:
     positionX: int = 0
     positionY: int = 0
     score: int = 0
+    inventory: dict = field(default_factory=dict)
+
+
+@dataclass
+class Tile:
+    PlayerCount: int = 0
+    Ressources: Ressources = field(default_factory=Ressources)
 
 
 def formatBroadCastMessage(playerInfo: PlayerInfo, message: str) -> str:
@@ -76,6 +93,36 @@ class ZappyClient:
         self.send('Right\n')
         return self.receive()
 
+    # Store the inventory in the player_info + return it
+    def inventory(self):
+        try:
+            self.send('Inventory\n')
+
+            response = self.receive()
+            my_list = response.strip('][\n ').split(',')
+            inventory: Ressources = Ressources()
+            for i in range(len(my_list)):
+                if 'food' in my_list[i]:
+                    inventory.FoodCount = int(my_list[i].split(' ')[1])
+                elif 'linemate' in my_list[i]:
+                    inventory.LinemateCount = int(my_list[i].split(' ')[2])
+                elif 'deraumere' in my_list[i]:
+                    inventory.DeraumerCount = int(my_list[i].split(' ')[2])
+                elif 'sibur' in my_list[i]:
+                    inventory.SiburCount = int(my_list[i].split(' ')[2])
+                elif 'mendiane' in my_list[i]:
+                    inventory.MendianeCount = int(my_list[i].split(' ')[2])
+                elif 'phiras' in my_list[i]:
+                    inventory.PhirasCount = int(my_list[i].split(' ')[2])
+                elif 'thystame' in my_list[i]:
+                    inventory.ThystameCount = int(my_list[i].split(' ')[2])
+
+            print("Inventory: " + str(inventory))
+            self.player_info.inventory = inventory
+            return inventory
+        except Exception as e:
+            print(f"Error getting inventory: {e}")
+
     def turn_left(self):
         self.send('Left\n')
         return self.receive()
@@ -83,8 +130,24 @@ class ZappyClient:
     def look_around(self):
         self.send('Look\n')
         response = self.receive()
-        print(f'Response: {response}')
-        return response.strip()
+
+        list = response.strip('][\n ').split(',')
+        tilesList: Tile = []
+
+        for i in range(len(list)):
+            tile = Tile()
+            tile.PlayerCount = list[i].count('player')
+            tile.Ressources.FoodCount = list[i].count('food')
+            tile.Ressources.LinemateCount = list[i].count('linemate')
+            tile.Ressources.DeraumerCount = list[i].count('deraumere')
+            tile.Ressources.SiburCount = list[i].count('sibur')
+            tile.Ressources.MendianeCount = list[i].count('mendiane')
+            tile.Ressources.PhirasCount = list[i].count('phiras')
+            tile.Ressources.ThystameCount = list[i].count('thystame')
+            tilesList.append(tile)
+
+        # print(f'Response: {tilesList}')
+        return tilesList
 
     def broadcast(self, text):
         self.send(formatBroadCastMessage(self.player_info, text))
@@ -121,11 +184,11 @@ class ActionNode:
 
 def is_front_clear():
     try:
-        tiles_str = client.look_around()
-        if tiles_str is not None:
-            # Parse the string into a list
-            tiles = tiles_str.strip('][').split(', ')
-            return 'player' not in tiles[0]
+        tiles = client.look_around()
+        inventory = client.inventory()
+        if tiles:
+            # Check the first tile for players
+            return tiles[0].PlayerCount == 0
         else:
             return False
     except Exception as e:
