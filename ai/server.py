@@ -99,23 +99,33 @@ class ZappyClient:
             self.send('Inventory\n')
 
             response = self.receive()
-            my_list = response.strip('][\n ').split(',')
+
+            response = response.strip('][')
+            response = ' '.join(response.split())
+            items = response.split(',')
+
             inventory: Ressources = Ressources()
-            for i in range(len(my_list)):
-                if 'food' in my_list[i]:
-                    inventory.FoodCount = int(my_list[i].split(' ')[1])
-                elif 'linemate' in my_list[i]:
-                    inventory.LinemateCount = int(my_list[i].split(' ')[2])
-                elif 'deraumere' in my_list[i]:
-                    inventory.DeraumerCount = int(my_list[i].split(' ')[2])
-                elif 'sibur' in my_list[i]:
-                    inventory.SiburCount = int(my_list[i].split(' ')[2])
-                elif 'mendiane' in my_list[i]:
-                    inventory.MendianeCount = int(my_list[i].split(' ')[2])
-                elif 'phiras' in my_list[i]:
-                    inventory.PhirasCount = int(my_list[i].split(' ')[2])
-                elif 'thystame' in my_list[i]:
-                    inventory.ThystameCount = int(my_list[i].split(' ')[2])
+            for item in items:
+                item = item.strip()
+                key_value = item.split(' ')
+
+                key = key_value[0]
+                value = int(key_value[1])
+
+                if key == 'food':
+                    inventory.FoodCount = value
+                elif key == 'linemate':
+                    inventory.LinemateCount = value
+                elif key == 'deraumere':
+                    inventory.DeraumerCount = value
+                elif key == 'sibur':
+                    inventory.SiburCount = value
+                elif key == 'mendiane':
+                    inventory.MendianeCount = value
+                elif key == 'phiras':
+                    inventory.PhirasCount = value
+                elif key == 'thystame':
+                    inventory.ThystameCount = value
 
             print("Inventory: " + str(inventory))
             self.player_info.inventory = inventory
@@ -128,26 +138,44 @@ class ZappyClient:
         return self.receive()
 
     def look_around(self):
-        self.send('Look\n')
-        response = self.receive()
+        try:
+            self.send('Look\n')
+            response = self.receive()
 
-        list = response.strip('][\n ').split(',')
-        tilesList: Tile = []
+            response = response.strip('][')
+            response = ' '.join(response.split())
+            tiles = response.split(',')
 
-        for i in range(len(list)):
-            tile = Tile()
-            tile.PlayerCount = list[i].count('player')
-            tile.Ressources.FoodCount = list[i].count('food')
-            tile.Ressources.LinemateCount = list[i].count('linemate')
-            tile.Ressources.DeraumerCount = list[i].count('deraumere')
-            tile.Ressources.SiburCount = list[i].count('sibur')
-            tile.Ressources.MendianeCount = list[i].count('mendiane')
-            tile.Ressources.PhirasCount = list[i].count('phiras')
-            tile.Ressources.ThystameCount = list[i].count('thystame')
-            tilesList.append(tile)
+            tilesList: Tile = []
 
-        # print(f'Response: {tilesList}')
-        return tilesList
+            for tile_info in tiles:
+                tile_info = tile_info.strip()
+                items = tile_info.split(' ')
+
+                tile = Tile()
+                for item in items:
+                    if item == 'player':
+                        tile.PlayerCount += 1
+                    elif item == 'food':
+                        tile.Ressources.FoodCount += 1
+                    elif item == 'linemate':
+                        tile.Ressources.LinemateCount += 1
+                    elif item == 'deraumere':
+                        tile.Ressources.DeraumerCount += 1
+                    elif item == 'sibur':
+                        tile.Ressources.SiburCount += 1
+                    elif item == 'mendiane':
+                        tile.Ressources.MendianeCount += 1
+                    elif item == 'phiras':
+                        tile.Ressources.PhirasCount += 1
+                    elif item == 'thystame':
+                        tile.Ressources.ThystameCount += 1
+
+                tilesList.append(tile)
+
+            return tilesList
+        except Exception as e:
+            print(f"Error looking around: {e}")
 
     def broadcast(self, text):
         self.send(formatBroadCastMessage(self.player_info, text))
@@ -185,7 +213,7 @@ class ActionNode:
 def is_front_clear():
     try:
         tiles = client.look_around()
-        inventory = client.inventory()
+        # inventory = client.inventory()
         if tiles:
             # Check the first tile for players
             return tiles[0].PlayerCount == 0
