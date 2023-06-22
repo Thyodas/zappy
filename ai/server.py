@@ -1,5 +1,24 @@
+import argparse
 import socket
 import json
+from dataclasses import dataclass
+
+
+@dataclass
+class PlayerInfo:
+    team: str = "Overflow"
+    positionX: int = 0
+    positionY: int = 0
+    score: int = 0
+
+
+def formatBroadCastMessage(playerInfo: PlayerInfo, message: str) -> str:
+    struct = {
+        "playerInfo": playerInfo,
+        "message": message
+    }
+    return f'Broadcast {json.dumps(struct)}\n'
+
 
 class ZappyClient:
     def __init__(self, port, name, machine='localhost'):
@@ -7,6 +26,7 @@ class ZappyClient:
         self.name = name
         self.machine = machine
         self.client_socket = None
+        self.player_info: PlayerInfo = PlayerInfo()
 
     def connect(self):
         try:
@@ -17,12 +37,15 @@ class ZappyClient:
             self.send(self.name + "\n")
         except Exception as e:
             print(f"Error connecting to the server: {e}")
+            exit(1)
 
     def send(self, message):
         try:
             self.client_socket.sendall(message.encode('ascii'))
         except Exception as e:
             print(f"Error sending message: {e}")
+            print("Message: " + message)
+            exit(1)
 
     def receive(self):
         data = ""
@@ -64,7 +87,7 @@ class ZappyClient:
         return response.strip()
 
     def broadcast(self, text):
-        self.send('Broadcast {}'.format(text))
+        self.send(formatBroadCastMessage(self.player_info, text))
         return self.receive()
 
 
@@ -124,20 +147,28 @@ def turn_right_action():
         print(f"Error turning right: {e}")
 
 
-client = ZappyClient(port=8005, name='JEAN')
-client.connect()
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Connect to a Zappy server.", add_help=False)
+    parser.add_argument('-p', '--port', type=int, required=True, help="The port number.")
+    parser.add_argument('-n', '--name', required=True, help="The name of the team.")
+    parser.add_argument('-h', '--host', default='localhost', help="The name of the machine; localhost by default.")
+    parser.add_argument('-help', action='help', default=argparse.SUPPRESS)
+    args = parser.parse_args()
 
-root = DecisionNode(is_front_clear, ActionNode(move_forward_action), ActionNode(turn_right_action))
+    client = ZappyClient(port=args.port, name=args.name, machine=args.host)
+    client.connect()
 
-while True:
-    try:
-        action = root.make_decision()
-        print(action)
-    except KeyboardInterrupt:
-        print("\nStopping the game...")
-        client.close()
-        break
-    except Exception as e:
-        print(f"Error in game loop: {e}")
-        client.close()
-        break
+    root = DecisionNode(is_front_clear, ActionNode(move_forward_action), ActionNode(turn_right_action))
+
+    while True:
+        try:
+            action = root.make_decision()
+            print(action)
+        except KeyboardInterrupt:
+            print("\nStopping the game...")
+            client.close()
+            break
+        except Exception as e:
+            print(f"Error in game loop: {e}")
+            client.close()
+            break
