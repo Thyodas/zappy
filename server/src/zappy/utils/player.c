@@ -8,6 +8,7 @@
 #include "data.h"
 #include "obj/player.h"
 #include "utils.h"
+#include "command.h"
 
 /**
  * Adds a player to zappy. Puts it on the map if AI.
@@ -99,6 +100,7 @@ int zappy_player_try_eat_food(zappy_t *zappy, player_t *player)
     if (player->inventory.food == 0)
         return 1;
     player->inventory.food -= 1;
+    server_pin(zappy, player);
     gettimeofday(&player->food_eat_start_time, NULL);
     uint64_t useconds = (uint64_t)FOOD_EXPIRATION_FREQ * 1000000ul
         / zappy->freq;
