@@ -6,6 +6,7 @@
 */
 
 #include "obj/map.h"
+#include "data.h"
 
 #include <stdlib.h>
 
@@ -52,13 +53,13 @@ static void remove_already_distributed(map_t *map, resource_t *quantity)
     for (size_t y = 0; y < map->height; ++y) {
         for (size_t x = 0; x < map->width; ++x) {
             cell_resource = &map->cells[y][x].resource;
-            quantity->food -= cell_resource->food;
-            quantity->linemate -= cell_resource->linemate;
-            quantity->deraumere -= cell_resource->deraumere;
-            quantity->sibur -= cell_resource->sibur;
-            quantity->mendiane -= cell_resource->mendiane;
-            quantity->phiras -= cell_resource->phiras;
-            quantity->thystame -= cell_resource->thystame;
+            SAFE_SUB(quantity->food, cell_resource->food);
+            SAFE_SUB(quantity->linemate, cell_resource->linemate);
+            SAFE_SUB(quantity->deraumere, cell_resource->deraumere);
+            SAFE_SUB(quantity->sibur, cell_resource->sibur);
+            SAFE_SUB(quantity->mendiane, cell_resource->mendiane);
+            SAFE_SUB(quantity->phiras, cell_resource->phiras);
+            SAFE_SUB(quantity->thystame, cell_resource->thystame);
         }
     }
 }

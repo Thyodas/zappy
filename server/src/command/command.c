@@ -62,7 +62,8 @@ void handle_command(zappy_t *zappy, connection_t *con, ENTRY *command)
             break;
         case P_AI:
             gettimeofday(&con->delay_command_start_time, NULL);
-            int64_t useconds = ai_command->time_limit * 1000000 / zappy->freq;
+            uint64_t useconds = ai_command->time_limit * 1000000ul
+                / zappy->freq;
             timer_add_useconds(&con->delay_command_start_time, useconds);
             con->delay_command_func = ai_command->func;
             if (ai_command->pre_exec_func

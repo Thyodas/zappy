@@ -11,7 +11,7 @@
 #include "utils.h"
 
 int check_available_players(uint32_t nb_players, uint32_t level);
-int try_consume_resources(zappy_t *zappy, pos_t pos, uint32_t level);
+int try_consume_resources(zappy_t *zappy, pos_t pos, uint32_t level, uint32_t nb_players);
 
 static int handle_incantation(zappy_t *zappy, connection_t *con)
 {
@@ -21,11 +21,11 @@ static int handle_incantation(zappy_t *zappy, connection_t *con)
         con->player->level))
         return RET_KO;
     if (con->incantation_data->resource_availability == UNKNOWN
-        && try_consume_resources(zappy, con->player->pos, con->player->level))
+        && try_consume_resources(zappy, con->player->pos, con->player->level,
+        con->incantation_data->players.len))
         return RET_KO;
     else
         con->incantation_data->resource_availability = AVAILABLE;
-
     return RET_OK;
 }
 

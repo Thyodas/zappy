@@ -9,7 +9,7 @@
 #include "command.h"
 #include "obj/incantation.h"
 
-int check_available_resources(zappy_t *zappy, pos_t pos, uint32_t level);
+int check_available_resources(zappy_t *zappy, pos_t pos, uint32_t level, uint32_t nb_players);
 int check_available_players(uint32_t nb_players, uint32_t level);
 
 /**
@@ -52,14 +52,15 @@ void start_incantation(zappy_t *zappy, player_t *caster,
 
 int ai_incantation_pre_exec(zappy_t *zappy, connection_t *con)
 {
-    if (!check_available_resources(zappy, con->player->pos,
-        con->player->level))
-        return RET_KO;
     incantation_data_t *incantation_data = create_incantation_data();
+    if (incantation_data == NULL)
+        return RET_KO;
     player_vector_t *players = &incantation_data->players;
     incantation_data->resource_availability = UNKNOWN;
     select_incantation_players(zappy, con->player, players);
-    if (!check_available_players(players->len, con->player->level)) {
+    if (!check_available_resources(zappy, con->player->pos,
+        con->player->level, players->len)
+        || !check_available_players(players->len, con->player->level)) {
         free_incantation_data(incantation_data);
         return RET_KO;
     }

@@ -23,53 +23,59 @@ static const incantation_requirement_t
  * Checks if the specified position on the Zappy map has the required resources
  * for a given level of incantation.
  *
- * @param zappy   Pointer to the Zappy game instance.
- * @param pos     The position on the Zappy map to check for available
- *                resources.
- * @param level   The level of incantation to check for resource availability.
- * @return        Returns 1 if the specified position has the required
- *                resources for the given incantation level, 0 otherwise.
+ * @param zappy      Pointer to the Zappy game instance.
+ * @param pos        The position on the Zappy map to check for available
+ *                   resources.
+ * @param level      The level of incantation to check for resource
+ *                   availability.
+ * @param nb_players The number of players involved in the incantation.
+ * @return           Returns 1 if the specified position has the required
+ *                   resources for the given incantation level, 0 otherwise.
  *
- * @warning       This function does not perform any bounds checking on the
- *                `level` parameter. Ensure that it is within a valid range.
+ * @warning          This function does not perform any bounds checking on the
+ *                   `level` parameter. Ensure that it is within a valid range.
  */
-int check_available_resources(zappy_t *zappy, pos_t pos, uint32_t level)
+int check_available_resources(zappy_t *zappy, pos_t pos, uint32_t level,
+    uint32_t nb_players)
 {
     const resource_t *resource = &zappy->map.cells[pos.y][pos.x].resource;
     const resource_t *required = &incantation_required[level - 1].min_resource;
-    return resource->linemate >= required->linemate
-        && resource->deraumere >= required->deraumere
-        && resource->sibur >= required->sibur
-        && resource->mendiane >= required->mendiane
-        && resource->phiras >= required->phiras
-        && resource->thystame >= required->thystame;
+    return resource->linemate >= required->linemate * nb_players
+        && resource->deraumere >= required->deraumere * nb_players
+        && resource->sibur >= required->sibur * nb_players
+        && resource->mendiane >= required->mendiane * nb_players
+        && resource->phiras >= required->phiras * nb_players
+        && resource->thystame >= required->thystame * nb_players;
 }
 
 /**
  * Tries to consume the required resources for a given level of incantation at
  * the specified position on the Zappy map.
  *
- * @param zappy  Pointer to the Zappy game instance.
- * @param pos    The position on the Zappy map to consume the resources from.
- * @param level  The level of incantation to consume the resources for.
- * @return       Returns 0 if the resources were successfully consumed, 1 if
- *               the required resources were not available.
+ * @param zappy      Pointer to the Zappy game instance.
+ * @param pos        The position on the Zappy map to consume the resources
+ *                   from.
+ * @param level      The level of incantation to consume the resources for.
+ * @param nb_players The number of players involved in the incantation.
+ * @return           Returns 0 if the resources were successfully consumed,
+ *                   1 if the required resources were not available.
  *
- * @warning      This function does not perform any bounds checking on the
- *               `level` parameter. Ensure that it is within a valid range.
+ * @warning          This function does not perform any bounds checking on the
+ *                   `level` parameter. Ensure that it is within a valid range.
  */
-int try_consume_resources(zappy_t *zappy, pos_t pos, uint32_t level)
+int try_consume_resources(zappy_t *zappy, pos_t pos, uint32_t level,
+    uint32_t nb_players)
 {
-    if (!check_available_resources(zappy, pos, level))
+    if (!check_available_resources(zappy, pos, level, nb_players))
         return 1;
     resource_t *resource = &zappy->map.cells[pos.y][pos.x].resource;
     const resource_t *required = &incantation_required[level - 1].min_resource;
-    resource->linemate -= required->linemate;
-    resource->deraumere -= required->deraumere;
-    resource->sibur -= required->sibur;
-    resource->mendiane -= required->mendiane;
-    resource->phiras -= required->phiras;
-    resource->thystame -= required->thystame;
+    resource->linemate -= required->linemate * nb_players;
+    resource->deraumere -= required->deraumere * nb_players;
+    resource->sibur -= required->sibur * nb_players;
+    resource->mendiane -= required->mendiane * nb_players;
+    resource->phiras -= required->phiras * nb_players;
+    resource->thystame -= required->thystame * nb_players;
     return 0;
 }
 

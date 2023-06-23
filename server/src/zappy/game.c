@@ -70,6 +70,7 @@ void check_resource_spawn(zappy_t *zappy)
             broadcast_cell_changes(zappy, &copy[y][x], &zappy->map.cells[y][x],
                 (pos_t){x, y});
     gettimeofday(&zappy->resource_spawn_start_time, NULL);
-    int64_t useconds = MAP_RESOURCE_SPAWN_FREQ * 1000000 / zappy->freq;
+    uint64_t useconds = (uint64_t)MAP_RESOURCE_SPAWN_FREQ * 1000000ul
+        / zappy->freq;
     timer_add_useconds(&zappy->resource_spawn_start_time, useconds);
 }

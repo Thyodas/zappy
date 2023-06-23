@@ -100,7 +100,8 @@ int zappy_player_try_eat_food(zappy_t *zappy, player_t *player)
         return 1;
     player->inventory.food -= 1;
     gettimeofday(&player->food_eat_start_time, NULL);
-    int64_t useconds = FOOD_EXPIRATION_FREQ * 1000000 / zappy->freq;
+    uint64_t useconds = (uint64_t)FOOD_EXPIRATION_FREQ * 1000000ul
+        / zappy->freq;
     timer_add_useconds(&player->food_eat_start_time, useconds);
     return 0;
 }

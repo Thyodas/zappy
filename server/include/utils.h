@@ -57,7 +57,7 @@ int parse_number(uint32_t *parsed_nb, const char *to_parse);
 double constrain_angle(double x);
 
 // timer.c
-void timer_add_useconds(struct timeval *time, int64_t useconds);
+void timer_add_useconds(struct timeval *time, uint64_t useconds);
 
 // win.c
 void set_winning_team(zappy_t *zappy, team_t *team);

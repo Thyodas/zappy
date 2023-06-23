@@ -58,6 +58,7 @@
 
 #define MAX(x, y) ((x > y) ? (x) : (y))
 #define MIN(x, y) ((x < y) ? (x) : (y))
+#define SAFE_SUB(to_sub, value) ((to_sub) >= (value) ? (to_sub) -= (value) : 0)
 
 #include "vector/vector.h"
 
