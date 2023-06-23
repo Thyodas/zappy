@@ -8,9 +8,11 @@
 #pragma once
 
 #include "obj/player.h"
+#include "obj/egg.h"
 #include "connection.h"
 
 #define __USE_GNU
+#include <sys/time.h>
 #include <sys/select.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -25,9 +27,12 @@
 #include <search.h>
 
 #define MAX_CONNECTIONS 30
-#define CONNECTION_TIMEOUT 300
 #define BIN_NAME "zappy"
 #define GRAPHIC_TEAM_NAME "GRAPHIC"
+
+#define MAX_PLAYER_LEVEL 8
+#define FOOD_EXPIRATION_FREQ 126
+#define MAP_RESOURCE_SPAWN_FREQ 20
 
 #define RET_OK  0
 #define RET_KO  1
@@ -59,18 +64,16 @@
 #include "obj/team.h"
 #include "obj/obj_vector.h"
 #include "obj/map.h"
-
-typedef struct {
-    uint32_t x;
-    uint32_t y;
-} pos_t;
+#include "pos.h"
 
 typedef struct database_s {
     uint32_t player_ids;
+    uint32_t egg_ids;
     player_vector_t gui_vector;
     player_vector_t ai_vector;
     team_vector_t team_vector;
     connection_vector_t connection_vector;
+    egg_vector_t egg_vector;
 } database_t;
 
 typedef struct zappy_s {
@@ -80,14 +83,19 @@ typedef struct zappy_s {
     uint32_t height;
     uint32_t clients_nb;
     uint32_t freq;
-    time_t current_timestamp;
+    struct timeval current_timestamp;
+    struct timeval resource_spawn_start_time;
+    resource_t resource_density;
     fd_set readfds;
     fd_set writefds;
     fd_set errorfds;
     database_t db;
     map_t map;
+    team_t *winning_team;
+
     struct hsearch_data gui_cmd_map;
     struct hsearch_data ai_cmd_map;
+    struct hsearch_data resource_name_map;
 } zappy_t;
 
 // socket.c
@@ -103,11 +111,13 @@ void hub(zappy_t *data);
 
 // event.c
 void handle_event_new_connection(zappy_t *data);
-void handle_event_connection_timeout(zappy_t *data, connection_t *con);
 void handle_event_connection_error(zappy_t *data, connection_t *con);
 
 // request.c
 void handle_event_connection_request(zappy_t *data, connection_t *con);
+void handle_event_connection_delay_command(zappy_t *data, connection_t *con);
+void handle_event_connection_command_in_buffer(zappy_t *data,
+    connection_t *con);
 
 // response.c
 int send_response(connection_t *con, void *data, size_t len);

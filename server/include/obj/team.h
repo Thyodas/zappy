@@ -21,15 +21,16 @@ typedef enum {
 typedef struct team_s {
     char *name;
     team_type_t type;
-    uint32_t available_slots;
 
     player_vector_t player_vector;
+    egg_vector_t egg_vector;
 } team_t;
 
 // memory.c
-team_t *create_team(const char *name, uint32_t available_slots);
+team_t *create_team(const char *name);
 void free_team(team_t *team);
 int team_add_player(team_t *team, player_t *player);
+int team_add_egg(team_t *team, egg_t *egg);
 
 // data.c
 team_t *get_team_by_name(team_vector_t *team_vector, const char *name);

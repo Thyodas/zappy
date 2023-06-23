@@ -6,6 +6,7 @@
 */
 
 #include "data.h"
+#include "utils.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,27 +23,6 @@ static const struct option long_options[] = {
     {"freq",    required_argument, 0, 'f'},
     {0, 0, 0, 0}
 };
-
-__attribute__((unused)) static int parse_double(double *parsed_nb,
-    const char *to_parse)
-{
-    char *end;
-
-    errno = 0;
-    const double sl = strtod(to_parse, &end);
-    if (end == to_parse)
-        return fprintf(stderr, HELP_MSG "\n'%s' not a double.\n", to_parse);
-    if ('\0' != *end)
-        return fprintf(stderr, HELP_MSG
-            "\n'%s' extra characters at end of input: %s.\n",to_parse, end);
-    if (ERANGE == errno)
-        return fprintf(stderr, HELP_MSG
-            "\n%s is out of range of type double.\n", to_parse);
-    if (sl <= 0)
-        return fprintf(stderr, HELP_MSG "\nValues must be >0.\n");
-    *parsed_nb = sl;
-    return 0;
-}
 
 static int parse_number_print_error(uint32_t *parsed_nb, const char *to_parse)
 {
@@ -86,8 +66,7 @@ int parse_team(zappy_t *data, bool team_name_mode, const char *name)
         fprintf(stderr, "Team '%s' already exists.\n", name);
         return 1;
     }
-    vector_push_back(vectorize(&data->db.team_vector),
-        create_team(name, data->clients_nb));
+    vector_push_back(vectorize(&data->db.team_vector), create_team(name));
     return 0;
 }
 
@@ -115,6 +94,18 @@ int handle_options(zappy_t *data, int c, bool *team_name_mode)
     }
 }
 
+static int configure_teams(zappy_t *data)
+{
+    team_t *team;
+    size_t nb_teams = data->db.team_vector.len;
+    for (size_t i = 0; i < nb_teams; ++i) {
+        team = vector_remove_by_pos(vectorize(&data->db.team_vector), 0);
+        if (team == NULL || zappy_add_team(data, team))
+            return 1;
+    }
+    return 0;
+}
+
 /**
  * Parses program arguments and adds values to the zappy_t structure
  * @param data The structure to fill.
@@ -136,10 +127,10 @@ int parse_arguments(zappy_t *data, int argc, char **argv)
             team_name_mode = false;
         if (c == 'h') {
             puts(HELP_MSG);
-            return 0;
+            return 1;
         }
         if (handle_options(data, c, &team_name_mode))
             return 1;
     }
-    return 0;
+    return configure_teams(data);
 }

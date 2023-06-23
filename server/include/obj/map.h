@@ -28,4 +28,4 @@ int init_map(map_t *map, uint32_t width, uint32_t height);
 void free_map_content(map_t *map);
 
 // data.c
-void map_distribute_resources(map_t *map);
+void map_distribute_resources(map_t *map, resource_t *density);

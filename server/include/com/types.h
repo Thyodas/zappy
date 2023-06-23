@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <uuid/uuid.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>

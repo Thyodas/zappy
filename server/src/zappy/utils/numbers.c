@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <limits.h>
+#include <math.h>
 
 /**
  * Parses a number from a string and stores the result in a uint32_t variable.
@@ -34,4 +35,12 @@ int parse_number(uint32_t *parsed_nb, const char *to_parse)
         return 1;
     *parsed_nb = sl;
     return 0;
+}
+
+double constrain_angle(double x)
+{
+    x = fmod(x,360);
+    if (x < 0)
+        x += 360;
+    return x;
 }

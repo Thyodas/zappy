@@ -104,6 +104,7 @@ int vector_free_content_with_function(vector_template_t *array,
  * It only frees the internal array.
  * @note The container can be reused as it is re-init after freeing its
  * elements.
+ * @warning The ptr to the array is not freed.
  * @param array The array. It MUST have been init with vector_init.
  * @return -1 in case of error else 0
  */

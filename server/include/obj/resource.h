@@ -25,14 +25,18 @@ typedef enum resource_e {
     MENDIANE,
     PHIRAS,
     THYSTAME,
+    NB_RESOURCE,
 } resource_type_t;
 
-typedef struct resource_s {
-    uint32_t food;
-    uint32_t linemate;
-    uint32_t deraumere;
-    uint32_t sibur;
-    uint32_t mendiane;
-    uint32_t phiras;
-    uint32_t thystame;
+typedef union resource_s {
+    struct {
+        uint32_t food;
+        uint32_t linemate;
+        uint32_t deraumere;
+        uint32_t sibur;
+        uint32_t mendiane;
+        uint32_t phiras;
+        uint32_t thystame;
+    };
+    uint32_t resource_array[NB_RESOURCE];
 } resource_t;

@@ -13,6 +13,7 @@
 #include <printf.h>
 #include <arpa/inet.h>
 #include "data.h"
+#include "obj/incantation.h"
 
 /*
  * Add connection to array. Realloc the array to take the new value.
@@ -31,7 +32,6 @@ connection_t *create_connection(void)
     *new_con = (connection_t){
         .player = NULL,
         .fd = -1,
-        .last_activity = time(NULL),
         .command = NULL,
     };
     buffer_init(&new_con->req_buffer);
@@ -50,6 +50,15 @@ void delete_connection(connection_t *con)
     close(con->fd);
     buffer_free_content(&con->req_buffer);
     buffer_free_content(&con->res_buffer);
+    if (con->incantation_data != NULL) {
+        if (con->incantation_data->players.len == 1)
+            free_incantation_data(con->incantation_data);
+        else
+            remove_player_from_incantation_data(con->incantation_data,
+                con->player);
+    }
+    free(con->command);
+    free(con->args);
     free(con);
 }
 

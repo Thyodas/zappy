@@ -10,6 +10,18 @@
 #include "com/response.h"
 #include "utils.h"
 
+/**
+ * Handle a new client connection event.
+ *
+ * @note This function creates a new connection structure, accepts the incoming
+ * connection, and adds it to the connection vector of the zappy data
+ * structure.
+ *
+ * @warning If the connection fails, an error is logged, and the connection
+ * structure is deleted.
+ *
+ * @param data The zappy data structure.
+ */
 void handle_event_new_connection(zappy_t *data)
 {
     connection_t *con = create_connection();
@@ -26,18 +38,6 @@ void handle_event_new_connection(zappy_t *data)
     printf(LOG_INFO("Connection from [%s:%hu] opened.\n"),
         inet_ntoa(con->p_address.sin_addr),
         ntohs(con->p_address.sin_port));
-}
-
-/*
- * TODO: maybe remove this function
- */
-void handle_event_connection_timeout(zappy_t *data, connection_t *con)
-{
-    return;
-    printf(LOG_INFO("Connection from [%s:%hu] timed out.\n"),
-        inet_ntoa(con->p_address.sin_addr),
-        ntohs(con->p_address.sin_port));
-    delete_connection_by_ptr(&data->db.connection_vector, con);
 }
 
 void handle_event_connection_error(zappy_t *data, connection_t *con)

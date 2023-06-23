@@ -6,7 +6,6 @@
 */
 
 #include "obj/player.h"
-#include "obj/player.h"
 
 /**
  * Create a player.
@@ -17,11 +16,16 @@
 player_t *create_player(player_type_t type, uint32_t player_id)
 {
     player_t *player = malloc(sizeof(player_t));
+    if (player == NULL)
+        return NULL;
     *player = (player_t){
         .team = NULL,
         .type = type,
         .id = player_id,
         .orientation = NORTH,
+        .level = 1,
+        .is_dead = false,
+        .inventory.food = 10,
     };
     return player;
 }

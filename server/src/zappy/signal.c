@@ -11,7 +11,7 @@
 #include <string.h>
 #include "data.h"
 
-extern zappy_t *MYTEAMS_DATA;
+extern zappy_t *ZAPPY_DATA;
 
 static void handle_sigpipe(__attribute__((unused)) int nb)
 {
@@ -34,8 +34,11 @@ int free_zappy(zappy_t *data)
         (void (*)(void *))&free_player);
     vector_free_content_with_function(vectorize(&data->db.ai_vector),
         (void (*)(void *))&free_player);
+    vector_free_content_with_function(vectorize(&data->db.egg_vector),
+        (void (*)(void *))&free_egg);
     hdestroy_r(&data->gui_cmd_map);
     hdestroy_r(&data->ai_cmd_map);
+    hdestroy_r(&data->resource_name_map);
     free_map_content(&data->map);
     return 0;
 }
@@ -43,7 +46,7 @@ int free_zappy(zappy_t *data)
 static void handle_sigint(__attribute__((unused)) int nb)
 {
     printf("\n" LOG_INFO("Server stopping.\n"));
-    free_zappy(MYTEAMS_DATA);
+    free_zappy(ZAPPY_DATA);
     exit(0);
 }
 

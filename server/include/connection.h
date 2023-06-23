@@ -9,6 +9,7 @@
 
 #include "obj/player.h"
 #include "obj/obj_vector.h"
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -20,15 +21,24 @@
 #include "com/response.h"
 #include "buffer/buffer.h"
 
+typedef struct zappy_s zappy_t;
+typedef struct incantation_data_s incantation_data_t;
+
 typedef struct connection_s {
     player_t *player;
     int fd;
-    unsigned long last_activity;
+
     string_buffer_t req_buffer;
     string_buffer_t res_buffer;
     struct sockaddr_in p_address;
-    char *command;
-    char *args;
+
+    char *command; // String containing the name of the command
+    char *args;    // String containing the args of the command
+
+    // Delayed command execution
+    struct timeval delay_command_start_time;
+    int (*delay_command_func)(zappy_t *zappy, connection_t *con);
+    incantation_data_t *incantation_data;
 } connection_t;
 
 // utils.c

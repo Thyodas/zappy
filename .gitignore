@@ -18,5 +18,12 @@ intra_server
 server/coding-style-reports.log
 
 server/strings_intra_server.txt
+*.id*
+*.nam
+*.til
 
 .clang-suggested-fix
+server.zip
+*.bin
+
+*.zip

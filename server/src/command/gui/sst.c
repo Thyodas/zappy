@@ -18,7 +18,7 @@ int gui_sst(zappy_t *zappy, connection_t *con)
         return RET_SBP;
     }
     uint32_t freq;
-    if (parse_number(&freq, argv[0])) {
+    if (parse_number(&freq, argv[0]) || freq == 0) {
         free(argv);
         return RET_SBP;
     }

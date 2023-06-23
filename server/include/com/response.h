@@ -8,6 +8,7 @@
 #pragma once
 
 #include <stdarg.h>
+#include <stdlib.h>
 
 #include "types.h"
 

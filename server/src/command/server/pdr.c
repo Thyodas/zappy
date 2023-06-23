@@ -7,7 +7,8 @@
 
 #include "data.h"
 
-int server_pdr(zappy_t *zappy, player_t *dropping_player, resource_type_t resource)
+int server_pdr(zappy_t *zappy, player_t *dropping_player,
+    resource_type_t resource)
 {
     for (size_t i = 0; i < zappy->db.gui_vector.len; ++i) {
         sendf_response(zappy->db.gui_vector.content[i]->session,
