@@ -12,6 +12,14 @@ class IPlayer {
 public:
     virtual ~IPlayer() = default;
 
+    virtual bool isBroadcast() const = 0;
+
+    virtual void setBroadcast(bool broadcast) = 0;
+
+    virtual const std::string &getBroadcastMessage() const = 0;
+
+    virtual void setBroadcastMessage(const std::string &broadcastMessage) = 0;
+
     virtual const std::string &getTeamName() const = 0;
 
     virtual const std::map<int, int> &getInventory() const = 0;

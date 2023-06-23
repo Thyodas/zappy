@@ -111,4 +111,20 @@ namespace GUI {
     void Player::setNextPos(const std::pair<int, int> &value) {
         Player::nextPos = value;
     }
+
+    bool Player::isBroadcast() const {
+        return broadcast;
+    }
+
+    void Player::setBroadcast(bool broadcast) {
+        Player::broadcast = broadcast;
+    }
+
+    const std::string &Player::getBroadcastMessage() const {
+        return broadcastMessage;
+    }
+
+    void Player::setBroadcastMessage(const std::string &broadcastMessage) {
+        Player::broadcastMessage = broadcastMessage;
+    }
 } // GUI

@@ -20,3 +20,7 @@ server/coding-style-reports.log
 server/strings_intra_server.txt
 
 .clang-suggested-fix
+
+*.out
+
+test.cpp

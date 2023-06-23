@@ -22,6 +22,16 @@ namespace GUI {
     using cmdHandlerFunct = std::function<std::shared_ptr<IConfig>
                     (const std::shared_ptr<IConfig> &, const std::string &)>;
 
+    static std::map<int , int> requiredNbPlayer {
+            {2, 1},
+            {3, 2},
+            {4, 2},
+            {5, 4},
+            {6, 4},
+            {7, 6},
+            {8, 6}
+    };
+
     class Coms {
     public:
         /**
@@ -194,26 +204,38 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerBroadcast(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
+            std::string tmp;
+            std::stringstream ss(answer);
+            std::vector<std::string> params;
+            while (!std::cin.eof() && std::getline(ss, tmp, ' '))
+                params.push_back(tmp);
+            int id = std::stoi(params[0]);
+            for (u_long i = 3; i < params.size(); i++) {
+                for (auto &player : conf->getPlayers()) {
+                    if (player.second->getId() != id) continue;
+                    player.second->setBroadcast(true);
+                    player.second->setBroadcastMessage(answer.substr(answer.find(' ') + 1));
+                    break;
+                }
+            }
             return conf;
-            //TODO: idk what to do with this case
         }
 
         static std::shared_ptr<IConfig> playerStartIncantation(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-//                TODO: variadic number of params
-// return c (!verifyNbParam(answer, 2)) continue;
-                std::string tmp;
-                std::stringstream ss(answer);
-                std::vector<std::string> params;
-                while (!std::cin.eof() && std::getline(ss, tmp, ' '))
-                    params.push_back(tmp);
-                std::pair<int, int> pos = {std::stoi(params[0]), std::stoi(params[1])};
-                for (u_long i = 3; i < params.size(); i++) {
-                    for (auto &player : conf->getPlayers()) {
-                        if (!(player.second->getPos() == pos)) continue;
-                        player.second->setInIncantation(true);
-                        break;
-                    }
+            std::string tmp;
+            std::stringstream ss(answer);
+            std::vector<std::string> params;
+            while (!std::cin.eof() && std::getline(ss, tmp, ' '))
+                params.push_back(tmp);
+            if (!verifyNbParam(answer, requiredNbPlayer[std::stoi(params[2])])) return conf;
+            std::pair<int, int> pos = {std::stoi(params[0]), std::stoi(params[1])};
+            for (u_long i = 3; i < params.size(); i++) {
+                for (auto &player : conf->getPlayers()) {
+                    if (!(player.second->getPos() == pos)) continue;
+                    player.second->setInIncantation(true);
+                    break;
                 }
+            }
             return conf;
         }
 
@@ -326,7 +348,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerConnectForEgg(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
-            return conf;
+            return conf; //TODO: implement
         }
 
         static std::shared_ptr<IConfig> eggDie(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {

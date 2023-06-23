@@ -16,7 +16,7 @@ namespace GUI {
 
     class Player final : public IPlayer {
     public:
-        Player() {};
+        Player() = default;
         Player(const Player &player) = default;
         Player(int id, std::string teamName = "", int orientation = 1,
                int level = 1) {
@@ -39,6 +39,8 @@ namespace GUI {
         bool isLayingEgg = false;
         bool isMoving = false;
         bool isEjecting = false;
+        bool broadcast = false;
+        std::string broadcastMessage;
 
         std::map<int, int> inventory = {{0, 0}, // food
                                         {1, 0}, // linemate
@@ -47,6 +49,14 @@ namespace GUI {
                                         {4, 0}, // mendiane
                                         {5, 0}, // phiras
                                         {6, 0}}; // thystame
+
+        bool isBroadcast() const final;
+
+        void setBroadcast(bool broadcast) final;
+
+        const std::string &getBroadcastMessage() const final;
+
+        void setBroadcastMessage(const std::string &broadcastMessage) final;
 
         const std::map<int, int> &getInventory() const final;
 
