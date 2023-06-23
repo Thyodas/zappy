@@ -52,6 +52,7 @@ namespace GUI {
             void animateModel(ModelEntity model, AnimationType type, int frame);
             int getMaxFrame(ModelEntity model, AnimationType type);
             void rotateModel(ModelEntity model, Direction direction);
+            bool isModelSelected(ModelEntity model, Vector3f position, float scale, std::shared_ptr<ICamera> camera);
         private:
             std::unordered_map<ModelEntity, ModelData> _models;
             std::unordered_map<GUI::Key, KeyboardKey> _keys;
@@ -61,6 +62,8 @@ namespace GUI {
             std::unordered_map<GUI::Key, bool> _releasedKeys;
             std::unordered_map<GUI::Mouse, bool> _pressedMouseButtons;
             GUI::Vector2f _mousePosition;
+            RayCollision _collision;
+            Ray _ray;
     };
 };
 

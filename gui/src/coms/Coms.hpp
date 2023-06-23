@@ -159,14 +159,14 @@ namespace GUI {
                     params.push_back(tmp);
                 int id = std::stoi(params[0]);
                 GUI::Vector2i pos = {std::stoi(params[1]), std::stoi(params[2])};
-                std::map<int, int> inventory = {
-                        {1, std::stoi(params[3])},
-                        {2, std::stoi(params[4])},
-                        {3, std::stoi(params[5])},
-                        {4, std::stoi(params[6])},
-                        {5, std::stoi(params[7])},
-                        {6, std::stoi(params[8])},
-                        {7, std::stoi(params[9])}
+                std::unordered_map<GUI::Object, int> inventory = {
+                        {OBJ_FOOD, std::stoi(params[3])},
+                        {OBJ_LINEMATE, std::stoi(params[4])},
+                        {OBJ_DERAUMERE, std::stoi(params[5])},
+                        {OBJ_SIBUR, std::stoi(params[6])},
+                        {OBJ_MENDIANE, std::stoi(params[7])},
+                        {OBJ_PHIRAS, std::stoi(params[8])},
+                        {OBJ_THYSTAME, std::stoi(params[9])}
                 };
                 for (auto &player : conf->getPlayers()) {
                     if (player.second->getId() != id) continue;
@@ -264,7 +264,8 @@ namespace GUI {
                 const int resourceIndex = std::stoi(params[1]);
                 for (auto &player : conf->getPlayers()) {
                     if (player.second->getId() != id) continue;
-                    player.second->opOnInventoryAtIndex(resourceIndex, -1);
+                    Object obj = static_cast<Object>(resourceIndex);
+                    player.second->setInventoryObject(obj, player.second->getInventoryObject(obj) - 1);
                     conf->getMapContent()[player.second->getPos()].at(resourceIndex) += 1;
                     break;
                 }
@@ -282,7 +283,8 @@ namespace GUI {
                 const int resourceIndex = std::stoi(params[1]);
                 for (auto &player : conf->getPlayers()) {
                     if (player.second->getId() != id) continue;
-                    player.second->opOnInventoryAtIndex(resourceIndex, +1);
+                    Object obj = static_cast<Object>(resourceIndex);
+                    player.second->setInventoryObject(obj, player.second->getInventoryObject(obj) + 1);
                     conf->getMapContent()[player.second->getPos()].at(resourceIndex) -= 1;
                     break;
                 }

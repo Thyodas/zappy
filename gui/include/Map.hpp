@@ -24,15 +24,20 @@ namespace GUI {
             Vector2i getSize() const;
             std::shared_ptr<GUI::ICell>& getCell(GUI::Vector2i pos);
             bool selectionMode() const;
-            void setSelectionMode(bool selectionMode);
             GUI::Vector2i getSelectionBlock() const;
             void setSelectionBlock(GUI::Vector2i selectionBlock);
+            SelectionType selectionType() const;
+            void setSelectionMode(bool selectionMode, SelectionType type);
+            void setSelectionMode(bool selectionMode, SelectionType type, int playerId);
+            int getPlayerId() const;
         protected:
         private:
             GUI::Vector2i _size;
             std::vector<std::vector<std::shared_ptr<GUI::ICell>>> _map;
             bool _selectionMode;
             GUI::Vector2i _selectionBlock;
+            SelectionType _selectionType;
+            int _playerId;
     };
 };
 

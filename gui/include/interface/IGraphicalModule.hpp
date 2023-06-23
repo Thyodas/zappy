@@ -82,6 +82,7 @@ namespace GUI {
             virtual void animateModel(ModelEntity model, AnimationType type, int frame) = 0;
             virtual int getMaxFrame(ModelEntity model, AnimationType type) = 0;
             virtual void rotateModel(ModelEntity model, Direction direction) = 0;
+            virtual bool isModelSelected(ModelEntity model, Vector3f position, float scale, std::shared_ptr<ICamera> camera) = 0;
     };
 };
 

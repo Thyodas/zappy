@@ -253,3 +253,15 @@ void GUI::RayLib::rotateModel(ModelEntity model, Direction direction)
             break;
     }
 }
+
+bool GUI::RayLib::isModelSelected(ModelEntity model, Vector3f position, float scale, std::shared_ptr<ICamera> camera)
+{
+    _ray = GetMouseRay(GetMousePosition(), std::dynamic_pointer_cast<RayLibCamera>(camera)->camera);
+    _collision = GetRayCollisionBox(_ray,
+        (BoundingBox){
+            (Vector3){position.x - (this->getModelSize(model).x * scale) / 2, position.y - (this->getModelSize(model).y * scale) / 2, position.z - (this->getModelSize(model).z * scale) / 2},
+            (Vector3){position.x + (this->getModelSize(model).x * scale) / 2, position.y + (this->getModelSize(model).y * scale) / 2, position.z + (this->getModelSize(model).z * scale) / 2}
+        }
+    );
+    return _collision.hit;
+}
