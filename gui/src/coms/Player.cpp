@@ -56,20 +56,20 @@ namespace GUI {
         Player::inIncantation = value;
     }
 
-    const std::map<int, int> &Player::getInventory() const {
-        return inventory;
+    std::unordered_map<GUI::Object, int> Player::getInventory() {
+        return _inventory;
     }
 
-    void Player::setInventory(const std::map<int, int> &value) {
-        Player::inventory = value;
+    void Player::setInventory(const std::unordered_map<GUI::Object, int> &value) {
+        _inventory = value;
     }
 
-    void Player::setInventoryAtIndex(int index, int value) {
-        Player::inventory[index] = value;
+    int Player::getInventoryObject(GUI::Object object) {
+        return _inventory[object];
     }
 
-    void Player::opOnInventoryAtIndex(int index, int value) {
-        Player::inventory[index] += value;
+    void Player::setInventoryObject(GUI::Object object, int value) {
+        _inventory[object] = value;
     }
 
     bool Player::getIsAlive() const {

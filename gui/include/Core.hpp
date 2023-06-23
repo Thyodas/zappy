@@ -35,6 +35,7 @@ namespace GUI {
             void drawEntities(std::shared_ptr<ICell> cell);
             void drawPlayers();
             void handleEndGame();
+            void handleCharacterSelection(Vector3f pos, int playerId);
             bool _running;
             GUI::Vector2i _windowSize;
             GUI::config _config;

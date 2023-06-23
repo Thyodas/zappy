@@ -42,18 +42,12 @@ namespace GUI {
         GUI::Vector3f _offset = {0, 0, 0};
         int _currentFrame = 0;
         GUI::AnimationType _currentAnim = GUI::AnimationType::ANIM_IDLE;
+        std::unordered_map<GUI::Object, int> _inventory;
 
-        std::map<int, int> inventory = {{0, 0}, // food
-                                        {1, 0}, // linemate
-                                        {2, 0}, // deraumere
-                                        {3, 0}, // sibur
-                                        {4, 0}, // mendiane
-                                        {5, 0}, // phiras
-                                        {6, 0}}; // thystame
-
-        const std::map<int, int> &getInventory() const final;
-
-        void setInventory(const std::map<int, int> &inventory) final;
+        std::unordered_map<GUI::Object, int> getInventory() final;
+        void setInventory(const std::unordered_map<GUI::Object, int> &inventory) final;
+        int getInventoryObject(GUI::Object object) final;
+        void setInventoryObject(GUI::Object object, int value) final;
 
         bool getIsMoving() const final;
 
@@ -90,10 +84,6 @@ namespace GUI {
         bool isInIncantation() const final;
 
         void setInIncantation(bool inIncantation) final;
-
-        void setInventoryAtIndex(int index, int value) final;
-
-        void opOnInventoryAtIndex(int index, int value) final;
 
         bool getIsAlive() const final;
 

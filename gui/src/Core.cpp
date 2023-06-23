@@ -103,12 +103,12 @@ void GUI::Core::handleUserInput()
     _module->handleEvents();
     if (_module->isKeyPressed(GUI::Key::ESCAPE))
         _running = false;
-    if (_map->selectionMode())
+    if (_map->selectionMode() && _map->selectionType() == GUI::SelectionType::BLOCK)
         handleSelection();
     else
         handleZoom();
     if (_module->isKeyReleased(GUI::Key::R)) {
-        _map->setSelectionMode(!_map->selectionMode());
+        _map->setSelectionMode(!_map->selectionMode(), GUI::SelectionType::BLOCK);
     }
     if (_module->isKeyPressed(GUI::Key::Z)) {
         _scene->getCamera()->zoom(0.1);
@@ -186,11 +186,25 @@ void GUI::Core::draw()
 
 void GUI::Core::drawCellDetails(std::shared_ptr<ICell> cell)
 {
+    std::unordered_map<GUI::Object, int> stock;
+    std::string type;
+
+    if (_map->selectionType() == SelectionType::BLOCK) {
+        stock = cell->getObjects();
+        type = "Cell";
+    } else {
+        stock = _coms.getConf()->getPlayers()[_map->getPlayerId()]->getInventory();
+        type = "Player";
+    }
     _module->drawRectangle((Vector2f){0, 0}, (Vector2f){static_cast<float>(30 * _windowSize.x / 100), static_cast<float>(_windowSize.y)}, GUI::C_Color::C_BLACK);
+
     std::string position = "Position: " + std::to_string(cell->getPos().x) + ", " + std::to_string(cell->getPos().y);
     _module->drawText(position, (Vector2f){10, 10}, 20, GUI::C_Color::C_WHITE);
+
+    type = "Type: " + type;
+    _module->drawText(type, (Vector2f){static_cast<float>(_windowSize.x - type.length() * 10 - 15), 10}, 20, GUI::C_Color::C_BLACK);
+
     int index = 0;
-    std::unordered_map<GUI::Object, int> stock = cell->getObjects();
     for (auto &i : _objectsMap) {
         _module->drawText(i.second, (Vector2f){10, static_cast<float>(_windowSize.y / _objectsMap.size() * index + 40)}, 20, GUI::C_Color::C_WHITE);
         _module->drawText(std::to_string(stock[i.first]), (Vector2f){200, static_cast<float>(_windowSize.y / _objectsMap.size() * index + 40)}, 20, GUI::C_Color::C_WHITE);
@@ -239,7 +253,6 @@ void GUI::Core::drawPlayers()
                 continue;
             }
             offset = player.second->getOffset();
-
             float framerate = static_cast<float>(_module->getMaxFrame(ModelEntity::GOLEM, animation) / (actions.getDuration(action.getType()) * 1000));
             int frame = static_cast<int>((_coms.getConf()->getClock()->getElapsedTime() - action.getTimestamp()) * framerate);
             if (frame < _module->getMaxFrame(ModelEntity::GOLEM, animation))
@@ -253,10 +266,23 @@ void GUI::Core::drawPlayers()
         _module->rotateModel(ModelEntity::GOLEM, player.second->getOrientation());
         _module->animateModel(ModelEntity::GOLEM, player.second->getAnimation(), player.second->getCurrentFrame());
         Vector3f groundSize = _module->getModelSize(ModelEntity::GRASS_BLOCK);
-        _module->drawModel(ModelEntity::GOLEM, {
+        Vector3f finalPos = {
             pos.x + offset.x + _module->getModelSize(ModelEntity::GRASS_BLOCK).x / 2,
             pos.y + offset.y,
             pos.z + offset.z + _module->getModelSize(ModelEntity::GRASS_BLOCK).x / 2
-        }, _config.models[ModelEntity::GOLEM].scale, _config.models[ModelEntity::GOLEM].rotation);
+        };
+        handleCharacterSelection(finalPos, player.second->getId());
+        _module->drawModel(ModelEntity::GOLEM, finalPos, _config.models[ModelEntity::GOLEM].scale, _config.models[ModelEntity::GOLEM].rotation);
+    }
+}
+
+void GUI::Core::handleCharacterSelection(Vector3f pos, int playerId)
+{
+    if (_module->isMouseButtonPressed(GUI::Mouse::BUTTON_LEFT)) {
+        if (_module->isModelSelected(ModelEntity::GOLEM, pos, _config.models[ModelEntity::GOLEM].scale, _scene->getCamera())) {
+            _map->setSelectionMode(true, SelectionType::PLAYER, playerId);
+        } else {
+            _map->setSelectionMode(false, SelectionType::NONE);
+        }
     }
 }

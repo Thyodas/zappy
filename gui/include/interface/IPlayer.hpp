@@ -12,6 +12,8 @@
 #include "Vector3f.hpp"
 #include "AnimationType.hpp"
 #include "Vector2i.hpp"
+#include "ICell.hpp"
+#include <unordered_map>
 
 class IPlayer {
 public:
@@ -19,13 +21,12 @@ public:
 
     virtual const std::string &getTeamName() const = 0;
 
-    virtual const std::map<int, int> &getInventory() const = 0;
+    virtual std::unordered_map<GUI::Object, int> getInventory() = 0;
+    virtual void setInventory(const std::unordered_map<GUI::Object, int> &inventory) = 0;
 
-    virtual void setInventory(const std::map<int, int> &value) = 0;
 
-    virtual void setInventoryAtIndex(int index, int value) = 0;
-
-    virtual void opOnInventoryAtIndex(int index, int value) = 0;
+    virtual int getInventoryObject(GUI::Object object) = 0;
+    virtual void setInventoryObject(GUI::Object object, int value) = 0;
 
     virtual bool getIsMoving() const = 0;
 

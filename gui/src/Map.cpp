@@ -10,6 +10,7 @@
 
 GUI::Map::Map(GUI::Vector2i ssize, std::map<GUI::Vector2i, std::vector<int>> mapContent) : _size(ssize), _selectionMode(false), _selectionBlock((GUI::Vector2i){0, 0})
 {
+    _selectionType = GUI::SelectionType::NONE;
     int count = 0;
     _map.resize(_size.y);
     for (int i = 0; i < _size.y; i++) {
@@ -40,9 +41,13 @@ bool GUI::Map::selectionMode() const
     return _selectionMode;
 }
 
-void GUI::Map::setSelectionMode(bool selectionMode)
+void GUI::Map::setSelectionMode(bool selectionMode, GUI::SelectionType type)
 {
     _selectionMode = selectionMode;
+    _selectionType = type;
+    if (selectionMode == false) {
+        _playerId = 0;
+    }
 }
 
 GUI::Vector2i GUI::Map::getSelectionBlock() const
@@ -53,4 +58,21 @@ GUI::Vector2i GUI::Map::getSelectionBlock() const
 void GUI::Map::setSelectionBlock(GUI::Vector2i selectionBlock)
 {
     _selectionBlock = selectionBlock;
+}
+
+GUI::SelectionType GUI::Map::selectionType() const
+{
+    return _selectionType;
+}
+
+int GUI::Map::getPlayerId() const
+{
+    return _playerId;
+}
+
+void GUI::Map::setSelectionMode(bool selectionMode, GUI::SelectionType type, int playerId)
+{
+    _selectionMode = selectionMode;
+    _selectionType = type;
+    _playerId = playerId;
 }
