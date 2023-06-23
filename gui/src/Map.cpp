@@ -8,7 +8,7 @@
 #include "Map.hpp"
 #include <iostream>
 
-GUI::Map::Map(GUI::Vector2i ssize, std::map<std::pair<int, int>, std::vector<int>> mapContent) : _size(ssize), _selectionMode(false), _selectionBlock((GUI::Vector2i){0, 0})
+GUI::Map::Map(GUI::Vector2i ssize, std::map<GUI::Vector2i, std::vector<int>> mapContent) : _size(ssize), _selectionMode(false), _selectionBlock((GUI::Vector2i){0, 0})
 {
     int count = 0;
     _map.resize(_size.y);
@@ -16,7 +16,7 @@ GUI::Map::Map(GUI::Vector2i ssize, std::map<std::pair<int, int>, std::vector<int
         _map[i].resize(_size.x);
         for (int j = 0; j < _size.x; j++) {
             count++;
-            _map[i][j] = std::make_shared<GUI::Cell>((GUI::Vector2i){j, i}, mapContent[(std::pair<int, int>){j, i}]);
+            _map[i][j] = std::make_shared<GUI::Cell>((GUI::Vector2i){j, i}, mapContent[(GUI::Vector2i){j, i}]);
         }
     }
 }

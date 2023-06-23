@@ -19,7 +19,7 @@
 namespace GUI {
     class Map : public IMap {
         public:
-            Map(GUI::Vector2i ssize, std::map<std::pair<int, int>, std::vector<int>>);
+            Map(GUI::Vector2i ssize, std::map<GUI::Vector2i, std::vector<int>>);
             ~Map();
             Vector2i getSize() const;
             std::shared_ptr<GUI::ICell>& getCell(GUI::Vector2i pos);

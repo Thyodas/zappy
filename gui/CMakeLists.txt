@@ -15,6 +15,7 @@ set(SOURCE
         Map.cpp
         Cell.cpp
         ArgsParser.cpp
+        Actions.cpp
         libs/RayLib.cpp
         coms/Network.cpp
         coms/Network.hpp

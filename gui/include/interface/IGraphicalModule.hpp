@@ -15,6 +15,9 @@
     #include "ICamera.hpp"
     #include "Vector2i.hpp"
     #include "Model.hpp"
+    #include "AnimationType.hpp"
+
+    #define DEGREES_RADIAN(x) (x * 3.14 / 180)
 
 namespace GUI {
     enum Key {
@@ -76,6 +79,9 @@ namespace GUI {
             virtual void enable3DMode(std::shared_ptr<ICamera> camera) = 0;
             virtual void disable3DMode() = 0;
             virtual bool isInteraction() = 0;
+            virtual void animateModel(ModelEntity model, AnimationType type, int frame) = 0;
+            virtual int getMaxFrame(ModelEntity model, AnimationType type) = 0;
+            virtual void rotateModel(ModelEntity model, Direction direction) = 0;
     };
 };
 

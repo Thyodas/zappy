@@ -60,12 +60,19 @@ GUI::config GUI::Parser::parseConfig()
 
             float scale = setting["scale"];
 
+            libconfig::Setting &rotation = setting["rotation"];
+            float x = rotation[0];
+            float y = rotation[1];
+            float z = rotation[2];
+            Vector3f rotationVector(x, y, z);
+
             config.models.insert({
                 this->getModelEntity(name),
                 (GUI::modelConfig){
                     modelPath,
                     texturePath,
-                    scale
+                    scale,
+                    rotationVector
                 }
             });
         }

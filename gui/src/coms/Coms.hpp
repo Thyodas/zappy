@@ -37,8 +37,8 @@ namespace GUI {
             std::vector<std::string> params;
             while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                 params.push_back(tmp);
-           conf->getMapSize().first = std::stoi(params[0]);
-           conf->getMapSize().second = std::stoi(params[1]);
+           conf->getMapSize().x = std::stoi(params[0]);
+           conf->getMapSize().y = std::stoi(params[1]);
             return conf;
         }
 
@@ -55,7 +55,7 @@ namespace GUI {
             std::vector<std::string> params;
             while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                 params.push_back(tmp);
-            std::pair<int, int> pos = {std::stoi(params[0]), std::stoi(params[1])};
+            GUI::Vector2i pos = {std::stoi(params[0]), std::stoi(params[1])};
             std::vector<int> content = {std::stoi(params[2]), std::stoi(params[3]), std::stoi(params[4]), std::stoi(params[5]), std::stoi(params[6]), std::stoi(params[7]),
                                                 std::stoi(params[8])};
             conf->getMapContent()[pos] = content;
@@ -101,7 +101,7 @@ namespace GUI {
 
                 newPlayer->id = std::stoi(params[0]);
                 newPlayer->pos = {std::stoi(params[1]), std::stoi(params[2])};
-                newPlayer->orientation = std::stoi(params[3]);
+                newPlayer->orientation = static_cast<GUI::Direction>(std::stoi(params[3]));
                 newPlayer->level = std::stoi(params[4]);
                 newPlayer->teamName = params[5].erase(params[5].size() - 1, 1);
 
@@ -122,12 +122,12 @@ namespace GUI {
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 int id = std::stoi(params[0]);
-                std::pair<int, int> pos = {std::stoi(params[1]), std::stoi(params[2])};
+                GUI::Vector2i pos = {std::stoi(params[1]), std::stoi(params[2])};
                 int orientation = std::stoi(params[3]);
                 for (auto &player : conf->getPlayers()) {
                     if (player.second->getId() != id) continue;
-                    player.second->setPos(pos);
-                    player.second->setOrientation(orientation);
+                    conf->getActions().addAction(ActionType::MOVE, player.second->getId(), static_cast<Direction>(orientation), pos, conf->getClock()->getElapsedTime());
+                    // player.second->setOrientation(static_cast<Direction>(orientation));
                     break;
                 }
             return conf;
@@ -158,7 +158,7 @@ namespace GUI {
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 int id = std::stoi(params[0]);
-                std::pair<int, int> pos = {std::stoi(params[1]), std::stoi(params[2])};
+                GUI::Vector2i pos = {std::stoi(params[1]), std::stoi(params[2])};
                 std::map<int, int> inventory = {
                         {1, std::stoi(params[3])},
                         {2, std::stoi(params[4])},
@@ -206,7 +206,7 @@ namespace GUI {
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
-                std::pair<int, int> pos = {std::stoi(params[0]), std::stoi(params[1])};
+                GUI::Vector2i pos = {std::stoi(params[0]), std::stoi(params[1])};
                 for (u_long i = 3; i < params.size(); i++) {
                     for (auto &player : conf->getPlayers()) {
                         if (!(player.second->getPos() == pos)) continue;
@@ -224,7 +224,7 @@ namespace GUI {
             std::vector<std::string> params;
             while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                 params.push_back(tmp);
-            std::pair<int, int> pos = {std::stoi(params[0]), std::stoi(params[1])};
+            GUI::Vector2i pos = {std::stoi(params[0]), std::stoi(params[1])};
             int result = std::stoi(params[2]); // 1 if success, 0 if fail
             for (u_long i = 3; i < params.size(); i++) {
                 for (auto &player : conf->getPlayers()) {
@@ -352,12 +352,7 @@ namespace GUI {
             std::vector<std::string> params;
             while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                 params.push_back(tmp);
-            conf->setTimeUnit(std::stoi(params[0]));
-            return conf;
-        }
-
-        static std::shared_ptr<IConfig> changeTimeUnit(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            setTimeUnit(conf, answer);
+            conf->getActions().setFrequence(std::stoi(params[0]));
             return conf;
         }
 
@@ -412,7 +407,7 @@ namespace GUI {
             commandHandler.emplace("ebo", playerConnectForEgg);
             commandHandler.emplace("edi", eggDie);
             commandHandler.emplace("sgt", setTimeUnit);
-            commandHandler.emplace("sst", changeTimeUnit);
+            commandHandler.emplace("sst", setTimeUnit);
             commandHandler.emplace("seg", endOfGame);
             commandHandler.emplace("smg", serverMessage);
             commandHandler.emplace("suc", unknownCmd);

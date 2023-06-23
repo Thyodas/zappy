@@ -10,15 +10,17 @@
 #include "IPlayer.hpp"
 #include "Egg.hpp"
 #include <memory>
+#include "Actions.hpp"
+#include "Chrono.hpp"
 
 namespace GUI {
     class IConfig {
     public:
         virtual ~IConfig() = default;
-        virtual std::pair<int, int> &getMapSize() = 0;
-        virtual void setMapSize(const std::pair<int, int> &value) = 0;
-        virtual std::map<std::pair<int, int>, std::vector<int>> &getMapContent() = 0;
-        virtual void setMapContent(const std::map<std::pair<int, int>, std::vector<int>> &value) = 0;
+        virtual GUI::Vector2i &getMapSize() = 0;
+        virtual void setMapSize(const GUI::Vector2i &value) = 0;
+        virtual std::map<GUI::Vector2i, std::vector<int>> &getMapContent() = 0;
+        virtual void setMapContent(const std::map<GUI::Vector2i, std::vector<int>> &value) = 0;
         virtual std::map<int, Egg> &getEggs() = 0;
         virtual void setEggs(const std::map<int, Egg> &value) = 0;
         virtual int getTimeUnit() = 0;
@@ -34,6 +36,8 @@ namespace GUI {
         virtual void addTeam(const std::string &name) = 0;
         virtual void addPlayer(int id, std::shared_ptr<IPlayer> player) = 0;
         virtual std::map<int, std::shared_ptr<IPlayer>>& getPlayers() = 0;
+        virtual Actions &getActions() = 0;
+        virtual std::shared_ptr<IClock> &getClock() = 0;
     };
 
 } // GUI

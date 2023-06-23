@@ -12,6 +12,8 @@
 #include <vector>
 #include "IConfig.hpp"
 #include "Player.hpp"
+#include "Actions.hpp"
+#include "Chrono.hpp"
 
 namespace GUI {
 
@@ -21,22 +23,22 @@ namespace GUI {
             ~Config() final = default;
 
         bool isInitialized() const {
-            return mapSize.first != 0 && mapSize.second != 0 && (int)mapContent.size() == mapSize.first * mapSize.second;
+            return mapSize.x != 0 && mapSize.y != 0 && (int)mapContent.size() == mapSize.x * mapSize.y;
         };
 
-        std::pair<int, int> &getMapSize() final {
+        GUI::Vector2i &getMapSize() final {
             return mapSize;
         }
 
-        void setMapSize(const std::pair<int, int> &value) final {
+        void setMapSize(const GUI::Vector2i &value) final {
             mapSize = value;
         }
 
-        std::map<std::pair<int, int>, std::vector<int>> &getMapContent() final {
+        std::map<GUI::Vector2i, std::vector<int>> &getMapContent() final {
             return mapContent;
         }
 
-        void setMapContent(const std::map<std::pair<int, int>, std::vector<int>> &value) final {
+        void setMapContent(const std::map<GUI::Vector2i, std::vector<int>> &value) final {
             mapContent = value;
         }
 
@@ -96,9 +98,17 @@ namespace GUI {
             players.insert(std::make_pair(id, player));
         }
 
+        Actions &getActions() final {
+            return _actions;
+        }
+
+        std::shared_ptr<IClock> &getClock() final {
+            return _clock;
+        }
+
         public:
-            std::pair<int, int> mapSize = {0, 0}; // X, Y
-            std::map<std::pair<int, int>, std::vector<int>> mapContent; // pos{X,Y}, content{q0, q1, q2, q3, q4, q5, q6}
+            GUI::Vector2i mapSize = {0, 0}; // X, Y
+            std::map<GUI::Vector2i, std::vector<int>> mapContent; // pos{X,Y}, content{q0, q1, q2, q3, q4, q5, q6}
             std::map<int, Egg> eggs; // eggId, Egg
             int timeUnit = 100; // time unit in ms
             std::string serverMessage; // message from the server
@@ -107,6 +117,9 @@ namespace GUI {
 
             std::map<int, std::shared_ptr<IPlayer>> players; // playerId, player
             std::vector<std::string> _teams;
+
+            Actions _actions;
+            std::shared_ptr<IClock> _clock = std::make_shared<Chrono>();
     };
 
 } // GUI

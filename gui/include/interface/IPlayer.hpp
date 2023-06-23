@@ -7,6 +7,11 @@
 
 #pragma once
 
+#include <map>
+#include <string>
+#include "Vector3f.hpp"
+#include "AnimationType.hpp"
+#include "Vector2i.hpp"
 
 class IPlayer {
 public:
@@ -36,17 +41,17 @@ public:
 
     virtual void setId(int value) = 0;
 
-    virtual const std::pair<int, int> &getPos() const = 0;
+    virtual GUI::Vector2i getPos() const = 0;
 
-    virtual void setPos(const std::pair<int, int> &value) = 0;
+    virtual void setPos(GUI::Vector2i value) = 0;
 
-    virtual const std::pair<int, int> &getNextPos() const = 0;
+    virtual GUI::Vector2i &getNextPos() = 0;
 
-    virtual void setNextPos(const std::pair<int, int> &pos) = 0;
+    virtual void setNextPos(GUI::Vector2i &pos) = 0;
 
-    virtual int getOrientation() const = 0;
+    virtual GUI::Direction getOrientation() const = 0;
 
-    virtual void setOrientation(int value) = 0;
+    virtual void setOrientation(GUI::Direction value) = 0;
 
     virtual int getLevel() const = 0;
 
@@ -64,4 +69,13 @@ public:
 
     virtual void setIsLayingEgg(bool value) = 0;
 
+    //
+    virtual GUI::Vector3f getOffset() const = 0;
+    virtual void setOffset(const GUI::Vector3f &offset) = 0;
+    virtual int getCurrentFrame() const = 0;
+    virtual void setCurrentFrame(int currentFrame) = 0;
+    virtual void setAnimation(GUI::AnimationType type) = 0;
+    virtual GUI::AnimationType getAnimation() const = 0;
+    virtual float getRotationAngle() const = 0;
+    //
 };

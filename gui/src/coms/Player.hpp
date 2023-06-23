@@ -22,7 +22,7 @@ namespace GUI {
                int level = 1) {
             this->id = id;
             this->teamName = std::move(teamName);
-            this->orientation = orientation;
+            this->orientation = static_cast<GUI::Direction>(orientation);
             this->level = level;
         }
 
@@ -30,15 +30,18 @@ namespace GUI {
 
         std::string teamName;
         int id = 0;
-        std::pair<int, int> pos = {0, 0};
-        std::pair<int, int> nextPos = {0, 0};
-        int orientation = 1;
+        GUI::Vector2i pos = {0, 0};
+        GUI::Vector2i nextPos = {0, 0};
+        Direction orientation = Direction::NORTH;
         int level = 1;
         bool isAlive = true;
         bool inIncantation = false;
         bool isLayingEgg = false;
         bool isMoving = false;
         bool isEjecting = false;
+        GUI::Vector3f _offset = {0, 0, 0};
+        int _currentFrame = 0;
+        GUI::AnimationType _currentAnim = GUI::AnimationType::ANIM_IDLE;
 
         std::map<int, int> inventory = {{0, 0}, // food
                                         {1, 0}, // linemate
@@ -68,17 +71,17 @@ namespace GUI {
 
         void setId(int id) final;
 
-        const std::pair<int, int> &getPos() const final;
+        Vector2i getPos() const final;
 
-        void setPos(const std::pair<int, int> &pos) final;
+        void setPos(Vector2i pos) final;
 
-        const std::pair<int, int> &getNextPos() const final;
+        GUI::Vector2i &getNextPos() final;
 
-        void setNextPos(const std::pair<int, int> &pos) final;
+        void setNextPos(GUI::Vector2i &pos) final;
 
-        int getOrientation() const final;
+        GUI::Direction getOrientation() const final;
 
-        void setOrientation(int orientation) final;
+        void setOrientation(GUI::Direction orientation) final;
 
         int getLevel() const final;
 
@@ -99,5 +102,13 @@ namespace GUI {
         bool getIsLayingEgg() const final;
 
         void setIsLayingEgg(bool value) final;
+
+        GUI::Vector3f getOffset() const final;
+        void setOffset(const GUI::Vector3f &offset) final;
+        int getCurrentFrame() const final;
+        void setCurrentFrame(int currentFrame) final;
+        GUI::AnimationType getAnimation() const final;
+        void setAnimation(GUI::AnimationType animationType) final;
+        float getRotationAngle() const final;
     };
 } // GUI

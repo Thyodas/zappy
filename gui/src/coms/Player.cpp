@@ -24,20 +24,20 @@ namespace GUI {
         Player::id = value;
     }
 
-    const std::pair<int, int> &Player::getPos() const {
+    Vector2i Player::getPos() const {
         return pos;
     }
 
-    void Player::setPos(const std::pair<int, int> &value) {
+    void Player::setPos(Vector2i value) {
         Player::pos = value;
     }
 
-    int Player::getOrientation() const {
+    GUI::Direction Player::getOrientation() const {
         return orientation;
     }
 
-    void Player::setOrientation(int value) {
-        Player::orientation = value;
+    void Player::setOrientation(GUI::Direction direction) {
+        Player::orientation = direction;
     }
 
     int Player::getLevel() const {
@@ -104,11 +104,50 @@ namespace GUI {
         Player::isEjecting = value;
     }
 
-    const std::pair<int, int> &Player::getNextPos() const {
+    GUI::Vector2i &Player::getNextPos() {
         return nextPos;
     }
 
-    void Player::setNextPos(const std::pair<int, int> &value) {
+    void Player::setNextPos(GUI::Vector2i &value) {
         Player::nextPos = value;
+    }
+
+    GUI::Vector3f Player::getOffset() const {
+        return _offset;
+    }
+
+    void Player::setOffset(const GUI::Vector3f &offset) {
+        _offset = offset;
+    }
+
+    int Player::getCurrentFrame() const {
+        return _currentFrame;
+    }
+
+    void Player::setCurrentFrame(int currentFrame) {
+        _currentFrame = currentFrame;
+    }
+
+    GUI::AnimationType Player::getAnimation() const {
+        return _currentAnim;
+    }
+
+    void Player::setAnimation(GUI::AnimationType animationType) {
+        _currentAnim = animationType;
+    }
+
+    float Player::getRotationAngle() const {
+        switch (orientation) {
+            case GUI::Direction::NORTH:
+                return 0;
+            case GUI::Direction::EAST:
+                return 90;
+            case GUI::Direction::SOUTH:
+                return 180;
+            case GUI::Direction::WEST:
+                return 270;
+            default:
+                return 0;
+        }
     }
 } // GUI

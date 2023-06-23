@@ -14,6 +14,7 @@
     #include <iostream>
     #include <map>
     #include <string>
+    #include <utility>
 
 namespace GUI {
     class Parser : public GUI::IParser {

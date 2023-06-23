@@ -57,6 +57,7 @@ namespace GUI {
         handleRequest();
         send();
         reset_fd();
+        _answer.clear();
     }
 
     void Coms::init(const std::string &ip, int port) {
