@@ -26,6 +26,7 @@ player_t *create_player(player_type_t type, uint32_t player_id)
         .level = 1,
         .is_dead = false,
         .inventory.food = 10,
+        .food_eat_start_time = {0},
     };
     return player;
 }

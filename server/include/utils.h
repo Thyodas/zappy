@@ -54,6 +54,7 @@ char **split_str_to_array(char *str, char *seperators, int *len, int max_arg);
 
 // number.c
 int parse_number(uint32_t *parsed_nb, const char *to_parse);
+int parse_number_print_error(uint32_t *parsed_nb, const char *to_parse);
 double constrain_angle(double x);
 
 // timer.c

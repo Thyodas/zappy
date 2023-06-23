@@ -9,9 +9,7 @@
 #include "utils.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <getopt.h>
-#include <limits.h>
 
 static const struct option long_options[] = {
     {"help",    no_argument,       0, 'h'},
@@ -23,29 +21,6 @@ static const struct option long_options[] = {
     {"freq",    required_argument, 0, 'f'},
     {0, 0, 0, 0}
 };
-
-static int parse_number_print_error(uint32_t *parsed_nb, const char *to_parse)
-{
-    char *end;
-
-    errno = 0;
-    const long sl = strtol(to_parse, &end, 10);
-    if (end == to_parse)
-        return fprintf(stderr, HELP_MSG "\n'%s' not a decimal number.\n",
-            to_parse);
-    if ('\0' != *end)
-        return fprintf(stderr, HELP_MSG
-    "\n'%s' extra characters at end of input: %s.\n",to_parse, end);
-    if ((LONG_MIN == sl || LONG_MAX == sl) && ERANGE == errno)
-        return fprintf(stderr, HELP_MSG
-            "\n%s is out of range of type uint32.\n", to_parse);
-    if (sl > UINT32_MAX)
-        return fprintf(stderr, HELP_MSG "\n%ld greater than INT_MAX.\n", sl);
-    if (sl <= 0)
-        return fprintf(stderr, HELP_MSG "\nValues must be >0.\n");
-    *parsed_nb = sl;
-    return 0;
-}
 
 int parse_team(zappy_t *data, bool team_name_mode, const char *name)
 {
@@ -106,6 +81,18 @@ static int configure_teams(zappy_t *data)
     return 0;
 }
 
+static int validate_arguments(zappy_t *data)
+{
+    if (configure_teams(data))
+        return 1;
+    if (data->port < 1 || data->port > 65535) {
+        fprintf(stderr, "Invalid port %u, should be between 1 and 65535.\n",
+            data->port);
+        return 1;
+    }
+    return 0;
+}
+
 /**
  * Parses program arguments and adds values to the zappy_t structure
  * @param data The structure to fill.
@@ -132,5 +119,5 @@ int parse_arguments(zappy_t *data, int argc, char **argv)
         if (handle_options(data, c, &team_name_mode))
             return 1;
     }
-    return configure_teams(data);
+    return validate_arguments(data);
 }
