@@ -155,7 +155,7 @@ void GUI::Core::drawGround()
     GUI::Vector3f grassSize = _module->getModelSize(ModelEntity::GRASS_BLOCK);
     for (int y = -(_map->getSize().y * grassSize.x / 2 - (grassSize.x / 2)), yy = 0; y <= (_map->getSize().y * grassSize.x / 2 - (grassSize.x / 2)); y += 2, yy++) {
         for (int x = -(_map->getSize().x * grassSize.z / 2 - (grassSize.z / 2)), xx = 0; x <= (_map->getSize().x * grassSize.z / 2 - (grassSize.z / 2)); x += 2, xx++) {
-            if (_map->selectionMode() && _map->getSelectionBlock() == (GUI::Vector2i){xx, yy})
+            if (_map->selectionMode() && _map->selectionType() == SelectionType::BLOCK && _map->getSelectionBlock() == (GUI::Vector2i){xx, yy})
                 continue;
             else
                 _module->drawModel(ModelEntity::GRASS_BLOCK, Vector3f(x, -grassSize.y, y), 1, Vector3f(0, 0, 0));
@@ -188,17 +188,21 @@ void GUI::Core::drawCellDetails(std::shared_ptr<ICell> cell)
 {
     std::unordered_map<GUI::Object, int> stock;
     std::string type;
+    Vector2i pos;
 
     if (_map->selectionType() == SelectionType::BLOCK) {
         stock = cell->getObjects();
         type = "Cell";
+        pos = cell->getPos();
     } else {
-        stock = _coms.getConf()->getPlayers()[_map->getPlayerId()]->getInventory();
+        std::shared_ptr<IPlayer> player = _coms.getConf()->getPlayers()[_map->getPlayerId()];
+        stock = player->getInventory();
         type = "Player";
+        pos = player->getPos();
     }
     _module->drawRectangle((Vector2f){0, 0}, (Vector2f){static_cast<float>(30 * _windowSize.x / 100), static_cast<float>(_windowSize.y)}, GUI::C_Color::C_BLACK);
 
-    std::string position = "Position: " + std::to_string(cell->getPos().x) + ", " + std::to_string(cell->getPos().y);
+    std::string position = "Position: " + std::to_string(pos.x) + ", " + std::to_string(pos.y);
     _module->drawText(position, (Vector2f){10, 10}, 20, GUI::C_Color::C_WHITE);
 
     type = "Type: " + type;
