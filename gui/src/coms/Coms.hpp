@@ -41,7 +41,7 @@ namespace GUI {
          * @return Config conf
          */
         static std::shared_ptr<IConfig> setMapSize(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 2)) return conf;
+//            if (!verifyNbParam(answer, 2)) return conf;
             std::string tmp;
             std::stringstream ss(answer);
             std::vector<std::string> params;
@@ -59,7 +59,7 @@ namespace GUI {
          * @return Config conf
          */
         static std::shared_ptr<IConfig> setMapTile(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 9)) return conf;
+//            if (!verifyNbParam(answer, 9)) return conf;
             std::string tmp;
             std::stringstream ss(answer);
             std::vector<std::string> params;
@@ -79,7 +79,7 @@ namespace GUI {
          * @return Config conf
          */
         static std::shared_ptr<IConfig> tnaCommand(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 1)) return conf;
+//            if (!verifyNbParam(answer, 1)) return conf;
                 std::string tmp;
                 std::stringstream ss(answer);
                 std::vector<std::string> params;
@@ -101,7 +101,7 @@ namespace GUI {
          * @return Config conf
          */
         static std::shared_ptr<IConfig> addPlayer(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 6)) return conf;
+//            if (!verifyNbParam(answer, 6)) return conf;
                 std::string tmp;
                 std::stringstream ss(answer);
                 std::vector<std::string> params;
@@ -125,7 +125,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> setPlayerPos(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 4)) return conf;
+//            if (!verifyNbParam(answer, 4)) return conf;
                 std::string tmp;
                 std::stringstream ss(answer);
                 std::vector<std::string> params;
@@ -144,7 +144,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> setPlayerLvl(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 2)) return conf;
+//            if (!verifyNbParam(answer, 2)) return conf;
                 std::string tmp;
                 std::stringstream ss(answer);
                 std::vector<std::string> params;
@@ -161,7 +161,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> setPlayerInventory(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 10)) return conf;
+//            if (!verifyNbParam(answer, 10)) return conf;
                 std::string tmp;
                 std::stringstream ss(answer);
                 std::vector<std::string> params;
@@ -188,7 +188,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerExpulsion(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 2)) return conf;
+//            if (!verifyNbParam(answer, 2)) return conf;
                 std::string tmp;
                 std::stringstream ss(answer);
                 std::vector<std::string> params;
@@ -227,7 +227,7 @@ namespace GUI {
             std::vector<std::string> params;
             while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                 params.push_back(tmp);
-            if (!verifyNbParam(answer, requiredNbPlayer[std::stoi(params[2])])) return conf;
+//            if (!verifyNbParam(answer, requiredNbPlayer[std::stoi(params[2])])) return conf;
             std::pair<int, int> pos = {std::stoi(params[0]), std::stoi(params[1])};
             for (u_long i = 3; i < params.size(); i++) {
                 for (auto &player : conf->getPlayers()) {
@@ -240,7 +240,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerEndIncantation(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 3)) return conf;
+//            if (!verifyNbParam(answer, 3)) return conf;
             std::string tmp;
             std::stringstream ss(answer);
             std::vector<std::string> params;
@@ -260,7 +260,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> eggLayingByPlayer(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
-            if (!verifyNbParam(answer, 1)) return conf;
+//            if (!verifyNbParam(answer, 1)) return conf;
             std::string tmp;
             std::stringstream ss(answer);
             std::vector<std::string> params;
@@ -276,7 +276,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerDropResource(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 2)) return conf;
+//            if (!verifyNbParam(answer, 2)) return conf;
                 std::string tmp;
                 std::stringstream ss(answer);
                 std::vector<std::string> params;
@@ -294,7 +294,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerCollectResource(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 2)) return conf;
+//            if (!verifyNbParam(answer, 2)) return conf;
                 std::string tmp;
                 std::stringstream ss(answer);
                 std::vector<std::string> params;
@@ -312,7 +312,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerDie(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 1)) return conf;
+//            if (!verifyNbParam(answer, 1)) return conf;
                 std::string tmp;
                 std::stringstream ss(answer);
                 std::vector<std::string> params;
@@ -328,7 +328,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> eggLaidByPlayer(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
-            if (!verifyNbParam(answer, 4)) return conf;
+//            if (!verifyNbParam(answer, 4)) return conf;
             std::string tmp;
             std::stringstream ss(answer);
             std::vector<std::string> params;
@@ -348,11 +348,23 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerConnectForEgg(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
-            return conf; //TODO: implement
+//            if (!verifyNbParam(answer, 1)) return conf;
+            std::string tmp;
+            std::stringstream ss(answer);
+            std::vector<std::string> params;
+            while (!std::cin.eof() && std::getline(ss, tmp, ' '))
+                params.push_back(tmp);
+            int eggNbr = std::stoi(params[0]);
+            for (auto &egg :conf->getEggs()) {
+                if (egg.second.id != eggNbr)  continue;
+                egg.second.isAlive = false;
+                break;
+            }
+            return conf;
         }
 
         static std::shared_ptr<IConfig> eggDie(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
-            if (!verifyNbParam(answer, 1)) return conf;
+//            if (!verifyNbParam(answer, 1)) return conf;
             std::string tmp;
             std::stringstream ss(answer);
             std::vector<std::string> params;
@@ -368,7 +380,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> setTimeUnit(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 1)) return conf;
+//            if (!verifyNbParam(answer, 1)) return conf;
             std::string tmp;
             std::stringstream ss(answer);
             std::vector<std::string> params;
@@ -384,7 +396,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> endOfGame(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 1)) return conf;
+//            if (!verifyNbParam(answer, 1)) return conf;
             std::string tmp;
             std::stringstream ss(answer);
             std::vector<std::string> params;
@@ -398,7 +410,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> serverMessage(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 2)) return conf;
+//            if (!verifyNbParam(answer, 2)) return conf;
             conf->setServerMessage(answer);
             return conf;
         }
@@ -467,7 +479,7 @@ namespace GUI {
         void handleRequest();
 
 
-        static bool verifyNbParam(const std::string &answer, int nbParam) {
+//        static bool verifyNbParam(const std::string &answer, int nbParam) {
             int nb = 0;
             for (auto &i : answer) {
                 if (i == ' ')
