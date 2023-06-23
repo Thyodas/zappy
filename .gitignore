@@ -27,3 +27,5 @@ server.zip
 *.bin
 
 *.zip
+
+ai/__pycache__/
