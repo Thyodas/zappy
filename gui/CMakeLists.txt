@@ -34,6 +34,11 @@ list(TRANSFORM SOURCE PREPEND "src/")
 
 add_compile_options(-Wall -Wextra -std=c++2a)
 
+if (APPLE)
+    include_directories(/usr/local/include)
+    link_directories(/usr/local/lib)
+endif()
+
 add_executable(${PROJECT_NAME} ${SOURCE})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

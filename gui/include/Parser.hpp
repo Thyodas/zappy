@@ -8,7 +8,7 @@
 #ifndef PARSER_HPP_
     #define PARSER_HPP_
 
-    #include "libconfig.h++"
+    #include <libconfig.h++>
     #include "IParser.hpp"
     #include "Model.hpp"
     #include <iostream>

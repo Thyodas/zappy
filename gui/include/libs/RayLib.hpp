@@ -10,7 +10,7 @@
 
     #include <unordered_map>
 
-    #include "raylib.h"
+    #include <raylib.h>
     #include "IGraphicalModule.hpp"
     #include "RayLibCamera.hpp"
     #include <vector>
