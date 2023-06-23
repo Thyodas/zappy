@@ -56,6 +56,15 @@ class ZappyClient:
         self.clientNum = 0
         self.buffer = ""
         self.player_info: PlayerInfo = PlayerInfo()
+        self.broadcast_on = False
+        self.elevation_underway = False
+        self.leader = False
+        self.ready_to_elevate = False
+        self.actionQueue = []
+        self.incanting = False
+        self.nbPlayersReady = 0
+        self.broadcastDirection = -1
+        self.alreadyBrocasted = False
 
     def connect(self):
         try:
@@ -84,6 +93,20 @@ class ZappyClient:
             print("Message: " + message)
             exit(1)
 
+    def handleMessage(self, direction, text):
+        if text.startswith("Help elevation") and int(text.split(' ')[1]) == self.player_info.score:
+            self.elevation_underway = True
+            self.broadcastDirection = direction
+        if text.startswith("Cancel") and self.elevation_underway:
+            self.elevation_underway = False
+            self.ready_to_elevate = False
+            self.alreadyBrocasted = False
+            self.broadcastDirection = -1
+        if text.startswith("I'm here") and self.leader:
+            self.nbPlayersReady += 1
+        if text.startswith("Ready") and self.elevation_underway:
+            self.ready_to_elevate = True
+
     def receive(self, timeLimit):
         data = ""
         delta = 0.01
@@ -100,6 +123,7 @@ class ZappyClient:
             end_time = time.time()
             splitCommand = self.buffer.split("\n")
             data = splitCommand[0]
+
             if len(splitCommand) == 2:
                 self.buffer = ""
             else:
@@ -110,6 +134,15 @@ class ZappyClient:
             if elapsed_time + delta < timeLimit / self.frequence or elapsed_time - delta > timeLimit / self.frequence:
                 self.frequence = timeLimit / elapsed_time
                 print(f"Found a new frequence {self.frequence}")
+            if data.startswith("message"):
+                data = data.strip()
+                parts = data.split(',')
+                K = int(parts[0].split()[1])
+                text = parts[1].strip()
+                self.handleMessage(K, text)
+                self.receive(timeLimit)
+            if data.startswith("dead"):
+                self.close()
         except Exception as e:
             print(f"Error receiving data: {e}")
         return data
@@ -130,7 +163,7 @@ class ZappyClient:
 
     def get_team_slots(self):
         self.send('Connect_nbr\n')
-        return self.receive().strip(DefaultTimeLimit.CONNECT_NBR.value)
+        return self.receive(DefaultTimeLimit.CONNECT_NBR.value).strip()
 
     def fork_player(self):
         self.send('Fork\n')
