@@ -1,6 +1,8 @@
 import argparse
+import os
 import socket
 import json
+import sys
 from dataclasses import dataclass, field
 
 
@@ -91,6 +93,35 @@ class ZappyClient:
 
     def turn_right(self):
         self.send('Right\n')
+        return self.receive()
+
+    def get_team_slots(self):
+        self.send('Connect_nbr\n')
+        return self.receive().strip()
+
+    def fork_player(self):
+        self.send('Fork\n')
+        response = self.receive()
+        if response.strip() == "ok":
+            pid = os.fork()
+            if pid == 0:
+                os.execv(sys.executable, ['python'] + sys.argv)
+        return response
+
+    def eject_players(self):
+        self.send('Eject\n')
+        return self.receive()
+
+    def take_object(self, object_name):
+        self.send(f'Take {object_name}\n')
+        return self.receive()
+
+    def set_object(self, object_name):
+        self.send(f'Set {object_name}\n')
+        return self.receive()
+
+    def start_incantation(self):
+        self.send('Incantation\n')
         return self.receive()
 
     # Store the inventory in the player_info + return it
