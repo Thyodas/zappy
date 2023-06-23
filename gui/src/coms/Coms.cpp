@@ -39,6 +39,7 @@ namespace GUI {
     bool Coms::receive() {
         if (_network->receive()) {
             _answer = _network->getAnswer();
+            std::cout << "[Info] Received command " + _answer << std::endl;
             return true;
         }
         return false;
@@ -56,6 +57,7 @@ namespace GUI {
         handleRequest();
         send();
         reset_fd();
+        _answer.clear();
     }
 
     void Coms::init(const std::string &ip, int port) {
@@ -65,6 +67,7 @@ namespace GUI {
         select();
         send();
         reset_fd();
+        addRequest("tna\n");
     }
 
     void Coms::handleRequest() {
@@ -75,7 +78,6 @@ namespace GUI {
         while(!std::cin.eof() && std::getline(ss, tmp, '\n')) {
             std::string cmd = _answer.substr(0, 3);
             if (commandHandler.find(cmd) == commandHandler.end()) {
-                std::cerr << "Unknown command: " << cmd << std::endl;
                 return;
             }
             std::string params = _answer.substr(4);

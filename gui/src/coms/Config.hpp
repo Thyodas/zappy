@@ -12,6 +12,8 @@
 #include <vector>
 #include "IConfig.hpp"
 #include "Player.hpp"
+#include "Actions.hpp"
+#include "Chrono.hpp"
 
 namespace GUI {
 
@@ -21,39 +23,23 @@ namespace GUI {
             ~Config() final = default;
 
         bool isInitialized() const {
-            return mapSize.first != 0 && mapSize.second != 0 && (int)mapContent.size() == mapSize.first * mapSize.second;
+            return mapSize.x != 0 && mapSize.y != 0 && (int)mapContent.size() == mapSize.x * mapSize.y;
         };
 
-        std::pair<int, int> &getMapSize() final {
+        GUI::Vector2i &getMapSize() final {
             return mapSize;
         }
 
-        void setMapSize(const std::pair<int, int> &value) final {
+        void setMapSize(const GUI::Vector2i &value) final {
             mapSize = value;
         }
 
-        std::map<std::pair<int, int>, std::vector<int>> &getMapContent() final {
+        std::map<GUI::Vector2i, std::vector<int>> &getMapContent() final {
             return mapContent;
         }
 
-        void setMapContent(const std::map<std::pair<int, int>, std::vector<int>> &value) final {
+        void setMapContent(const std::map<GUI::Vector2i, std::vector<int>> &value) final {
             mapContent = value;
-        }
-
-        std::map<int, std::string> &getTeamsName() final {
-            return teamsName;
-        }
-
-        void setTeamsName(const std::map<int, std::string> &value) final {
-            teamsName = value;
-        }
-
-        std::map<int, std::shared_ptr<IPlayer>> &getPlayers() final {
-            return players;
-        }
-
-        void setPlayers(const std::map<int, std::shared_ptr<IPlayer>> &value) final {
-            players = value;
         }
 
         std::map<int, Egg> &getEggs() final {
@@ -72,14 +58,6 @@ namespace GUI {
             timeUnit = value;
         }
 
-        bool isEndGame() final {
-            return endGame;
-        }
-
-        void setEndGame(bool value) final {
-            endGame = value;
-        }
-
         std::string &getServerMessage() final {
             return serverMessage;
         }
@@ -96,25 +74,52 @@ namespace GUI {
             winnerTeam = value;
         }
 
-        bool isEnd1() final {
-            return isEnd;
+        bool isEnd() final {
+            return _isEnd;
         }
 
         void setIsEnd(bool value) final {
-            isEnd = value;
+            _isEnd = value;
+        }
+
+        std::vector<std::string> getTeams() const {
+            return _teams;
+        }
+
+        void addTeam(const std::string &name) {
+            _teams.push_back(name);
+        }
+
+        std::map<int, std::shared_ptr<IPlayer>> &getPlayers() final {
+            return players;
+        }
+
+        void addPlayer(int id, std::shared_ptr<IPlayer> player) {
+            players.insert(std::make_pair(id, player));
+        }
+
+        Actions &getActions() final {
+            return _actions;
+        }
+
+        std::shared_ptr<IClock> &getClock() final {
+            return _clock;
         }
 
         public:
-            std::pair<int, int> mapSize = {0, 0}; // X, Y
-            std::map<std::pair<int, int>, std::vector<int>> mapContent; // pos{X,Y}, content{q0, q1, q2, q3, q4, q5, q6}
-            std::map<int, std::string> teamsName; // teamId, teamName
-            std::map<int, std::shared_ptr<IPlayer>> players; // playerId, player
+            GUI::Vector2i mapSize = {0, 0}; // X, Y
+            std::map<GUI::Vector2i, std::vector<int>> mapContent; // pos{X,Y}, content{q0, q1, q2, q3, q4, q5, q6}
             std::map<int, Egg> eggs; // eggId, Egg
             int timeUnit = 100; // time unit in ms
-            bool endGame = true; // true if the game is over
             std::string serverMessage; // message from the server
-            std::string winnerTeam; // name of the winner team
-            bool isEnd = false; // true if the game is over
+            std::string winnerTeam = "none"; // name of the winner team
+            bool _isEnd = false; // true if the game is over
+
+            std::map<int, std::shared_ptr<IPlayer>> players; // playerId, player
+            std::vector<std::string> _teams;
+
+            Actions _actions;
+            std::shared_ptr<IClock> _clock = std::make_shared<Chrono>();
     };
 
 } // GUI

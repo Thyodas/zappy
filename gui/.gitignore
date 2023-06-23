@@ -13,3 +13,5 @@ build
 *.a
 
 .clang-suggested-fix
+.vscode
+compile_commands.json

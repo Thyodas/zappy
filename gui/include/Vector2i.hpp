@@ -23,6 +23,16 @@ namespace GUI {
             bool operator==(const Vector2i &v2) {
                 return (this->x == v2.x && this->y == v2.y);
             };
+            bool operator!=(const Vector2i &v2) {
+                return !(*this == v2);
+            };
+            bool operator<(const Vector2i& other) const {
+                if (x < other.x)
+                    return true;
+                else if (x == other.x && y < other.y)
+                    return true;
+                return false;
+            };
             Vector2i operator+(const Vector2i &v2) {
                 return (Vector2i(this->x + v2.x, this->y + v2.y));
             };

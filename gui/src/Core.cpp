@@ -53,9 +53,11 @@ void GUI::Core::init(GUI::GraphicalLib lib, GUI::Vector2i windowSize)
     _module->init(_windowSize);
     _module->loadModels(_config.models);
 
+    _coms.getConf()->getActions().setGridSize(_module->getModelSize(ModelEntity::GRASS_BLOCK));
+
     while (!this->_coms.getConf()->isInitialized())
         this->_coms.process();
-    _map = std::make_shared<Map>(GUI::Vector2i(_coms.getConf()->getMapSize().first, _coms.getConf()->getMapSize().second), _coms.getConf()->getMapContent());
+    _map = std::make_shared<Map>(_coms.getConf()->getMapSize(), _coms.getConf()->getMapContent());
 
     GUI::Vector3f groundSize = _module->getModelSize(ModelEntity::GRASS_BLOCK);
     _scene->getCamera()->setPosition(Vector3f(_map->getSize().x * groundSize.x / 2, 20, 20));
@@ -99,21 +101,21 @@ void GUI::Core::handleSelection()
 void GUI::Core::handleUserInput()
 {
     _module->handleEvents();
-    if (_module->isKeyReleased(GUI::Key::R)) {
-        _map->setSelectionMode(!_map->selectionMode());
-    }
+    if (_module->isKeyPressed(GUI::Key::ESCAPE))
+        _running = false;
     if (_map->selectionMode())
         handleSelection();
     else
         handleZoom();
-    if (_module->isKeyPressed(GUI::Key::ESCAPE)) {
-        _running = false;
-    } else if (_module->isKeyPressed(GUI::Key::Z)) {
+    if (_module->isKeyReleased(GUI::Key::R)) {
+        _map->setSelectionMode(!_map->selectionMode());
+    }
+    if (_module->isKeyPressed(GUI::Key::Z)) {
         _scene->getCamera()->zoom(0.1);
     } else if (_module->isKeyPressed(GUI::Key::S)) {
         _scene->getCamera()->zoom(-0.1);
     }
-    if (_module->isKeyPressed(GUI::Key::H)) {
+    if (_module->isKeyReleased(GUI::Key::H)) {
         _drawObjects = !_drawObjects;
     }
 }
@@ -121,12 +123,31 @@ void GUI::Core::handleUserInput()
 void GUI::Core::run()
 {
     while (_running) {
-        this->_coms.process();
+        if (_coms.getConf()->isEnd()) {
+            handleEndGame();
+            _running = false;
+            break;
+        }
+        _coms.process();
         handleUserInput();
         if (_module->isInteraction())
             this->draw();
     }
     _module->close();
+}
+
+void GUI::Core::handleEndGame()
+{
+    std::string endMessage = "The winner is: " + _coms.getConf()->getWinnerTeam();
+    std::string exitMsg = "Press esc to exit";
+    while (!_module->isKeyPressed(GUI::Key::ESCAPE)) {
+        _module->handleEvents();
+        _module->preDraw();
+        _module->clear(C_Color::C_BLACK);
+        _module->drawText(endMessage, (Vector2f){static_cast<float>((_windowSize.x - endMessage.length() * 25 / 2) / 2), static_cast<float>(_windowSize.y / 2)}, 25, GUI::C_Color::C_GREEN);
+        _module->drawText(exitMsg, (Vector2f){static_cast<float>((_windowSize.x - exitMsg.length() * 25 / 2) / 2), static_cast<float>(_windowSize.y / 2 + 50)}, 25, GUI::C_Color::C_GREEN);
+        _module->postDraw();
+    }
 }
 
 void GUI::Core::drawGround()
@@ -145,6 +166,7 @@ void GUI::Core::drawGround()
 void GUI::Core::draw()
 {
     _module->preDraw();
+    _module->clear(C_Color::C_WHITE);
     _module->enable3DMode(_scene->getCamera());
     this->drawGround();
     _module->drawGrid(_map->getSize(), _module->getModelSize(ModelEntity::GRASS_BLOCK).x, GUI::C_Color::C_RED);
@@ -155,6 +177,7 @@ void GUI::Core::draw()
             }
         }
     }
+    this->drawPlayers();
     _module->disable3DMode();
     if (_map->selectionMode())
         this->drawCellDetails(_map->getCell(_map->getSelectionBlock()));
@@ -198,5 +221,42 @@ void GUI::Core::drawEntities(std::shared_ptr<ICell> cell)
             offsetX += 0.25;
             count++;
         }
+    }
+}
+
+void GUI::Core::drawPlayers()
+{
+    Actions actions = _coms.getConf()->getActions();
+    Vector3f offset = {0, 0, 0};
+    for (auto &player : _coms.getConf()->getPlayers()) {
+        Vector3f pos = _module->mousePosFromGrid(player.second->getPos(), _module->getModelSize(ModelEntity::GRASS_BLOCK).x, _map->getSize());
+        if (actions.isAction(player.first)) {
+            ActionData action = actions.getAction(player.first);
+            AnimationType animation = actions.execute(player.second, action, _coms.getConf()->getClock()->getElapsedTime());
+            if (animation == AnimationType::ANIM_END) {
+                _coms.getConf()->getActions().deleteAction(player.first);
+                player.second->setAnimation(AnimationType::ANIM_IDLE);
+                continue;
+            }
+            offset = player.second->getOffset();
+
+            float framerate = static_cast<float>(_module->getMaxFrame(ModelEntity::GOLEM, animation) / (actions.getDuration(action.getType()) * 1000));
+            int frame = static_cast<int>((_coms.getConf()->getClock()->getElapsedTime() - action.getTimestamp()) * framerate);
+            if (frame < _module->getMaxFrame(ModelEntity::GOLEM, animation))
+                player.second->setCurrentFrame(frame);
+        } else {
+            player.second->setAnimation(AnimationType::ANIM_IDLE);
+            player.second->setCurrentFrame(player.second->getCurrentFrame() + 1);
+            if (_module->getMaxFrame(ModelEntity::GOLEM, player.second->getAnimation()) <= player.second->getCurrentFrame())
+                player.second->setCurrentFrame(0);
+        }
+        _module->rotateModel(ModelEntity::GOLEM, player.second->getOrientation());
+        _module->animateModel(ModelEntity::GOLEM, player.second->getAnimation(), player.second->getCurrentFrame());
+        Vector3f groundSize = _module->getModelSize(ModelEntity::GRASS_BLOCK);
+        _module->drawModel(ModelEntity::GOLEM, {
+            pos.x + offset.x + _module->getModelSize(ModelEntity::GRASS_BLOCK).x / 2,
+            pos.y + offset.y,
+            pos.z + offset.z + _module->getModelSize(ModelEntity::GRASS_BLOCK).x / 2
+        }, _config.models[ModelEntity::GOLEM].scale, _config.models[ModelEntity::GOLEM].rotation);
     }
 }

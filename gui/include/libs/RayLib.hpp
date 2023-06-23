@@ -18,8 +18,10 @@
 namespace GUI {
     struct ModelData {
         Model model;
+        ModelAnimation *animation;
         Texture texture;
         GUI::Vector3f size;
+        GUI::Vector3f rotation;
     };
 
     class RayLib : public IGraphicalModule{
@@ -47,6 +49,9 @@ namespace GUI {
             void enable3DMode(std::shared_ptr<ICamera> camera);
             void disable3DMode();
             bool isInteraction();
+            void animateModel(ModelEntity model, AnimationType type, int frame);
+            int getMaxFrame(ModelEntity model, AnimationType type);
+            void rotateModel(ModelEntity model, Direction direction);
         private:
             std::unordered_map<ModelEntity, ModelData> _models;
             std::unordered_map<GUI::Key, KeyboardKey> _keys;

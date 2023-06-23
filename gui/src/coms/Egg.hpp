@@ -8,6 +8,7 @@
 #pragma once
 
 #include <utility>
+#include "Vector2i.hpp"
 
 namespace GUI {
 
@@ -16,7 +17,7 @@ namespace GUI {
         Egg() = default;
 
         ~Egg() = default;
-        std::pair <int, int> pos = {0, 0};
+        GUI::Vector2i pos = {0, 0};
         int id = 1;
         bool isAlive = true;
     };

@@ -15,6 +15,7 @@ set(SOURCE
         Map.cpp
         Cell.cpp
         ArgsParser.cpp
+        Actions.cpp
         libs/RayLib.cpp
         coms/Network.cpp
         coms/Network.hpp
@@ -27,7 +28,7 @@ set(SOURCE
         coms/Egg.cpp
         coms/Egg.hpp
         coms/Config.hpp
-        )
+)
 
 list(TRANSFORM SOURCE PREPEND "src/")
 

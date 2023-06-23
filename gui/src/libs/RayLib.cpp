@@ -109,8 +109,15 @@ void GUI::RayLib::loadModels(std::unordered_map<ModelEntity, modelConfig> models
     _models.reserve(models.size());
     for (auto &model : models) {
         _models[model.first].model = LoadModel(model.second.modelPath.c_str());
-        _models[model.first].texture = LoadTexture(model.second.texturePath.c_str());
-        _models[model.first].model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = _models[model.first].texture;
+        _models[model.first].rotation = model.second.rotation;
+        if (model.second.modelPath.length() > 4 && model.second.modelPath.substr(model.second.modelPath.length() - 4) == ".glb") {
+            unsigned int models = 0;
+            _models[model.first].animation = LoadModelAnimations(model.second.modelPath.c_str(), &models);
+        }
+         else {
+            _models[model.first].texture = LoadTexture(model.second.texturePath.c_str());
+            _models[model.first].model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = _models[model.first].texture;
+        }
         BoundingBox bounds = GetModelBoundingBox(_models[model.first].model);
         _models[model.first].size = {
             bounds.max.x - bounds.min.x,
@@ -122,13 +129,13 @@ void GUI::RayLib::loadModels(std::unordered_map<ModelEntity, modelConfig> models
 
 void GUI::RayLib::drawModel(ModelEntity model, Vector3f position, float scale, Vector3f rotation)
 {
-    DrawModelEx(_models[model].model, {position.x, position.y, position.z}, {0, 1, 0}, rotation.x, {scale, scale, scale}, WHITE);
+    DrawModelEx(_models[model].model, {position.x, position.y, position.z}, {rotation.x, rotation.y, rotation.z}, rotation.x, {scale, scale, scale}, WHITE);
 }
+
 
 void GUI::RayLib::preDraw()
 {
     BeginDrawing();
-    this->clear(GUI::C_Color::C_WHITE);
 }
 
 void GUI::RayLib::postDraw()
@@ -215,4 +222,34 @@ void GUI::RayLib::disable3DMode()
 bool GUI::RayLib::isInteraction()
 {
     return _pressedKeys.size() > 0 || _pressedMouseButtons.size() > 0 || _pressedMouseButtons.size() > 0;
+}
+
+void GUI::RayLib::animateModel(ModelEntity model, AnimationType type, int frame)
+{
+    UpdateModelAnimation(_models[model].model, _models[model].animation[type], frame);
+}
+
+int GUI::RayLib::getMaxFrame(ModelEntity model, AnimationType type)
+{
+    return _models[model].animation[type].frameCount;
+}
+
+void GUI::RayLib::rotateModel(ModelEntity model, Direction direction)
+{
+    switch (direction) {
+        case Direction::NORTH:
+            _models[model].model.transform = MatrixRotateXYZ({0, 0, DEGREES_RADIAN(180)});
+            break;
+        case Direction::EAST:
+            _models[model].model.transform = MatrixRotateXYZ({0, 0, DEGREES_RADIAN(270)});
+            break;
+        case Direction::SOUTH:
+            _models[model].model.transform = MatrixRotateXYZ({0, 0, DEGREES_RADIAN(0)});
+            break;
+        case Direction::WEST:
+            _models[model].model.transform = MatrixRotateXYZ({0, 0, DEGREES_RADIAN(90)});
+            break;
+        default:
+            break;
+    }
 }

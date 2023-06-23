@@ -8,6 +8,10 @@
 #ifndef MODEL_HPP_
     #define MODEL_HPP_
 
+    #include <vector>
+    #include <utility>
+    #include "Vector3f.hpp"
+
 namespace GUI {
     /*
     ** @brief Enum of all the models
@@ -31,6 +35,7 @@ namespace GUI {
         std::string modelPath;
         std::string texturePath;
         float scale;
+        Vector3f rotation;
     };
 };
 

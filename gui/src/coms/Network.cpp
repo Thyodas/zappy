@@ -47,10 +47,7 @@ namespace GUI {
     }
 
     void Network::disconnect() {
-        if (close(_server_fd) == 0)
-            std::cerr << ">NTWK: Disconnected " << std::endl;
-        else
-            std::cerr << ">NTWK: Disconnection failed: " << errno << std::endl;
+        close(_server_fd);
     }
     void Network::reset_fd() {
         FD_ZERO(&_readfds);
