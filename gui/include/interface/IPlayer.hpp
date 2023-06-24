@@ -58,10 +58,6 @@ public:
 
     virtual void setLevel(int value) = 0;
 
-    virtual bool isInIncantation() const = 0;
-
-    virtual void setInIncantation(bool value) = 0;
-
     virtual bool getIsAlive() const = 0;
 
     virtual void setIsAlive(bool isAlive) = 0;

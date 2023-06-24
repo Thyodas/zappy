@@ -59,14 +59,6 @@ namespace GUI {
         Player::level = value;
     }
 
-    bool Player::isInIncantation() const {
-        return inIncantation;
-    }
-
-    void Player::setInIncantation(bool value) {
-        Player::inIncantation = value;
-    }
-
     std::unordered_map<GUI::Object, int> Player::getInventory() {
         return _inventory;
     }

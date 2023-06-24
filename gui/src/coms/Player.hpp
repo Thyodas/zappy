@@ -30,7 +30,6 @@ namespace GUI {
         Direction orientation = Direction::NORTH;
         int level = 1;
         bool isAlive = true;
-        bool inIncantation = false;
         bool isMoving = false;
         bool isEjecting = false;
         GUI::Vector3f _offset = {0, 0, 0};
@@ -74,10 +73,6 @@ namespace GUI {
         int getLevel() const final;
 
         void setLevel(int level) final;
-
-        bool isInIncantation() const final;
-
-        void setInIncantation(bool inIncantation) final;
 
         bool getIsAlive() const final;
 

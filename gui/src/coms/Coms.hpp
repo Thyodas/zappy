@@ -209,21 +209,14 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerStartIncantation(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-//                TODO: variadic number of params
-// return c (!verifyNbParam(answer, 2)) continue;
                 std::string tmp;
                 std::stringstream ss(answer);
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 GUI::Vector2i pos = {std::stoi(params[0]), std::stoi(params[1])};
-                for (u_long i = 3; i < params.size(); i++) {
-                    for (auto &player : conf->getPlayers()) {
-                        if (!(player.second->getPos() == pos)) continue;
-                        player.second->setInIncantation(true);
-                        break;
-                    }
-                }
+                int firstPlayer = std::stoi(params[3]);
+                conf->getActions().addAction(ActionType::INCANTATION_BEGIN, firstPlayer, conf->getClock()->getElapsedTime());
             return conf;
         }
 
@@ -239,7 +232,6 @@ namespace GUI {
             for (u_long i = 3; i < params.size(); i++) {
                 for (auto &player : conf->getPlayers()) {
                     if (!(player.second->getPos() == pos)) continue;
-                    player.second->setInIncantation(result != 1);
                     player.second->setLevel(result == 1 ? player.second->getLevel() + 1 : player.second->getLevel());
                     break;
                 }
