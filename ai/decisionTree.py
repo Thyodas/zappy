@@ -94,7 +94,6 @@ class DecisionNode:
         else:
             return self.false_branch.make_decision()
 
-
 class ActionNode:
     def __init__(self, action):
         self.action = action
