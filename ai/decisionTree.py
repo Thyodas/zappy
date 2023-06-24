@@ -195,7 +195,7 @@ def action_look_for_food():
     tiles = client.player.look_around()
     go_index = 0
     for index, tile in enumerate(tiles):
-        if tile.Resources.food_count > 0:
+        if tile.resources.food_count > 0:
             go_index = index
             break
     if go_index == 0:
@@ -244,17 +244,17 @@ def is_elevation_ready():
 def enough_resources_on_tile():
     tiles = client.player.look_around()
     resources = resources_for_level[client.player.player_info.score]
-    if resources.linemate_count > tiles[0].Resources.linemate_count:
+    if resources.linemate_count > tiles[0].resources.linemate_count:
         return False
-    if resources.mendiane_count > tiles[0].Resources.mendiane_count:
+    if resources.mendiane_count > tiles[0].resources.mendiane_count:
         return False
-    if resources.phiras_count > tiles[0].Resources.phiras_count:
+    if resources.phiras_count > tiles[0].resources.phiras_count:
         return False
-    if resources.sibur_count > tiles[0].Resources.sibur_count:
+    if resources.sibur_count > tiles[0].resources.sibur_count:
         return False
-    if resources.thystame_count > tiles[0].Resources.thystame_count:
+    if resources.thystame_count > tiles[0].resources.thystame_count:
         return False
-    if resources.deraumer_count > tiles[0].Resources.deraumer_count:
+    if resources.deraumer_count > tiles[0].resources.deraumer_count:
         return False
     return True
 
@@ -295,7 +295,7 @@ def look_for_linemate():
     tiles = client.player.look_around()
     go_index = 0
     for index, tile in enumerate(tiles):
-        if tile.Resources.linemate_count > 0:
+        if tile.resources.linemate_count > 0:
             go_index = index
             break
     if go_index == 0:
@@ -315,7 +315,7 @@ def look_for_deraumer():
     tiles = client.player.look_around()
     go_index = 0
     for index, tile in enumerate(tiles):
-        if tile.Resources.deraumer_count > 0:
+        if tile.resources.deraumer_count > 0:
             go_index = index
             break
     if go_index == 0:
@@ -335,7 +335,7 @@ def look_for_mendiane():
     tiles = client.player.look_around()
     go_index = 0
     for index, tile in enumerate(tiles):
-        if tile.Resources.mendiane_count > 0:
+        if tile.resources.mendiane_count > 0:
             go_index = index
             break
     if go_index == 0:
@@ -355,7 +355,7 @@ def look_for_phiras():
     tiles = client.player.look_around()
     go_index = 0
     for index, tile in enumerate(tiles):
-        if tile.Resources.phiras_count > 0:
+        if tile.resources.phiras_count > 0:
             go_index = index
             break
     if go_index == 0:
@@ -375,7 +375,7 @@ def look_for_sibur():
     tiles = client.player.look_around()
     go_index = 0
     for index, tile in enumerate(tiles):
-        if tile.Resources.sibur_count > 0:
+        if tile.resources.sibur_count > 0:
             go_index = index
             break
     if go_index == 0:
@@ -395,7 +395,7 @@ def look_for_thystame():
     tiles = client.player.look_around()
     go_index = 0
     for index, tile in enumerate(tiles):
-        if tile.Resources.thystame_count > 0:
+        if tile.resources.thystame_count > 0:
             go_index = index
             break
     if go_index == 0:
