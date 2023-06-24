@@ -128,9 +128,9 @@ void GUI::Core::run()
             _running = false;
             break;
         }
+        handleConfigUpdate();
         _coms.process();
         handleUserInput();
-        handleConfigUpdate();
         this->draw();
     }
     _module->close();
@@ -142,8 +142,15 @@ void GUI::Core::handleConfigUpdate()
         for (auto &block : _coms.getConf()->getMapContent()) {
             _map->getCell(block.first)->setObjects(block.second);
         }
+        _coms.getConf()->getMapContent().clear();
     }
-    _coms.getConf()->getMapContent().clear();
+
+    if (_coms.getConf()->getDeadPlayers().size() > 0) {
+        for (auto player : _coms.getConf()->getDeadPlayers()) {
+            _coms.getConf()->deletePlayer(player);
+        }
+        _coms.getConf()->getDeadPlayers().clear();
+    }
 }
 
 void GUI::Core::handleEndGame()
@@ -205,6 +212,8 @@ void GUI::Core::drawCellDetails(std::shared_ptr<ICell> cell)
         type = "Cell";
         pos = cell->getPos();
     } else {
+        if (_coms.getConf()->getPlayers().find(_map->getPlayerId()) == _coms.getConf()->getPlayers().end())
+            return;
         std::shared_ptr<IPlayer> player = _coms.getConf()->getPlayers()[_map->getPlayerId()];
         stock = player->getInventory();
         type = "Player";
@@ -257,6 +266,8 @@ void GUI::Core::drawPlayers()
     Actions actions = _coms.getConf()->getActions();
     Vector3f offset = {0, 0, 0};
     for (auto &player : _coms.getConf()->getPlayers()) {
+        if (player.second == nullptr || (player.second != nullptr && player.second->getIsAlive() == false))
+            continue;
         Vector3f pos = _module->mousePosFromGrid(player.second->getPos(), _module->getModelSize(ModelEntity::GRASS_BLOCK).x, _map->getSize());
         if (actions.isAction(player.first)) {
             ActionData action = actions.getAction(player.first);

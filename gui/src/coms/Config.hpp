@@ -95,7 +95,11 @@ namespace GUI {
         }
 
         void addPlayer(int id, std::shared_ptr<IPlayer> player) {
-            players.insert(std::make_pair(id, player));
+            players.insert({id, player});
+        }
+
+        void deletePlayer(int id) {
+            players.erase(id);
         }
 
         Actions &getActions() final {
@@ -104,6 +108,10 @@ namespace GUI {
 
         std::shared_ptr<IClock> &getClock() final {
             return _clock;
+        }
+
+        std::vector<int>& getDeadPlayers() final {
+            return _deadPlayers;
         }
 
         public:
@@ -117,8 +125,7 @@ namespace GUI {
 
             std::map<int, std::shared_ptr<IPlayer>> players; // playerId, player
             std::vector<std::string> _teams;
-
-
+            std::vector<int> _deadPlayers;
             Actions _actions;
             std::shared_ptr<IClock> _clock = std::make_shared<Chrono>();
     };

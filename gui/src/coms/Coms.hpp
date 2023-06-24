@@ -299,6 +299,8 @@ namespace GUI {
                 for (auto &player :conf->getPlayers()) {
                     if (player.second->getId() != id) continue;
                     player.second->setIsAlive(false);
+                    conf->getDeadPlayers().push_back(player.first);
+                    conf->getActions().addAction(ActionData(ActionType::DIE, player.second->getId(), conf->getClock()->getElapsedTime()));
                     break;
                 }
             return conf;

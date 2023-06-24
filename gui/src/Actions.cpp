@@ -17,7 +17,7 @@ GUI::Actions::Actions() : _frequence(100)
     _actionsTime[CONNECT_NBR] = 0 / _frequence;
     _actionsTime[FORK] = 42 / _frequence;
     _actionsTime[EJECT] = 7 / _frequence;
-    _actionsTime[DIE] = 0 / _frequence;
+    _actionsTime[DIE] = 7 / _frequence; // replaced 0 by 7 to play animation
     _actionsTime[TAKE_OBJECT] = 7 / _frequence;
     _actionsTime[SET_OBJECT] = 7 / _frequence;
     _actionsTime[INCANTATION] = 300 / _frequence;
@@ -25,6 +25,7 @@ GUI::Actions::Actions() : _frequence(100)
     _actions[MOVE] = &Actions::c_move;
     _actions[TAKE_OBJECT] = &Actions::c_takeObject;
     _actions[SET_OBJECT] = &Actions::c_dropObject;
+    _actions[DIE] = &Actions::c_die;
 }
 
 void GUI::Actions::addAction(ActionType type, int playerId, Direction direction, Vector2i pos, float timestamp)
@@ -128,8 +129,6 @@ GUI::AnimationType GUI::Actions::c_move(std::shared_ptr<IPlayer>& player, Action
     }
 }
 
-#include <iostream>
-
 GUI::AnimationType GUI::Actions::c_takeObject(std::shared_ptr<IPlayer>& player, ActionData &data, [[maybe_unused]] std::shared_ptr<ICell>& cell, [[maybe_unused]] std::map<int, std::shared_ptr<IPlayer>>& players, double now)
 {
     if (player->getAnimation() != ANIM_CROUNCH)
@@ -152,6 +151,20 @@ GUI::AnimationType GUI::Actions::c_dropObject(std::shared_ptr<IPlayer>& player, 
 
     if (elapsed < _actionsTime[SET_OBJECT] * 1000) {
         return ANIM_CROUNCH;
+    } else {
+        player->setAnimation(ANIM_IDLE);
+        return AnimationType::ANIM_END;
+    }
+}
+
+GUI::AnimationType GUI::Actions::c_die(std::shared_ptr<IPlayer> &player, ActionData &data, [[maybe_unused]] std::shared_ptr<ICell>& cell, std::map<int, std::shared_ptr<IPlayer>>& players, double now)
+{
+    if (player->getAnimation() != ANIM_DIE)
+        player->setAnimation(ANIM_DIE);
+    double elapsed = now - data.getTimestamp();
+
+    if (elapsed < _actionsTime[DIE] * 1000) {
+        return ANIM_DIE;
     } else {
         player->setAnimation(ANIM_IDLE);
         return AnimationType::ANIM_END;

@@ -121,6 +121,7 @@ namespace GUI {
             AnimationType c_move(std::shared_ptr<IPlayer> &player, ActionData &data, std::shared_ptr<ICell>& cell, std::map<int, std::shared_ptr<IPlayer>>& players, double now);
             AnimationType c_takeObject(std::shared_ptr<IPlayer> &player, ActionData &data, std::shared_ptr<ICell>& cell, std::map<int, std::shared_ptr<IPlayer>>& players, double now);
             AnimationType c_dropObject(std::shared_ptr<IPlayer> &player, ActionData &data, std::shared_ptr<ICell>& cell, std::map<int, std::shared_ptr<IPlayer>>& players, double now);
+            AnimationType c_die(std::shared_ptr<IPlayer> &player, ActionData &data, std::shared_ptr<ICell>& cell, std::map<int, std::shared_ptr<IPlayer>>& players, double now);
     };
 };
 

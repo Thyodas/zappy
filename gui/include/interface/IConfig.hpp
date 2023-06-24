@@ -38,6 +38,8 @@ namespace GUI {
         virtual std::map<int, std::shared_ptr<IPlayer>>& getPlayers() = 0;
         virtual Actions &getActions() = 0;
         virtual std::shared_ptr<IClock> &getClock() = 0;
+        virtual std::vector<int>& getDeadPlayers() = 0;
+        virtual void deletePlayer(int id) = 0;
     };
 
 } // GUI
