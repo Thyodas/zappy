@@ -222,20 +222,6 @@ namespace GUI {
 
         static std::shared_ptr<IConfig> playerEndIncantation(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
             if (!verifyNbParam(answer, 3)) return conf;
-            std::string tmp;
-            std::stringstream ss(answer);
-            std::vector<std::string> params;
-            while (!std::cin.eof() && std::getline(ss, tmp, ' '))
-                params.push_back(tmp);
-            GUI::Vector2i pos = {std::stoi(params[0]), std::stoi(params[1])};
-            int result = std::stoi(params[2]); // 1 if success, 0 if fail
-            for (u_long i = 3; i < params.size(); i++) {
-                for (auto &player : conf->getPlayers()) {
-                    if (!(player.second->getPos() == pos)) continue;
-                    player.second->setLevel(result == 1 ? player.second->getLevel() + 1 : player.second->getLevel());
-                    break;
-                }
-            }
             return conf;
         }
 
