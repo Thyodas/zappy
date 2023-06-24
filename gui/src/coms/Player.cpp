@@ -8,6 +8,17 @@
 #include "Player.hpp"
 
 namespace GUI {
+    Player::Player(int id, std::string teamName = "", int orientation = 1, int level = 1) {
+        this->id = id;
+        this->teamName = std::move(teamName);
+        this->orientation = static_cast<GUI::Direction>(orientation);
+        this->level = level;
+        for (int i = 0; i < GUI::Object::OBJ_LAST_ELEMENT; i++) {
+            _inventory[(GUI::Object)i] = 0;
+        }
+        _inventory[GUI::Object::OBJ_FOOD] = 10;
+    }
+
     const std::string &Player::getTeamName() const {
         return teamName;
     }

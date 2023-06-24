@@ -22,6 +22,8 @@ namespace GUI {
             GUI::Vector2i getPos() const;
             std::unordered_map<Object, int> getObjects() const;
             void addObject(GUI::Object object);
+            void removeObject(GUI::Object object);
+            void setObjects(std::vector<int> objects);
         protected:
         private:
             GUI::Vector2i _pos;

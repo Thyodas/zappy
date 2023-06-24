@@ -10,6 +10,8 @@
 
     #include <iostream>
 
+    #define DEFAULT_LOCALHOST_ADRESS "127.0.0.1"
+
 namespace GUI {
     struct Args {
         int port;

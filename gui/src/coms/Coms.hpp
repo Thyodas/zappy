@@ -58,7 +58,7 @@ namespace GUI {
             GUI::Vector2i pos = {std::stoi(params[0]), std::stoi(params[1])};
             std::vector<int> content = {std::stoi(params[2]), std::stoi(params[3]), std::stoi(params[4]), std::stoi(params[5]), std::stoi(params[6]), std::stoi(params[7]),
                                                 std::stoi(params[8])};
-            conf->getMapContent()[pos] = content;
+            conf->getMapContent().emplace(std::make_pair(pos, content));
             return conf;
         }
 
@@ -127,7 +127,6 @@ namespace GUI {
                 for (auto &player : conf->getPlayers()) {
                     if (player.second->getId() != id) continue;
                     conf->getActions().addAction(ActionType::MOVE, player.second->getId(), static_cast<Direction>(orientation), pos, conf->getClock()->getElapsedTime());
-                    // player.second->setOrientation(static_cast<Direction>(orientation));
                     break;
                 }
             return conf;
@@ -265,8 +264,7 @@ namespace GUI {
                 for (auto &player : conf->getPlayers()) {
                     if (player.second->getId() != id) continue;
                     Object obj = static_cast<Object>(resourceIndex);
-                    player.second->setInventoryObject(obj, player.second->getInventoryObject(obj) - 1);
-                    conf->getMapContent()[player.second->getPos()].at(resourceIndex) += 1;
+                    conf->getActions().addAction(ActionData(ActionType::SET_OBJECT, player.second->getId(), player.second->getPos(), conf->getClock()->getElapsedTime(), obj));
                     break;
                 }
             return conf;
@@ -284,8 +282,7 @@ namespace GUI {
                 for (auto &player : conf->getPlayers()) {
                     if (player.second->getId() != id) continue;
                     Object obj = static_cast<Object>(resourceIndex);
-                    player.second->setInventoryObject(obj, player.second->getInventoryObject(obj) + 1);
-                    conf->getMapContent()[player.second->getPos()].at(resourceIndex) -= 1;
+                    conf->getActions().addAction(ActionData(ActionType::TAKE_OBJECT, player.second->getId(), player.second->getPos(), conf->getClock()->getElapsedTime(), obj));
                     break;
                 }
             return conf;
@@ -425,6 +422,7 @@ namespace GUI {
         const std::shared_ptr<IConfig> &getConf() const;
 
         std::string _answer;
+        void addRequest(const std::string &request);
     private:
         std::unique_ptr<INetwork> _network = std::make_unique<Network>();
         bool _requestToSend = false;
@@ -436,7 +434,6 @@ namespace GUI {
         void disconnect();
         void reset_fd();
         int select();
-        void addRequest(const std::string &request);
         void send();
         bool receive();
         void handleRequest();

@@ -130,10 +130,20 @@ void GUI::Core::run()
         }
         _coms.process();
         handleUserInput();
-        if (_module->isInteraction())
-            this->draw();
+        handleConfigUpdate();
+        this->draw();
     }
     _module->close();
+}
+
+void GUI::Core::handleConfigUpdate()
+{
+    if (_coms.getConf()->getMapContent().size() > 0) {
+        for (auto &block : _coms.getConf()->getMapContent()) {
+            _map->getCell(block.first)->setObjects(block.second);
+        }
+    }
+    _coms.getConf()->getMapContent().clear();
 }
 
 void GUI::Core::handleEndGame()
@@ -250,7 +260,7 @@ void GUI::Core::drawPlayers()
         Vector3f pos = _module->mousePosFromGrid(player.second->getPos(), _module->getModelSize(ModelEntity::GRASS_BLOCK).x, _map->getSize());
         if (actions.isAction(player.first)) {
             ActionData action = actions.getAction(player.first);
-            AnimationType animation = actions.execute(player.second, action, _coms.getConf()->getClock()->getElapsedTime());
+            AnimationType animation = actions.execute(player.second, _map->getCell(player.second->getPos()), action, _coms.getConf()->getPlayers(), _coms.getConf()->getClock()->getElapsedTime());
             if (animation == AnimationType::ANIM_END) {
                 _coms.getConf()->getActions().deleteAction(player.first);
                 player.second->setAnimation(AnimationType::ANIM_IDLE);

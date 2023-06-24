@@ -18,13 +18,8 @@ namespace GUI {
     public:
         Player() {};
         Player(const Player &player) = default;
-        Player(int id, std::string teamName = "", int orientation = 1,
-               int level = 1) {
-            this->id = id;
-            this->teamName = std::move(teamName);
-            this->orientation = static_cast<GUI::Direction>(orientation);
-            this->level = level;
-        }
+        Player(int id, std::string teamName, int orientation,
+               int level);
 
         ~Player() final = default;
 

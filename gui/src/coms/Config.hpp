@@ -118,6 +118,7 @@ namespace GUI {
             std::map<int, std::shared_ptr<IPlayer>> players; // playerId, player
             std::vector<std::string> _teams;
 
+
             Actions _actions;
             std::shared_ptr<IClock> _clock = std::make_shared<Chrono>();
     };

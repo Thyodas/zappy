@@ -23,6 +23,8 @@ GUI::Actions::Actions() : _frequence(100)
     _actionsTime[INCANTATION] = 300 / _frequence;
 
     _actions[MOVE] = &Actions::c_move;
+    _actions[TAKE_OBJECT] = &Actions::c_takeObject;
+    _actions[SET_OBJECT] = &Actions::c_dropObject;
 }
 
 void GUI::Actions::addAction(ActionType type, int playerId, Direction direction, Vector2i pos, float timestamp)
@@ -33,6 +35,11 @@ void GUI::Actions::addAction(ActionType type, int playerId, Direction direction,
 void GUI::Actions::addAction(ActionType type, int playerId, float timestamp)
 {
     _playersActions[playerId].push_back(ActionData(type, playerId, timestamp));
+}
+
+void GUI::Actions::addAction(ActionData action)
+{
+    _playersActions[action.getPlayerId()].push_back(ActionData(action));
 }
 
 void GUI::Actions::deleteAction(int playerId)
@@ -50,7 +57,38 @@ GUI::ActionData GUI::Actions::getAction(int playerId)
     return _playersActions[playerId].front();
 }
 
-GUI::AnimationType GUI::Actions::c_move(std::shared_ptr<IPlayer>& player, ActionData &data, double now)
+void GUI::Actions::setGridSize(GUI::Vector3f size)
+{
+    _gridSize = size;
+}
+
+GUI::AnimationType GUI::Actions::execute(std::shared_ptr<IPlayer>& player, std::shared_ptr<ICell>& cell, ActionData &data, std::map<int, std::shared_ptr<IPlayer>>& players, double now)
+{
+    return (this->*_actions[data.getType()])(player, data, cell, players, now);
+}
+
+double GUI::Actions::getDuration(ActionType type)
+{
+    return _actionsTime[type];
+}
+
+void GUI::Actions::setFrequence(double frequence)
+{
+    _frequence = frequence;
+    _actionsTime[MOVE] = 7 / _frequence;
+    _actionsTime[LOOK] = 7 / _frequence;
+    _actionsTime[INVENTORY] = 1 / _frequence;
+    _actionsTime[BROADCAST] = 7 / _frequence;
+    _actionsTime[CONNECT_NBR] = 0 / _frequence;
+    _actionsTime[FORK] = 42 / _frequence;
+    _actionsTime[EJECT] = 7 / _frequence;
+    _actionsTime[DIE] = 0 / _frequence;
+    _actionsTime[TAKE_OBJECT] = 7 / _frequence;
+    _actionsTime[SET_OBJECT] = 7 / _frequence;
+    _actionsTime[INCANTATION] = 300 / _frequence;
+}
+
+GUI::AnimationType GUI::Actions::c_move(std::shared_ptr<IPlayer>& player, ActionData &data, [[maybe_unused]] std::shared_ptr<ICell>& cell, [[maybe_unused]] std::map<int, std::shared_ptr<IPlayer>>& players, double now)
 {
     if (player->getAnimation() != ANIM_WALKING && player->getPos() != data.getPos())
         player->setAnimation(ANIM_WALKING);
@@ -90,33 +128,32 @@ GUI::AnimationType GUI::Actions::c_move(std::shared_ptr<IPlayer>& player, Action
     }
 }
 
-void GUI::Actions::setGridSize(GUI::Vector3f size)
+#include <iostream>
+
+GUI::AnimationType GUI::Actions::c_takeObject(std::shared_ptr<IPlayer>& player, ActionData &data, [[maybe_unused]] std::shared_ptr<ICell>& cell, [[maybe_unused]] std::map<int, std::shared_ptr<IPlayer>>& players, double now)
 {
-    _gridSize = size;
+    if (player->getAnimation() != ANIM_CROUNCH)
+        player->setAnimation(ANIM_CROUNCH);
+    double elapsed = now - data.getTimestamp();
+
+    if (elapsed < _actionsTime[TAKE_OBJECT] * 1000) {
+        return ANIM_CROUNCH;
+    } else {
+        player->setAnimation(ANIM_IDLE);
+        return AnimationType::ANIM_END;
+    }
 }
 
-GUI::AnimationType GUI::Actions::execute(std::shared_ptr<IPlayer>& player, ActionData &data, double now)
+GUI::AnimationType GUI::Actions::c_dropObject(std::shared_ptr<IPlayer>& player, ActionData &data, [[maybe_unused]] std::shared_ptr<ICell>& cell, [[maybe_unused]] std::map<int, std::shared_ptr<IPlayer>>& players, double now)
 {
-    return (this->*_actions[data.getType()])(player, data, now);
-}
+    if (player->getAnimation() != ANIM_CROUNCH)
+        player->setAnimation(ANIM_CROUNCH);
+    double elapsed = now - data.getTimestamp();
 
-double GUI::Actions::getDuration(ActionType type)
-{
-    return _actionsTime[type];
-}
-
-void GUI::Actions::setFrequence(double frequence)
-{
-    _frequence = frequence;
-    _actionsTime[MOVE] = 7 / _frequence;
-    _actionsTime[LOOK] = 7 / _frequence;
-    _actionsTime[INVENTORY] = 1 / _frequence;
-    _actionsTime[BROADCAST] = 7 / _frequence;
-    _actionsTime[CONNECT_NBR] = 0 / _frequence;
-    _actionsTime[FORK] = 42 / _frequence;
-    _actionsTime[EJECT] = 7 / _frequence;
-    _actionsTime[DIE] = 0 / _frequence;
-    _actionsTime[TAKE_OBJECT] = 7 / _frequence;
-    _actionsTime[SET_OBJECT] = 7 / _frequence;
-    _actionsTime[INCANTATION] = 300 / _frequence;
+    if (elapsed < _actionsTime[SET_OBJECT] * 1000) {
+        return ANIM_CROUNCH;
+    } else {
+        player->setAnimation(ANIM_IDLE);
+        return AnimationType::ANIM_END;
+    }
 }

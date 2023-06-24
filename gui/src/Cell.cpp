@@ -33,3 +33,15 @@ void GUI::Cell::addObject(GUI::Object object)
 {
     _objects[object] += 1;
 }
+
+void GUI::Cell::removeObject(GUI::Object object)
+{
+    _objects[object] -= 1;
+}
+
+void GUI::Cell::setObjects(std::vector<int> objects)
+{
+    for (int i = 0; i < GUI::Object::OBJ_LAST_ELEMENT; i++) {
+        _objects[(GUI::Object)i] = objects[i];
+    }
+}

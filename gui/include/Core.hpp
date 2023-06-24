@@ -36,6 +36,7 @@ namespace GUI {
             void drawPlayers();
             void handleEndGame();
             void handleCharacterSelection(Vector3f pos, int playerId);
+            void handleConfigUpdate();
             bool _running;
             GUI::Vector2i _windowSize;
             GUI::config _config;

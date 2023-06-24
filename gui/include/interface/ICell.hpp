@@ -29,6 +29,8 @@ namespace GUI {
             virtual GUI::Vector2i getPos() const = 0;
             virtual std::unordered_map<GUI::Object, int> getObjects() const = 0;
             virtual void addObject(GUI::Object object) = 0;
+            virtual void removeObject(GUI::Object object) = 0;
+            virtual void setObjects(std::vector<int> objects) = 0;
     };
 };
 
