@@ -94,6 +94,7 @@ class DecisionNode:
         else:
             return self.false_branch.make_decision()
 
+
 class ActionNode:
     def __init__(self, action):
         self.action = action
@@ -234,6 +235,7 @@ def action_fork():
     # client.player.already_reproduced = True
     logger.success("Reproduced sucessfully")
     return "Reproduced sucessfully"
+
 
 def is_level_8():
     return client.player.player_info.score == 8
