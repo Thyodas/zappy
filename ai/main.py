@@ -13,17 +13,17 @@ if __name__ == "__main__":
     client.player = client.ZappyClient(port=args.port, name=args.name, machine=args.host)
     client.player.connect()
 
-    root = decisionTree.DecisionNode(decisionTree.is_front_clear, decisionTree.ActionNode(decisionTree.move_forward_action), decisionTree.ActionNode(decisionTree.turn_right_action))
+    root = decisionTree.init_decision_tree()
 
     while True:
-        try:
-            action = root.make_decision()
-            print(action)
-        except KeyboardInterrupt:
-            print("\nStopping the game...")
-            client.close()
-            break
-        except Exception as e:
-            print(f"Error in game loop: {e}")
-            client.close()
-            break
+        action = root.make_decision()
+        # try:
+        #     print(action)
+        # except KeyboardInterrupt:
+        #     print("\nStopping the game...")
+        #     client.player.close()
+        #     break
+        # except Exception as e:
+        #     print(f"Error in game loop: {e}")
+        #     client.player.close()
+        #     break

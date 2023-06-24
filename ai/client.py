@@ -5,6 +5,8 @@ import sys
 from dataclasses import dataclass, field
 from enum import Enum
 import time
+import uuid
+import logger
 
 class DefaultTimeLimit(Enum):
     FORWARD = 7
@@ -36,7 +38,8 @@ class PlayerInfo:
     team: str = "Overflow"
     positionX: int = 0
     positionY: int = 0
-    score: int = 0
+    score: int = 1
+    uuid: str = str(uuid.uuid4())
     inventory: dict = field(default_factory=dict)
 
 
@@ -60,11 +63,12 @@ class ZappyClient:
         self.elevation_underway = False
         self.leader = False
         self.ready_to_elevate = False
-        self.actionQueue = []
         self.incanting = False
         self.nbPlayersReady = 0
         self.broadcastDirection = -1
         self.alreadyBrocasted = False
+        self.alreadyReproduced = False
+        self.uuidIncanting = ""
 
     def connect(self):
         try:
@@ -94,18 +98,26 @@ class ZappyClient:
             exit(1)
 
     def handleMessage(self, direction, text):
-        if text.startswith("Help elevation") and int(text.split(' ')[1]) == self.player_info.score:
+        data_map = json.loads(text)
+        logger.warn(f"Received broadcast from level {data_map['score']} player {data_map['uuid']} in team {data_map['team']} with message : {data_map['message']}")
+        if data_map["message"] == "Help elevation" and data_map["team"] == self.player_info.team and data_map["score"] == self.player_info.score and data_map["uuid"] > self.uuidIncanting:
             self.elevation_underway = True
             self.broadcastDirection = direction
-        if text.startswith("Cancel") and self.elevation_underway:
+            self.uuidIncanting = data_map["uuid"]
+        if data_map["message"] == "Cancel" and data_map["team"] == self.player_info.team and data_map["score"] == self.player_info.score:
             self.elevation_underway = False
             self.ready_to_elevate = False
             self.alreadyBrocasted = False
             self.broadcastDirection = -1
-        if text.startswith("I'm here") and self.leader:
+            self.uuidIncanting = ""
+        if data_map["message"] == "I'm here" and data_map["team"] == self.player_info.team and data_map["score"] == self.player_info.score and self.leader:
             self.nbPlayersReady += 1
-        if text.startswith("Ready") and self.elevation_underway:
+        if data_map["message"] == "Ready" and data_map["team"] == self.player_info.team and data_map["score"] == self.player_info.score and self.elevation_underway:
             self.ready_to_elevate = True
+        # if text.startswith("Help elevation") and int(text.split(' ')[1]) == self.player_info.score:
+        #if text.startswith("Cancel") and self.elevation_underway:
+        #if text.startswith("I'm here") and self.leader:
+        #if text.startswith("Ready") and self.elevation_underway:
 
     def receive(self, timeLimit):
         data = ""
@@ -133,14 +145,17 @@ class ZappyClient:
                 return data
             if elapsed_time + delta < timeLimit / self.frequence or elapsed_time - delta > timeLimit / self.frequence:
                 self.frequence = timeLimit / elapsed_time
-                print(f"Found a new frequence {self.frequence}")
+                logger.warn(f"Found a new frequence {self.frequence}")
             if data.startswith("message"):
                 data = data.strip()
-                parts = data.split(',')
-                K = int(parts[0].split()[1])
-                text = parts[1].strip()
+                K = int(data[8])
+                text = data[11:]
+                # data = data.strip()
+                # parts = data.split(',')
+                # K = int(parts[0].split()[1])
+                # text = parts[1].strip()
                 self.handleMessage(K, text)
-                self.receive(timeLimit)
+                return self.receive(timeLimit)
             if data.startswith("dead"):
                 self.close()
         except Exception as e:
@@ -154,18 +169,22 @@ class ZappyClient:
             print(f"Error closing the socket: {e}")
 
     def move_forward(self):
+        logger.info("Going forward")
         self.send('Forward\n')
         return self.receive(DefaultTimeLimit.FORWARD.value)
 
     def turn_right(self):
+        logger.info("Going right")
         self.send('Right\n')
         return self.receive(DefaultTimeLimit.RIGHT.value)
 
     def get_team_slots(self):
+        logger.info(f"{self.clientNum} Fetching team slots")
         self.send('Connect_nbr\n')
-        return self.receive(DefaultTimeLimit.CONNECT_NBR.value).strip()
+        return self.receive(DefaultTimeLimit.CONNECT_NBR.value)
 
     def fork_player(self):
+        logger.info(f"{self.clientNum} Forking")
         self.send('Fork\n')
         response = self.receive(DefaultTimeLimit.FORK.value)
         if response.strip() == "ok":
@@ -175,23 +194,28 @@ class ZappyClient:
         return response
 
     def eject_players(self):
+        logger.info("Ejecting")
         self.send('Eject\n')
         return self.receive(DefaultTimeLimit.EJECT.value)
 
     def take_object(self, object_name):
+        logger.info(f"Taking object {object_name}")
         self.send(f'Take {object_name}\n')
         return self.receive(DefaultTimeLimit.TAKE.value)
 
     def set_object(self, object_name):
+        logger.info(f"Putting down object {object_name}")
         self.send(f'Set {object_name}\n')
         return self.receive(DefaultTimeLimit.SET.value)
 
     def start_incantation(self):
+        logger.success("Starting incantation")
         self.send('Incantation\n')
         return self.receive(DefaultTimeLimit.INCANTATION.value)
 
     # Store the inventory in the player_info + return it
     def inventory(self):
+        logger.info(f"{self.clientNum} Fetching inventory")
         try:
             self.send('Inventory\n')
 
@@ -224,17 +248,19 @@ class ZappyClient:
                 elif key == 'thystame':
                     inventory.ThystameCount = value
 
-            print("Inventory: " + str(inventory))
+            logger.info("Inventory: " + str(inventory))
             self.player_info.inventory = inventory
             return inventory
         except Exception as e:
             print(f"Error getting inventory: {e}")
 
     def turn_left(self):
+        logger.info("Turning left")
         self.send('Left\n')
         return self.receive(DefaultTimeLimit.LEFT.value)
 
     def look_around(self):
+        logger.info(f"{self.clientNum} Looking around")
         try:
             self.send('Look\n')
             response = self.receive(DefaultTimeLimit.LOOK.value)
@@ -275,12 +301,22 @@ class ZappyClient:
             print(f"Error looking around: {e}")
 
     def broadcast(self, text):
+        logger.info("Broadcasting...")
         self.send(formatBroadCastMessage(self.player_info, text))
         return self.receive(DefaultTimeLimit.BROADCAST.value)
 
 def formatBroadCastMessage(playerInfo: PlayerInfo, message: str) -> str:
+
+    #     team: str = "Overflow"
+    # positionX: int = 0
+    # positionY: int = 0
+    # score: int = 1
+    # inventory: dict = field(default_factory=dict)
+
     struct = {
-        "playerInfo": playerInfo,
+        "team": playerInfo.team,
+        "uuid": playerInfo.uuid,
+        "score": playerInfo.score,
         "message": message
     }
     return f'Broadcast {json.dumps(struct)}\n'
