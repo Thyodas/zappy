@@ -5,6 +5,7 @@
 ** player.c
 */
 
+#include <assert.h>
 #include "data.h"
 #include "obj/player.h"
 #include "utils.h"
@@ -44,18 +45,18 @@ int zappy_remove_player(zappy_t *zappy, player_t *player)
 {
     if (player == NULL)
         return 0;
+    if (vector_remove_by_ptr(vectorize(&player->team->player_vector), player)
+        == NULL)
+        return 1;
     if (player->type != P_AI) {
         if (vector_remove_by_ptr(vectorize(&zappy->db.gui_vector), player)
             == NULL)
             return 1;
-        zappy->map.cells[player->pos.y][player->pos.x].nb_players -= 1;
         free_player(player);
         return 0;
     }
+    zappy->map.cells[player->pos.y][player->pos.x].nb_players -= 1;
     if (vector_remove_by_ptr(vectorize(&zappy->db.ai_vector), player)
-        == NULL)
-        return 1;
-    if (vector_remove_by_ptr(vectorize(&player->team->player_vector), player)
         == NULL)
         return 1;
     free_player(player);
@@ -80,6 +81,7 @@ void zappy_move_player(zappy_t *zappy, player_t *player,
             new_pos.x = RANGE(new_pos.x - 1, zappy->map.width);
             break;
     }
+    assert(zappy->map.cells[player->pos.y][player->pos.x].nb_players != 0);
     zappy->map.cells[player->pos.y][player->pos.x].nb_players -= 1;
     zappy->map.cells[new_pos.y][new_pos.x].nb_players += 1;
     player->pos = new_pos;
