@@ -17,9 +17,12 @@
 int buffer_write(string_buffer_t *buffer, const char *string, uint32_t len)
 {
     buffer_truncate(buffer);
-    buffer->buffer = realloc(buffer->buffer, len + buffer->len + 1);
-    if (buffer->buffer == NULL)
+    char *tmp = realloc(buffer->buffer, len + buffer->len + 1);
+    if (tmp == NULL) {
+        buffer_free_content(buffer);
         return 1;
+    }
+    buffer->buffer = tmp;
     memcpy(buffer->buffer + buffer->len, string, len);
     buffer->len += len;
     buffer->buffer[buffer->len] = '\0';

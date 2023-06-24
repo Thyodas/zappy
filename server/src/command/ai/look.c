@@ -9,6 +9,7 @@
 #include "data.h"
 #include "utils.h"
 #include "command.h"
+#include "buffer/buffer.h"
 
 static void print_repeat(connection_t *con, const char *to_print, uint32_t n)
 {
@@ -80,10 +81,9 @@ static pos_t get_abs_pos(zappy_t *zappy, player_t *player, int32_t x,
 int ai_look(zappy_t *zappy, connection_t *con)
 {
     player_t *player = con->player;
-    uint32_t buf_start = con->res_buffer.len;
     print_tile(zappy, con, player->pos);
-    if (buf_start != con->res_buffer.len)
-        con->res_buffer.buffer[buf_start] = '[';
+    if (buffer_get_read_len(&con->res_buffer) > 0)
+        con->res_buffer.buffer[con->res_buffer.read_bytes] = '[';
     else
         send_response(con, "[", 1);
     for (int32_t lvl = 1; lvl <= (int32_t)player->level; ++lvl) {
