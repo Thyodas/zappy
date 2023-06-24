@@ -177,17 +177,17 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerExpulsion(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 2)) return conf;
+            if (!verifyNbParam(answer, 1)) return conf;
                 std::string tmp;
                 std::stringstream ss(answer);
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 int id = std::stoi(params[0]);
-                for (auto &player : conf->getPlayers()) {
-                    if (player.second->getId() != id) continue;
-                    player.second->setIsEjecting(true);
-                    break;
+                std::vector<int> playersOnTile;
+                if (conf->getPlayers().find(id) != conf->getPlayers().end()) {
+                    std::shared_ptr<IPlayer> player = conf->getPlayers().at(id);
+                    conf->getActions().addAction(ActionType::MOVE, player->getId(), static_cast<Direction>(player->getOrientation()), player->getPos(), conf->getClock()->getElapsedTime());
                 }
             return conf;
         }
