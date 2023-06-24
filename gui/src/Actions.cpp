@@ -78,6 +78,7 @@ void GUI::Actions::setFrequence(double frequence)
     _actionsTime[INCANTATION] = 300 / _frequence;
 }
 
+// Uncomment to move player while animating
 GUI::AnimationType GUI::Actions::c_move(std::shared_ptr<IPlayer>& player, ActionData &data, [[maybe_unused]] std::shared_ptr<ICell>& cell, [[maybe_unused]] std::map<int, std::shared_ptr<IPlayer>>& players, double now)
 {
     if (player->getAnimation() != ANIM_WALKING && player->getPos() != data.getPos())
@@ -85,30 +86,30 @@ GUI::AnimationType GUI::Actions::c_move(std::shared_ptr<IPlayer>& player, Action
     double elapsed = now - data.getTimestamp();
 
     if (elapsed < _actionsTime[MOVE] * 1000) {
-        double progress = elapsed / (_actionsTime[MOVE] * 1000);
-        float toMove = progress * _gridSize.z;
-        GUI::Vector3f offset = player->getOffset();
-
+        // double progress = elapsed / (_actionsTime[MOVE] * 1000);
+        // float toMove = progress * _gridSize.z;
+        // GUI::Vector3f offset = player->getOffset();
         switch (data.getDirection()) {
             case NORTH:
-                player->setOffset({0, 0, -toMove});
+                // player->setOffset({0, 0, -toMove});
                 player->setOrientation(NORTH);
                 break;
             case SOUTH:
-                player->setOffset({0, 0, toMove});
+                // player->setOffset({0, 0, toMove});
                 player->setOrientation(SOUTH);
                 break;
             case WEST:
-                player->setOffset({-toMove, 0, 0});
+                // player->setOffset({-toMove, 0, 0});
                 player->setOrientation(WEST);
                 break;
             case EAST:
-                player->setOffset({toMove, 0, 0});
+                // player->setOffset({toMove, 0, 0});
                 player->setOrientation(EAST);
                 break;
             default:
                 break;
         }
+        player->setOffset({0, 0, 0});
         return ANIM_WALKING;
     } else {
         player->setOffset({0, 0, 0});
