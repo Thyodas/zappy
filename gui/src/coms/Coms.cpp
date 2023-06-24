@@ -68,6 +68,7 @@ namespace GUI {
         send();
         reset_fd();
         addRequest("tna\n");
+        addRequest("sgt\n");
     }
 
     void Coms::handleRequest() {

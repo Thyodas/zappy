@@ -8,24 +8,13 @@
 #include "Actions.hpp"
 #include <algorithm>
 
-GUI::Actions::Actions() : _frequence(100)
+GUI::Actions::Actions() : _frequence(-1)
 {
-    _actionsTime[MOVE] = 7 / _frequence;
-    _actionsTime[LOOK] = 7 / _frequence;
-    _actionsTime[INVENTORY] = 1 / _frequence;
-    _actionsTime[BROADCAST] = 7 / _frequence;
-    _actionsTime[CONNECT_NBR] = 0 / _frequence;
-    _actionsTime[FORK] = 42 / _frequence;
-    _actionsTime[EJECT] = 7 / _frequence;
-    _actionsTime[DIE] = 7 / _frequence; // replaced 0 by 7 to play animation
-    _actionsTime[TAKE_OBJECT] = 7 / _frequence;
-    _actionsTime[SET_OBJECT] = 7 / _frequence;
-    _actionsTime[INCANTATION] = 300 / _frequence;
-
     _actions[MOVE] = &Actions::c_move;
     _actions[TAKE_OBJECT] = &Actions::c_takeObject;
     _actions[SET_OBJECT] = &Actions::c_dropObject;
     _actions[DIE] = &Actions::c_die;
+    _actions[BROADCAST] = &Actions::c_broadcast;
 }
 
 void GUI::Actions::addAction(ActionType type, int playerId, Direction direction, Vector2i pos, float timestamp)
@@ -83,7 +72,7 @@ void GUI::Actions::setFrequence(double frequence)
     _actionsTime[CONNECT_NBR] = 0 / _frequence;
     _actionsTime[FORK] = 42 / _frequence;
     _actionsTime[EJECT] = 7 / _frequence;
-    _actionsTime[DIE] = 0 / _frequence;
+    _actionsTime[DIE] = 7 / _frequence;
     _actionsTime[TAKE_OBJECT] = 7 / _frequence;
     _actionsTime[SET_OBJECT] = 7 / _frequence;
     _actionsTime[INCANTATION] = 300 / _frequence;
@@ -157,7 +146,7 @@ GUI::AnimationType GUI::Actions::c_dropObject(std::shared_ptr<IPlayer>& player, 
     }
 }
 
-GUI::AnimationType GUI::Actions::c_die(std::shared_ptr<IPlayer> &player, ActionData &data, [[maybe_unused]] std::shared_ptr<ICell>& cell, std::map<int, std::shared_ptr<IPlayer>>& players, double now)
+GUI::AnimationType GUI::Actions::c_die(std::shared_ptr<IPlayer> &player, ActionData &data, [[maybe_unused]] std::shared_ptr<ICell>& cell, [[maybe_unused]] std::map<int, std::shared_ptr<IPlayer>>& players, double now)
 {
     if (player->getAnimation() != ANIM_DIE)
         player->setAnimation(ANIM_DIE);
@@ -165,6 +154,20 @@ GUI::AnimationType GUI::Actions::c_die(std::shared_ptr<IPlayer> &player, ActionD
 
     if (elapsed < _actionsTime[DIE] * 1000) {
         return ANIM_DIE;
+    } else {
+        player->setAnimation(ANIM_IDLE);
+        return AnimationType::ANIM_END;
+    }
+}
+
+GUI::AnimationType GUI::Actions::c_broadcast(std::shared_ptr<IPlayer> &player, ActionData &data, [[maybe_unused]] std::shared_ptr<ICell>& cell, [[maybe_unused]] std::map<int, std::shared_ptr<IPlayer>>& players, double now)
+{
+    if (player->getAnimation() != ANIM_SCREAM)
+        player->setAnimation(ANIM_SCREAM);
+    double elapsed = now - data.getTimestamp();
+
+    if (elapsed < _actionsTime[BROADCAST] * 1000) {
+        return ANIM_SCREAM;
     } else {
         player->setAnimation(ANIM_IDLE);
         return AnimationType::ANIM_END;

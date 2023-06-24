@@ -192,9 +192,20 @@ namespace GUI {
             return conf;
         }
 
-        static std::shared_ptr<IConfig> playerBroadcast(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
+        static std::shared_ptr<IConfig> playerBroadcast(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
+            if (!verifyNbParam(answer, 2)) return conf;
+                std::string tmp;
+                std::stringstream ss(answer);
+                std::vector<std::string> params;
+                while (!std::cin.eof() && std::getline(ss, tmp, ' '))
+                    params.push_back(tmp);
+                int id = std::stoi(params[0]);
+                for (auto &player : conf->getPlayers()) {
+                    if (player.second->getId() != id) continue;
+                    conf->getActions().addAction(ActionType::BROADCAST, player.second->getId(), conf->getClock()->getElapsedTime());
+                    break;
+                }
             return conf;
-            //TODO: idk what to do with this case
         }
 
         static std::shared_ptr<IConfig> playerStartIncantation(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
@@ -354,6 +365,7 @@ namespace GUI {
             while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                 params.push_back(tmp);
             conf->getActions().setFrequence(std::stoi(params[0]));
+            conf->setFrequence(std::stoi(params[0]));
             return conf;
         }
 

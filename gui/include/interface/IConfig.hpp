@@ -40,6 +40,8 @@ namespace GUI {
         virtual std::shared_ptr<IClock> &getClock() = 0;
         virtual std::vector<int>& getDeadPlayers() = 0;
         virtual void deletePlayer(int id) = 0;
+        virtual int getFrequence() const = 0;
+        virtual void setFrequence(int value) = 0;
     };
 
 } // GUI

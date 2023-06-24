@@ -23,7 +23,7 @@ namespace GUI {
             ~Config() final = default;
 
         bool isInitialized() const {
-            return mapSize.x != 0 && mapSize.y != 0 && (int)mapContent.size() == mapSize.x * mapSize.y;
+            return mapSize.x != 0 && mapSize.y != 0 && (int)mapContent.size() == mapSize.x * mapSize.y && _freq != -1;
         };
 
         GUI::Vector2i &getMapSize() final {
@@ -114,6 +114,14 @@ namespace GUI {
             return _deadPlayers;
         }
 
+        int getFrequence() const final {
+            return _freq;
+        }
+
+        void setFrequence(int freq) final {
+            _freq = freq;
+        }
+
         public:
             GUI::Vector2i mapSize = {0, 0}; // X, Y
             std::map<GUI::Vector2i, std::vector<int>> mapContent; // pos{X,Y}, content{q0, q1, q2, q3, q4, q5, q6}
@@ -122,6 +130,7 @@ namespace GUI {
             std::string serverMessage; // message from the server
             std::string winnerTeam = "none"; // name of the winner team
             bool _isEnd = false; // true if the game is over
+            int _freq = -1; // frequency of the server
 
             std::map<int, std::shared_ptr<IPlayer>> players; // playerId, player
             std::vector<std::string> _teams;
