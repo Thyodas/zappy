@@ -25,7 +25,8 @@ namespace GUI {
         SIBUR,
         MENDIANE,
         PHIRAS,
-        THYSTAME
+        THYSTAME,
+        EGG
     };
 
     /*
@@ -36,6 +37,7 @@ namespace GUI {
         std::string texturePath;
         float scale;
         Vector3f rotation;
+        bool animation;
     };
 };
 

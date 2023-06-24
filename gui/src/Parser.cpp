@@ -18,7 +18,8 @@ GUI::Parser::Parser(const std::string& path)
         {GUI::ModelEntity::SIBUR, "sibur"},
         {GUI::ModelEntity::MENDIANE, "mendiane"},
         {GUI::ModelEntity::PHIRAS, "phiras"},
-        {GUI::ModelEntity::THYSTAME, "thystame"}
+        {GUI::ModelEntity::THYSTAME, "thystame"},
+        {GUI::ModelEntity::EGG, "egg"}
     };
 
     try {
@@ -66,13 +67,16 @@ GUI::config GUI::Parser::parseConfig()
             float z = rotation[2];
             Vector3f rotationVector(x, y, z);
 
+            bool animation = setting["animation"];
+
             config.models.insert({
                 this->getModelEntity(name),
                 (GUI::modelConfig){
                     modelPath,
                     texturePath,
                     scale,
-                    rotationVector
+                    rotationVector,
+                    animation
                 }
             });
         }

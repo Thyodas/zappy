@@ -110,11 +110,11 @@ void GUI::RayLib::loadModels(std::unordered_map<ModelEntity, modelConfig> models
     for (auto &model : models) {
         _models[model.first].model = LoadModel(model.second.modelPath.c_str());
         _models[model.first].rotation = model.second.rotation;
-        if (model.second.modelPath.length() > 4 && model.second.modelPath.substr(model.second.modelPath.length() - 4) == ".glb") {
+        if (model.second.animation) {
             unsigned int models = 0;
             _models[model.first].animation = LoadModelAnimations(model.second.modelPath.c_str(), &models);
         }
-         else {
+        if (model.second.modelPath.length() > 4 && model.second.modelPath.substr(model.second.modelPath.length() - 4) != ".glb") {
             _models[model.first].texture = LoadTexture(model.second.texturePath.c_str());
             _models[model.first].model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = _models[model.first].texture;
         }
@@ -170,12 +170,16 @@ void GUI::RayLib::drawGrid(Vector2i size, float spacing, GUI::C_Color color) {
 
 
 GUI::Vector3f GUI::RayLib::mousePosFromGrid(GUI::Vector2i position, int cellSize, GUI::Vector2i numberOfCells) {
-    float x = static_cast<float>(position.x) * cellSize - (cellSize * numberOfCells.x) / 2.0f;
-    float z = static_cast<float>(position.y) * cellSize - (cellSize * numberOfCells.y) / 2.0f;
+    float halfWidth = cellSize * numberOfCells.x / 2.0f;
+    float halfHeight = cellSize * numberOfCells.y / 2.0f;
+
+    float x = static_cast<float>(position.x) * cellSize - halfWidth;
+    float z = static_cast<float>(position.y) * cellSize - halfHeight;
     float y = 0;
 
     return GUI::Vector3f(x, y, z);
 }
+
 
 bool GUI::RayLib::isMouseButtonPressed(GUI::Mouse button)
 {

@@ -325,19 +325,23 @@ namespace GUI {
             while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                 params.push_back(tmp);
             int id = std::stoi(params[0]);
+            Vector2i pos = {std::stoi(params[2]), std::stoi(params[3])};
             Egg egg;
-            for (auto &player :conf->getPlayers()) {
-                if (player.second->getId() != id)  continue;
-                egg.pos = player.second->getPos();
-                egg.id = (int)conf->getEggs().size() + 1;
-                player.second->setIsLayingEgg(false);
-                break;
-            }
-            conf->getEggs()[egg.id] = egg;
+                egg.pos = pos;
+                egg.id = id;
+            conf->getEggs().insert({egg.id, egg});
             return conf;
         }
 
         static std::shared_ptr<IConfig> playerConnectForEgg(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
+            if (!verifyNbParam(answer, 1)) return conf;
+            std::string tmp;
+            std::stringstream ss(answer);
+            std::vector<std::string> params;
+            while (!std::cin.eof() && std::getline(ss, tmp, ' '))
+                params.push_back(tmp);
+            int id = std::stoi(params[0]);
+            conf->getEggs().erase(id);
             return conf;
         }
 
@@ -351,7 +355,7 @@ namespace GUI {
             int eggNbr = std::stoi(params[0]);
             for (auto &egg :conf->getEggs()) {
                 if (egg.second.id != eggNbr)  continue;
-                egg.second.isAlive = false;
+                egg.second.alive = false;
                 break;
             }
             return conf;
