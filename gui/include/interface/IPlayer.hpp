@@ -66,10 +66,6 @@ public:
 
     virtual void setIsAlive(bool isAlive) = 0;
 
-    virtual bool getIsLayingEgg() const = 0;
-
-    virtual void setIsLayingEgg(bool value) = 0;
-
     //
     virtual GUI::Vector3f getOffset() const = 0;
     virtual void setOffset(const GUI::Vector3f &offset) = 0;

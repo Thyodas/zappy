@@ -91,14 +91,6 @@ namespace GUI {
         Player::isAlive = value;
     }
 
-    bool Player::getIsLayingEgg() const {
-        return isLayingEgg;
-    }
-
-    void Player::setIsLayingEgg(bool value) {
-        Player::isLayingEgg = value;
-    }
-
     bool Player::getIsMoving() const {
         return isMoving;
     }

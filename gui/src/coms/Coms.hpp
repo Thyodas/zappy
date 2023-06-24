@@ -248,18 +248,6 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> eggLayingByPlayer(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
-            if (!verifyNbParam(answer, 1)) return conf;
-            std::string tmp;
-            std::stringstream ss(answer);
-            std::vector<std::string> params;
-            while (!std::cin.eof() && std::getline(ss, tmp, ' '))
-                params.push_back(tmp);
-            int id = std::stoi(params[0]);
-            for (auto &player : conf->getPlayers()) {
-                if (player.second->getId() != id) continue;
-                player.second->setIsLayingEgg(true);
-                break;
-            }
             return conf;
         }
 
@@ -352,12 +340,8 @@ namespace GUI {
             std::vector<std::string> params;
             while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                 params.push_back(tmp);
-            int eggNbr = std::stoi(params[0]);
-            for (auto &egg :conf->getEggs()) {
-                if (egg.second.id != eggNbr)  continue;
-                egg.second.alive = false;
-                break;
-            }
+            int id = std::stoi(params[0]);
+            conf->getEggs().erase(id);
             return conf;
         }
 
