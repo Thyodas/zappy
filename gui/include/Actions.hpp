@@ -26,13 +26,13 @@ namespace GUI {
         LOOK,
         INVENTORY,
         BROADCAST,
-        CONNECT_NBR,
         FORK,
         EJECT,
         DIE,
         TAKE_OBJECT,
         SET_OBJECT,
-        INCANTATION
+        INCANTATION_BEGIN,
+        INCANTATION_END
     };
 
     class ActionData {
@@ -123,6 +123,8 @@ namespace GUI {
             AnimationType c_dropObject(std::shared_ptr<IPlayer> &player, ActionData &data, std::shared_ptr<ICell>& cell, std::map<int, std::shared_ptr<IPlayer>>& players, double now);
             AnimationType c_die(std::shared_ptr<IPlayer> &player, ActionData &data, std::shared_ptr<ICell>& cell, std::map<int, std::shared_ptr<IPlayer>>& players, double now);
             AnimationType c_broadcast(std::shared_ptr<IPlayer> &player, ActionData &data, std::shared_ptr<ICell>& cell, std::map<int, std::shared_ptr<IPlayer>>& players, double now);
+            AnimationType c_incantationBegin(std::shared_ptr<IPlayer> &player, ActionData &data, std::shared_ptr<ICell>& cell, std::map<int, std::shared_ptr<IPlayer>>& players, double now);
+
     };
 };
 

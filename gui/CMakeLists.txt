@@ -25,8 +25,6 @@ set(SOURCE
         coms/Coms.hpp
         coms/Player.cpp
         coms/Player.hpp
-        coms/Egg.cpp
-        coms/Egg.hpp
         coms/Config.hpp
 )
 

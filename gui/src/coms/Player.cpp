@@ -59,14 +59,6 @@ namespace GUI {
         Player::level = value;
     }
 
-    bool Player::isInIncantation() const {
-        return inIncantation;
-    }
-
-    void Player::setInIncantation(bool value) {
-        Player::inIncantation = value;
-    }
-
     std::unordered_map<GUI::Object, int> Player::getInventory() {
         return _inventory;
     }
@@ -89,14 +81,6 @@ namespace GUI {
 
     void Player::setIsAlive(bool value) {
         Player::isAlive = value;
-    }
-
-    bool Player::getIsLayingEgg() const {
-        return isLayingEgg;
-    }
-
-    void Player::setIsLayingEgg(bool value) {
-        Player::isLayingEgg = value;
     }
 
     bool Player::getIsMoving() const {

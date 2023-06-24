@@ -177,17 +177,17 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerExpulsion(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 2)) return conf;
+            if (!verifyNbParam(answer, 1)) return conf;
                 std::string tmp;
                 std::stringstream ss(answer);
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 int id = std::stoi(params[0]);
-                for (auto &player : conf->getPlayers()) {
-                    if (player.second->getId() != id) continue;
-                    player.second->setIsEjecting(true);
-                    break;
+                std::vector<int> playersOnTile;
+                if (conf->getPlayers().find(id) != conf->getPlayers().end()) {
+                    std::shared_ptr<IPlayer> player = conf->getPlayers().at(id);
+                    conf->getActions().addAction(ActionType::MOVE, player->getId(), static_cast<Direction>(player->getOrientation()), player->getPos(), conf->getClock()->getElapsedTime());
                 }
             return conf;
         }
@@ -209,21 +209,14 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerStartIncantation(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-//                TODO: variadic number of params
-// return c (!verifyNbParam(answer, 2)) continue;
                 std::string tmp;
                 std::stringstream ss(answer);
                 std::vector<std::string> params;
                 while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                     params.push_back(tmp);
                 GUI::Vector2i pos = {std::stoi(params[0]), std::stoi(params[1])};
-                for (u_long i = 3; i < params.size(); i++) {
-                    for (auto &player : conf->getPlayers()) {
-                        if (!(player.second->getPos() == pos)) continue;
-                        player.second->setInIncantation(true);
-                        break;
-                    }
-                }
+                int firstPlayer = std::stoi(params[3]);
+                conf->getActions().addAction(ActionType::INCANTATION_BEGIN, firstPlayer, conf->getClock()->getElapsedTime());
             return conf;
         }
 
@@ -239,7 +232,6 @@ namespace GUI {
             for (u_long i = 3; i < params.size(); i++) {
                 for (auto &player : conf->getPlayers()) {
                     if (!(player.second->getPos() == pos)) continue;
-                    player.second->setInIncantation(result != 1);
                     player.second->setLevel(result == 1 ? player.second->getLevel() + 1 : player.second->getLevel());
                     break;
                 }
@@ -248,18 +240,6 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> eggLayingByPlayer(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
-            if (!verifyNbParam(answer, 1)) return conf;
-            std::string tmp;
-            std::stringstream ss(answer);
-            std::vector<std::string> params;
-            while (!std::cin.eof() && std::getline(ss, tmp, ' '))
-                params.push_back(tmp);
-            int id = std::stoi(params[0]);
-            for (auto &player : conf->getPlayers()) {
-                if (player.second->getId() != id) continue;
-                player.second->setIsLayingEgg(true);
-                break;
-            }
             return conf;
         }
 
@@ -325,19 +305,23 @@ namespace GUI {
             while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                 params.push_back(tmp);
             int id = std::stoi(params[0]);
+            Vector2i pos = {std::stoi(params[2]), std::stoi(params[3])};
             Egg egg;
-            for (auto &player :conf->getPlayers()) {
-                if (player.second->getId() != id)  continue;
-                egg.pos = player.second->getPos();
-                egg.id = (int)conf->getEggs().size() + 1;
-                player.second->setIsLayingEgg(false);
-                break;
-            }
-            conf->getEggs()[egg.id] = egg;
+                egg.pos = pos;
+                egg.id = id;
+            conf->getEggs().insert({egg.id, egg});
             return conf;
         }
 
         static std::shared_ptr<IConfig> playerConnectForEgg(const std::shared_ptr<IConfig> &conf, [[maybe_unused]] const std::string &answer) {
+            if (!verifyNbParam(answer, 1)) return conf;
+            std::string tmp;
+            std::stringstream ss(answer);
+            std::vector<std::string> params;
+            while (!std::cin.eof() && std::getline(ss, tmp, ' '))
+                params.push_back(tmp);
+            int id = std::stoi(params[0]);
+            conf->getEggs().erase(id);
             return conf;
         }
 
@@ -348,12 +332,8 @@ namespace GUI {
             std::vector<std::string> params;
             while (!std::cin.eof() && std::getline(ss, tmp, ' '))
                 params.push_back(tmp);
-            int eggNbr = std::stoi(params[0]);
-            for (auto &egg :conf->getEggs()) {
-                if (egg.second.id != eggNbr)  continue;
-                egg.second.isAlive = false;
-                break;
-            }
+            int id = std::stoi(params[0]);
+            conf->getEggs().erase(id);
             return conf;
         }
 

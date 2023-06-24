@@ -34,6 +34,7 @@ namespace GUI {
             void drawCellDetails(std::shared_ptr<ICell> cell);
             void drawEntities(std::shared_ptr<ICell> cell);
             void drawPlayers();
+            void drawEggs();
             void handleEndGame();
             void handleCharacterSelection(Vector3f pos, int playerId);
             void handleConfigUpdate();

@@ -195,11 +195,24 @@ void GUI::Core::draw()
             }
         }
     }
+    this->drawEggs();
     this->drawPlayers();
     _module->disable3DMode();
     if (_map->selectionMode())
         this->drawCellDetails(_map->getCell(_map->getSelectionBlock()));
     _module->postDraw();
+}
+
+void GUI::Core::drawEggs()
+{
+    Vector3f grassSize = _module->getModelSize(ModelEntity::GRASS_BLOCK);
+    Vector3f eggSize = _module->getModelSize(ModelEntity::EGG);
+    for (auto &egg : _coms.getConf()->getEggs()) {
+        Vector3f pos = _module->mousePosFromGrid(egg.second.pos, grassSize.x, _map->getSize());
+        pos.x += grassSize.x - (eggSize.x * _config.models[EGG].scale) / 2;
+        pos.z += grassSize.z - (eggSize.z * _config.models[EGG].scale) / 2;
+        _module->drawModel(ModelEntity::EGG, pos, _config.models[EGG].scale, {0, 0, 0});
+    }
 }
 
 void GUI::Core::drawCellDetails(std::shared_ptr<ICell> cell)

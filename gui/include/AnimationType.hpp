@@ -13,8 +13,10 @@ namespace GUI {
         ANIM_CROUNCH,
         ANIM_DIE,
         ANIM_IDLE,
-        ANIM_SCREAM,
+        ANIM_KICK,
         ANIM_TPOSE,
+        ANIM_SPELL,
+        ANIM_SCREAM,
         ANIM_WALKING,
         ANIM_END // used to know if an action is done
     };

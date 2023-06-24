@@ -30,8 +30,6 @@ namespace GUI {
         Direction orientation = Direction::NORTH;
         int level = 1;
         bool isAlive = true;
-        bool inIncantation = false;
-        bool isLayingEgg = false;
         bool isMoving = false;
         bool isEjecting = false;
         GUI::Vector3f _offset = {0, 0, 0};
@@ -76,17 +74,9 @@ namespace GUI {
 
         void setLevel(int level) final;
 
-        bool isInIncantation() const final;
-
-        void setInIncantation(bool inIncantation) final;
-
         bool getIsAlive() const final;
 
         void setIsAlive(bool value) final;
-
-        bool getIsLayingEgg() const final;
-
-        void setIsLayingEgg(bool value) final;
 
         GUI::Vector3f getOffset() const final;
         void setOffset(const GUI::Vector3f &offset) final;
