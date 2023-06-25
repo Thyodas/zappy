@@ -22,7 +22,7 @@ class DefaultTimeLimit(Enum):
     TAKE = 7
     SET = 7
     INCANTATION = 300
-    REGULAR_BROADCAST = 10
+    REGULAR_BROADCAST = 20
 
 
 @dataclass
@@ -118,6 +118,7 @@ class ZappyClient:
             self.elevation_underway = True
             self.broadcastDirection = direction
             self.uuid_incanting = data_map["uuid"]
+            self.leader = False
             if data_map["teamSize"] > self.team_size:
                 self.team_size = data_map["teamSize"]
         if data_map["message"] == "Cancel" and data_map["team"] == self.player_info.team and data_map["score"] == self.player_info.score:
@@ -204,6 +205,7 @@ class ZappyClient:
                 self.handle_message(K, text)
                 return self.receive(timeLimit)
             if data.startswith("dead"):
+                logger.error("I'm dead")
                 self.close()
         except Exception as e:
             print(f"Error receiving data: {e}")
@@ -259,6 +261,11 @@ class ZappyClient:
     def start_incantation(self):
         logger.success("Starting incantation")
         self.send('Incantation\n')
+        data = self.receive(0)
+        logger.error(data)
+        if data != "Elevation underway":
+            logger.error("Error during incantation")
+            return "ko"
         return self.receive(DefaultTimeLimit.INCANTATION.value)
 
     # Store the inventory in the player_info + return it
@@ -275,7 +282,6 @@ class ZappyClient:
         inventory: Resources = Resources()
         for item in items:
             item = item.strip()
-            print(item)
             key_value = item.split(' ')
 
             key = key_value[0]
@@ -342,6 +348,7 @@ class ZappyClient:
 
                 tiles_list.append(tile)
 
+            logger.info(tiles_list)
             return tiles_list
         except Exception as e:
             print(f"Error looking around: {e}")

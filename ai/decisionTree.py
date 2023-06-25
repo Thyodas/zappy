@@ -234,15 +234,14 @@ def action_fork():
     #     return "Failed to reproduce"
     # client.player.already_reproduced = True
     logger.success("Reproduced sucessfully")
+    client.player.already_reproduced = True
     return "Reproduced sucessfully"
 
 def is_level_8():
     return client.player.player_info.score == 8
 
 def received_hello():
-    client.player.elasped_time = time.time() - client.player.last_broadcast
-    remaining_time = ((client.DefaultTimeLimit.REGULAR_BROADCAST.value / client.player.frequency) - client.player.elasped_time * 2)
-    if remaining_time <= 0:
+    if client.player.player_info.score >= 2:
         client.player.received_hello = True
     return client.player.received_hello
 
@@ -257,6 +256,8 @@ def is_team_full():
     # except Exception as e:
     #     nb_connections = int(client.player.receive())
     # logger.info(f"Got {nb_connections} slots")
+    if client.player.already_reproduced:
+        return True
     return client.player.team_size >= 6
     #return nb_connections == 0
 
@@ -316,13 +317,18 @@ def action_look_for_food_and_cancel_broad():
 def look_for_linemate():
     logger.info("I'm looking for linemate")
     tiles = client.player.look_around()
-    go_index = 0
+    go_index = -1
     for index, tile in enumerate(tiles):
         if tile.resources.linemate_count > 0:
             go_index = index
+            logger.info(f"Found linemate at index {go_index}!")
             break
     if go_index == 0:
         client.player.take_object("linemate")
+        return
+    if go_index == -1:
+        client.player.move_forward()
+        return
     direction = utils.fill_action_queue(go_index, client.player.player_info.score)
     client.player.move_forward()
     if direction == 1:
@@ -336,13 +342,18 @@ def look_for_linemate():
 def look_for_deraumer():
     logger.info("I'm looking for deraumer")
     tiles = client.player.look_around()
-    go_index = 0
+    go_index = -1
     for index, tile in enumerate(tiles):
         if tile.resources.deraumer_count > 0:
             go_index = index
+            logger.info(f"Found deraumer at index {go_index}!")
             break
     if go_index == 0:
-        client.player.take_object("deraumer")
+        client.player.take_object("deraumere")
+        return
+    if go_index == -1:
+        client.player.move_forward()
+        return
     direction = utils.fill_action_queue(go_index, client.player.player_info.score)
     client.player.move_forward()
     if direction == 1:
@@ -356,13 +367,18 @@ def look_for_deraumer():
 def look_for_mendiane():
     logger.info("I'm looking for mendiane")
     tiles = client.player.look_around()
-    go_index = 0
+    go_index = -1
     for index, tile in enumerate(tiles):
         if tile.resources.mendiane_count > 0:
             go_index = index
+            logger.info(f"Found mendiane at index {go_index}!")
             break
     if go_index == 0:
         client.player.take_object("mendiane")
+        return
+    if go_index == -1:
+        client.player.move_forward()
+        return
     direction = utils.fill_action_queue(go_index, client.player.player_info.score)
     client.player.move_forward()
     if direction == 1:
@@ -376,13 +392,18 @@ def look_for_mendiane():
 def look_for_phiras():
     logger.info("I'm looking for phiras")
     tiles = client.player.look_around()
-    go_index = 0
+    go_index = -1
     for index, tile in enumerate(tiles):
         if tile.resources.phiras_count > 0:
             go_index = index
+            logger.info(f"Found phiras at index {go_index}!")
             break
     if go_index == 0:
         client.player.take_object("phiras")
+        return
+    if go_index == -1:
+        client.player.move_forward()
+        return
     direction = utils.fill_action_queue(go_index, client.player.player_info.score)
     client.player.move_forward()
     if direction == 1:
@@ -396,13 +417,18 @@ def look_for_phiras():
 def look_for_sibur():
     logger.info("I'm looking for sibur")
     tiles = client.player.look_around()
-    go_index = 0
+    go_index = -1
     for index, tile in enumerate(tiles):
         if tile.resources.sibur_count > 0:
             go_index = index
+            logger.info(f"Found sibur at index {go_index}!")
             break
     if go_index == 0:
         client.player.take_object("sibur")
+        return
+    if go_index == -1:
+        client.player.move_forward()
+        return
     direction = utils.fill_action_queue(go_index, client.player.player_info.score)
     client.player.move_forward()
     if direction == 1:
@@ -416,13 +442,18 @@ def look_for_sibur():
 def look_for_thystame():
     logger.info("I'm looking for thystame")
     tiles = client.player.look_around()
-    go_index = 0
+    go_index = -1
     for index, tile in enumerate(tiles):
         if tile.resources.thystame_count > 0:
             go_index = index
+            logger.info(f"Found thystame at index {go_index}!")
             break
     if go_index == 0:
         client.player.take_object("thystame")
+        return
+    if go_index == -1:
+        client.player.move_forward()
+        return
     direction = utils.fill_action_queue(go_index, client.player.player_info.score)
     client.player.move_forward()
     if direction == 1:
@@ -441,16 +472,22 @@ def action_look_for_resources_to_elevate():
     resources = resources_for_level[client.player.player_info.score]
     if resources.linemate_count > inventory.linemate_count:
         look_for_linemate()
+        return
     if resources.mendiane_count > inventory.mendiane_count:
         look_for_mendiane()
+        return
     if resources.phiras_count > inventory.phiras_count:
         look_for_phiras()
+        return
     if resources.sibur_count > inventory.sibur_count:
         look_for_sibur()
+        return
     if resources.thystame_count > inventory.thystame_count:
         look_for_thystame()
+        return
     if resources.deraumer_count > inventory.deraumer_count:
         look_for_deraumer()
+        return
 
 
 def is_on_the_tile():
@@ -464,15 +501,22 @@ def already_broadcasted():
 def action_set_objects_down():
     logger.info("I'm putting object down")
     client.player.set_object("linemate")
-    client.player.set_object("sibur")
-    client.player.set_object("mendiane")
-    client.player.set_object("phiras")
-    client.player.set_object("thystame")
-    client.player.set_object("deraumer")
+    if client.player.player_info.score == 2 or client.player.player_info.score >= 4:
+        client.player.set_object("deraumer")
+    if client.player.player_info.score >= 2:
+        client.player.set_object("sibur")
+    if client.player.player_info.score == 5 or client.player.player_info.score == 7:
+        client.player.set_object("mendiane")
+    if client.player.player_info.score == 3 or client.player.player_info.score == 4 or client.player.player_info.score >= 6:
+        client.player.set_object("phiras")
+    if client.player.player_info.score == 7:
+        client.player.set_object("thystame")
 
 
 def move_toward_broadcast():
     logger.info("I'm moving toward broadcast")
+    if client.player.broadcastDirection == -1:
+        return
     if client.player.broadcastDirection == 1 or client.player.broadcastDirection == 2 or client.player.broadcastDirection == 8:
         client.player.move_forward()
     if client.player.broadcastDirection == 4 or client.player.broadcastDirection == 5 or client.player.broadcastDirection == 6:
@@ -485,6 +529,7 @@ def move_toward_broadcast():
     if client.player.broadcastDirection == 3:
         client.player.turn_left()
         client.player.move_forward()
+    client.player.broadcastDirection = -1
 
 
 def tell_leader_ready():
@@ -520,5 +565,5 @@ def init_decision_tree():
     leaf_elevation_underway = DecisionNode(is_elevation_underway, leaf_enough_food_to_help_elevate, leaf_is_lvl8)
 
     root = DecisionNode(is_broadcast_on, leaf_enough_food_to_elevate_solo, leaf_elevation_underway)
-    waitingNode = DecisionNode(received_hello, root, ActionNode(action_wait))
+    waitingNode = DecisionNode(received_hello, root, leaf_enough_food_to_start_elevate)
     return waitingNode
