@@ -35,6 +35,10 @@ void handle_event_connection_request(zappy_t *data, connection_t *con)
         delete_connection_by_ptr(&data->db.connection_vector, con);
         return;
     }
+    if (con->req_buffer.buffer != NULL && count_occurrence(
+        con->req_buffer.buffer + con->req_buffer.read_bytes, '\n') >= 10) {
+        buffer_read_on_newline(&con->req_buffer);
+    }
     if (buffer_write(&con->req_buffer, buf, read_bytes)) {
         zappy_remove_player(data, con->player);
         delete_connection_by_ptr(&data->db.connection_vector, con);

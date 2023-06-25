@@ -11,7 +11,8 @@
 #include "utils.h"
 
 int check_available_players(uint32_t nb_players, uint32_t level);
-int try_consume_resources(zappy_t *zappy, pos_t pos, uint32_t level, uint32_t nb_players);
+int try_consume_resources(zappy_t *zappy, pos_t pos,
+    uint32_t level, uint32_t nb_players);
 
 static int handle_incantation(zappy_t *zappy, connection_t *con)
 {

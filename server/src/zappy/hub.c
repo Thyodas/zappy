@@ -51,7 +51,8 @@ static void select_config(zappy_t *data, int *nfds, struct timeval *timeout)
 }
 
 /**
- * Handles events for all client connections, including error, request, and response events.
+ * Handles events for all client connections, including error, request,
+ * and response events.
  *
  * @param data - The zappy_t data structure.
  */
@@ -92,7 +93,8 @@ static void handle_in_socket(zappy_t *data)
 }
 
 /**
- * Handles game-related events, such as checking player food, resource spawn, and end game conditions.
+ * Handles game-related events, such as checking player food, resource spawn,
+ * and end game conditions.
  *
  * @param data - The zappy_t data structure.
  */

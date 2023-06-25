@@ -86,7 +86,8 @@ int handle_options(zappy_t *data, int c, bool *team_name_mode)
 }
 
 /**
- * Configures the teams in the zappy_t data structure by adding them to the zappy data structure.
+ * Configures the teams in the zappy_t data structure by adding them to the
+ * zappy data structure.
  *
  * @param data - The zappy_t data structure.
  * @return 0 on success, 1 on failure.

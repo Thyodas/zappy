@@ -51,8 +51,10 @@ int bind_tcp_socket(int sockfd, uint16_t port)
  * Listens for incoming connections on a TCP socket.
  *
  * @param sockfd - The file descriptor of the listening socket.
- * @param queue_size - The maximum number of pending connections that can be queued.
- * @return The file descriptor of the listening socket, or -1 if an error occurs.
+ * @param queue_size - The maximum number of pending connections
+ * that can be queued.
+ * @return The file descriptor of the listening socket, or -1 if an error
+ * occurs.
  */
 int listen_tcp_socket(int sockfd, int queue_size)
 {

@@ -1,6 +1,7 @@
 *.pdf
 zappy_gui
 zappy_ai
+!ai/zappy_ai
 zappy_server
 *.o
 *.a
@@ -29,6 +30,8 @@ server.zip
 *.zip
 
 ai/__pycache__/
+doxygen/
+.gitmodules
 
 assets/
 config.cfg

@@ -36,7 +36,8 @@ static void init_database(zappy_t *data)
 }
 
 /**
- * Initializes the resource density based on the map size within the zappy_t data structure.
+ * Initializes the resource density based on the map size within the zappy_t
+ * data structure.
  *
  * @param data - The zappy_t data structure.
  */
@@ -55,7 +56,8 @@ static void init_resource_density(zappy_t *data)
 }
 
 /**
- * Initializes the zappy_t data structure with default values and initializes the database and hash maps.
+ * Initializes the zappy_t data structure with default values and initializes
+ * the database and hash maps.
  *
  * @param data - The zappy_t data structure.
  * @return 0 on success, or 1 if an error occurs during hash map initialization.
@@ -78,8 +80,8 @@ static int init_data(zappy_t *data)
 }
 
 /**
- * Initializes the default values for the zappy_t data structure, including the map, resource density,
- * default teams, and the graphic team.
+ * Initializes the default values for the zappy_t data structure,
+ * including the map, resource density, default teams, and the graphic team.
  *
  * @param data - The zappy_t data structure.
  */
@@ -99,8 +101,9 @@ void init_default_values(zappy_t *data)
 }
 
 /**
- * Initializes the zappy_t data structure, parses command-line arguments, sets up the server, starts the hub,
- * and performs cleanup after the hub has finished.
+ * Initializes the zappy_t data structure, parses command-line arguments,
+ * sets up the server, starts the hub, and performs cleanup after the hub has
+ * finished.
  *
  * @param argc - The number of command-line arguments.
  * @param argv - The array of command-line arguments.

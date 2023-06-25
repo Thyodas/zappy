@@ -8,7 +8,7 @@ The server is written in C and generates the world in which the inhabitants live
 
 ## AI Client
 
-The AI client is also written in C and acts as an autonomous drone controller. Once launched, the user has no more influence on its operation. The AI communicates with the server via TCP sockets, sending requests and receiving confirmations of their successful execution. For more details on the usage and communication protocol of the AI client, please refer to the AI's README.
+The AI client is written in Python and acts as an autonomous drone controller. Once launched, the user has no more influence on its operation. The AI communicates with the server via TCP sockets, sending requests and receiving confirmations of their successful execution. For more details on the usage and communication protocol of the AI client, please refer to the AI's README.
 
 ## Graphical User Interface
 

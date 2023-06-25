@@ -22,7 +22,8 @@ void announce_winners(zappy_t *zappy)
 }
 
 /**
- * Checks the food level of each AI player and handles their death if they run out of food.
+ * Checks the food level of each AI player and handles their death if they
+ * run out of food.
  *
  * @param zappy - The zappy_t data structure.
  */
@@ -63,7 +64,8 @@ void remove_dead_players(zappy_t *zappy)
 }
 
 /**
- * Broadcasts the changes in a map cell to all clients if the cell contents have changed.
+ * Broadcasts the changes in a map cell to all clients if the cell contents
+ * have changed.
  *
  * @param zappy - The zappy_t data structure.
  * @param cell_a - Pointer to the original map cell.
@@ -78,7 +80,8 @@ static void broadcast_cell_changes(zappy_t *zappy, map_cell_t *cell_a,
 }
 
 /**
- * Checks if it is time to spawn new resources on the map and distributes them accordingly.
+ * Checks if it is time to spawn new resources on the map and distributes
+ * them accordingly.
  *
  * @param zappy - The zappy_t data structure.
  */

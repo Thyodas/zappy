@@ -10,7 +10,8 @@
 #include "utils.h"
 
 /**
- * Allows a player to take an object from the current map cell and add it to their inventory.
+ * Allows a player to take an object from the current map cell and add it to
+ * their inventory.
  *
  * @param zappy - The zappy_t data structure.
  * @param player - The player taking the object.
@@ -32,7 +33,8 @@ int zappy_map_player_take_object(zappy_t *zappy, player_t *player,
 }
 
 /**
- * Allows a player to set an object from their inventory onto the current map cell.
+ * Allows a player to set an object from their inventory onto the current
+ * map cell.
  *
  * @param zappy - The zappy_t data structure.
  * @param player - The player setting the object.

@@ -69,7 +69,8 @@ static int init_hash_map(struct hsearch_data *map, const ENTRY commands[],
 }
 
 /**
- * Initializes all hash maps used in the zappy_t data structure, including the GUI command map, AI command map, and resource name map.
+ * Initializes all hash maps used in the zappy_t data structure, including the
+ * GUI command map, AI command map, and resource name map.
  *
  * @param zappy - The zappy_t data structure.
  * @return 0 on success, or 1 if an error occurs during hash map initialization.

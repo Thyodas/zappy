@@ -9,7 +9,8 @@
 #include "command.h"
 #include "obj/incantation.h"
 
-int check_available_resources(zappy_t *zappy, pos_t pos, uint32_t level, uint32_t nb_players);
+int check_available_resources(zappy_t *zappy, pos_t pos, uint32_t level,
+    uint32_t nb_players);
 int check_available_players(uint32_t nb_players, uint32_t level);
 
 /**

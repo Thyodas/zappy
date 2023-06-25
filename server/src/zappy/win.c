@@ -47,7 +47,8 @@ void set_winning_team(zappy_t *zappy, team_t *team)
 }
 
 /**
- * Checks if any team has met the winning condition and updates the winning team accordingly.
+ * Checks if any team has met the winning condition and updates the winning
+ * team accordingly.
  *
  * @param zappy - The zappy_t struct representing the game state.
  */

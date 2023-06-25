@@ -112,7 +112,8 @@ void zappy_turn_player(__attribute__((unused))zappy_t *zappy, player_t *player,
  *
  * @param zappy - The Zappy data structure.
  * @param player - The player to eat food.
- * @return 1 if the player is unable to eat food (food inventory is empty or not enough time has passed since the last eat), 0 otherwise.
+ * @return 1 if the player is unable to eat food (food inventory is empty
+ * or not enough time has passed since the last eat), 0 otherwise.
  */
 int zappy_player_try_eat_food(zappy_t *zappy, player_t *player)
 {

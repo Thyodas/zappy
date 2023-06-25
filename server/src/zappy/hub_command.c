@@ -22,7 +22,8 @@ static int is_delay_command_ready(zappy_t *data, connection_t *con)
 }
 
 /**
- * Handles all command events for a connection, including delay command and command in buffer events.
+ * Handles all command events for a connection, including delay command and
+ * command in buffer events.
  *
  * @param data - The zappy_t data structure.
  * @param con - The connection for which to handle the events.

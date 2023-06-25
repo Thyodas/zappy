@@ -47,3 +47,13 @@ char **split_str_to_array(char *str, char *seperators, int *len, int max_arg)
     *len = size;
     return array;
 }
+
+size_t count_occurrence(const char *string, char to_find)
+{
+    size_t nb = 0;
+    for (size_t i = 0; string[i] != '\0'; ++i) {
+        if (string[i] == to_find)
+            ++nb;
+    }
+    return nb;
+}

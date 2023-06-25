@@ -51,6 +51,7 @@ int zappy_resolve_resource_name(zappy_t *zappy, char *resource_name,
 
 // string.c
 char **split_str_to_array(char *str, char *seperators, int *len, int max_arg);
+size_t count_occurrence(const char *string, char to_find);
 
 // number.c
 int parse_number(uint32_t *parsed_nb, const char *to_parse);

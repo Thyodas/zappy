@@ -1,4 +1,4 @@
-## Buffer C Library
+## C Buffer Library
 
 The `buffer` library provides functions for handling string buffers in C. It allows you to write strings to a buffer, read strings from a buffer based on separators or newlines, and manage the buffer's memory.
 
