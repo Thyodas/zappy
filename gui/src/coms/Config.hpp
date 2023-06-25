@@ -95,7 +95,7 @@ namespace GUI {
         }
 
         void addPlayer(int id, std::shared_ptr<IPlayer> player) {
-            players.insert({id, player});
+            players.insert(std::make_pair(id, player));
         }
 
         void deletePlayer(int id) {
