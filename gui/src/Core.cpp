@@ -288,12 +288,14 @@ void GUI::Core::drawCellDetails(std::shared_ptr<ICell> cell)
     std::string                          type;
     Vector2i                             pos;
     std::string playerInfo;
+    std::string level;
 
     if (_map->selectionType() == SelectionType::BLOCK) {
         stock = cell->getObjects();
         type  = "Cell";
         pos   = cell->getPos();
         playerInfo = "";
+        level = "";
     }
     else {
         if (_coms.getConf()->getPlayers().find(_map->getPlayerId()) ==
@@ -305,6 +307,7 @@ void GUI::Core::drawCellDetails(std::shared_ptr<ICell> cell)
         type  = "Player";
         pos   = player->getPos();
         playerInfo = std::to_string(player->getId()) + " - " + player->getTeamName();
+        level = "Level: " + std::to_string(player->getLevel());
     }
     _module->drawRectangle(
         (Vector2f){0, 0},
@@ -327,6 +330,12 @@ void GUI::Core::drawCellDetails(std::shared_ptr<ICell> cell)
         playerInfo,
         (Vector2f){static_cast<float>(_windowSize.x - playerInfo.length() * 10 - 15),
                    35},
+        20, GUI::C_Color::C_BLACK);
+
+    _module->drawText(
+        level,
+        (Vector2f){static_cast<float>(_windowSize.x - level.length() * 10 - 15),
+                   60},
         20, GUI::C_Color::C_BLACK);
 
     int index = 0;
