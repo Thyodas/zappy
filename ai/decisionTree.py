@@ -236,7 +236,6 @@ def action_fork():
     logger.success("Reproduced sucessfully")
     return "Reproduced sucessfully"
 
-
 def is_level_8():
     return client.player.player_info.score == 8
 
