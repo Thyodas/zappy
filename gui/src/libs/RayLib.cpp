@@ -26,6 +26,7 @@ GUI::RayLib::RayLib()
     _keys[GUI::Key::S]      = KeyboardKey::KEY_S;
     _keys[GUI::Key::D]      = KeyboardKey::KEY_D;
     _keys[GUI::Key::H]      = KeyboardKey::KEY_H;
+    _keys[GUI::Key::T]      = KeyboardKey::KEY_T;
 
     _mouseButtons[GUI::Mouse::BUTTON_LEFT]  = MOUSE_LEFT_BUTTON;
     _mouseButtons[GUI::Mouse::BUTTON_RIGHT] = MOUSE_RIGHT_BUTTON;
@@ -67,6 +68,11 @@ void GUI::RayLib::display() {}
 
 void GUI::RayLib::handleEvents()
 {
+    if (WindowShouldClose()) {
+        _pressedKeys[GUI::Key::ESCAPE] = true;
+        _releasedKeys[GUI::Key::ESCAPE] = true;
+        return;
+    }
     Vector2 mousePos = GetMousePosition();
     _mousePosition   = {mousePos.x, mousePos.y};
     for (auto &key : _keys) {
@@ -154,16 +160,8 @@ void GUI::RayLib::drawModel(ModelEntity model, Vector3f position, float scale,
 void GUI::RayLib::drawModelCube(ModelEntity model, Vector3f position,
                                 float scale)
 {
-    // check if model is selected
-    if (isModelSelected(model, position, scale,
-                        std::make_shared<RayLibCamera>())) {
-        DrawModelWires(_models[model].model,
-                       {position.x, position.y, position.z}, scale, RED);
-    }
-    else {
-        DrawModel(_models[model].model, {position.x, position.y, position.z},
-                  scale, WHITE);
-    }
+    DrawModel(_models[model].model, {position.x, position.y, position.z},
+              scale, WHITE);
 }
 
 void GUI::RayLib::preDraw() { BeginDrawing(); }

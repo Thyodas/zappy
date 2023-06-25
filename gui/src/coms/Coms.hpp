@@ -99,18 +99,14 @@ namespace GUI {
                     params.push_back(tmp);
                 std::shared_ptr<Player> newPlayer = std::make_shared<Player>();
 
+                int id = std::stoi(params[0]);
                 newPlayer->id = std::stoi(params[0]);
                 newPlayer->pos = {std::stoi(params[1]), std::stoi(params[2])};
                 newPlayer->orientation = static_cast<GUI::Direction>(std::stoi(params[3]));
                 newPlayer->level = std::stoi(params[4]);
                 newPlayer->teamName = params[5].erase(params[5].size() - 1, 1);
 
-                auto teams = conf->getTeams();
-                if (std::find(teams.begin(), teams.end(), params[0]) == teams.end()) {
-                    conf->addTeam(params[0]);
-                }
-
-                conf->addPlayer(newPlayer->id, newPlayer);
+                conf->addPlayer(id, newPlayer);
             return conf;
         }
 

@@ -11,6 +11,7 @@
     #include <vector>
     #include <utility>
     #include "Vector3f.hpp"
+    #include <string>
 
 namespace GUI {
     /*

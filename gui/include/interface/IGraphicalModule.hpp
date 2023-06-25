@@ -33,7 +33,8 @@ namespace GUI {
         Q,
         S,
         D,
-        H
+        H,
+        T
     };
 
     enum Mouse {

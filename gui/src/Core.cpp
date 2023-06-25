@@ -16,7 +16,9 @@ GUI::Core::Core(GUI::Args args)
       _scene(std::make_shared<Scene>()),
       _map(nullptr),
       _drawObjects(true),
-      _coms(args.machine, args.port)
+      _coms(args.machine, args.port),
+      _currentTeam(0),
+      _teamSelection(false)
 {
     IParser *parser = new Parser("config.cfg");
     _config         = parser->parseConfig();
@@ -72,17 +74,11 @@ void GUI::Core::init(GUI::GraphicalLib lib, GUI::Vector2i windowSize)
 
 void GUI::Core::handleZoom()
 {
-    if (_module->isKeyPressed(GUI::Key::LEFT)) {
-        _scene->getCamera()->rotateX(1);
+    if (_module->isKeyPressed(GUI::Key::Z)) {
+        _scene->getCamera()->zoom(0.1);
     }
-    else if (_module->isKeyPressed(GUI::Key::RIGHT)) {
-        _scene->getCamera()->rotateX(-1);
-    }
-    else if (_module->isKeyPressed(GUI::Key::UP)) {
-        _scene->getCamera()->rotateY(1);
-    }
-    else if (_module->isKeyPressed(GUI::Key::DOWN)) {
-        _scene->getCamera()->rotateY(-1);
+    else if (_module->isKeyPressed(GUI::Key::S)) {
+        _scene->getCamera()->zoom(-0.1);
     }
 }
 
@@ -111,23 +107,49 @@ void GUI::Core::handleUserInput()
 {
     _module->handleEvents();
     if (_module->isKeyPressed(GUI::Key::ESCAPE)) _running = false;
-    if (_map->selectionMode() &&
-        _map->selectionType() == GUI::SelectionType::BLOCK)
-        handleSelection();
-    else
+    if (_teamSelection) handleTeamSelection();
+    if (_module->isKeyReleased(GUI::Key::T)) {
+        _teamSelection = !_teamSelection;
+        return;
+    }
+    if (_map->selectionMode() && !_teamSelection) {
+        if (_map->selectionType() == GUI::SelectionType::BLOCK)
+            handleSelection();
+    } else if (!_teamSelection) {
         handleZoom();
+        handleRotation();
+    }
     if (_module->isKeyReleased(GUI::Key::R)) {
         _map->setSelectionMode(!_map->selectionMode(),
                                GUI::SelectionType::BLOCK);
     }
-    if (_module->isKeyPressed(GUI::Key::Z)) {
-        _scene->getCamera()->zoom(0.1);
-    }
-    else if (_module->isKeyPressed(GUI::Key::S)) {
-        _scene->getCamera()->zoom(-0.1);
-    }
     if (_module->isKeyReleased(GUI::Key::H)) {
         _drawObjects = !_drawObjects;
+    }
+}
+
+void GUI::Core::handleRotation()
+{
+    if (_module->isKeyPressed(GUI::Key::LEFT)) {
+        _scene->getCamera()->rotateX(1);
+    }
+    else if (_module->isKeyPressed(GUI::Key::RIGHT)) {
+        _scene->getCamera()->rotateX(-1);
+    }
+    else if (_module->isKeyPressed(GUI::Key::UP)) {
+        _scene->getCamera()->rotateY(1);
+    }
+    else if (_module->isKeyPressed(GUI::Key::DOWN)) {
+        _scene->getCamera()->rotateY(-1);
+    }
+}
+
+void GUI::Core::handleTeamSelection()
+{
+    if (_module->isKeyReleased(GUI::Key::LEFT) && static_cast<int>(_currentTeam) - 1 >= 0) {
+        _currentTeam--;
+    } else if (_module->isKeyReleased(GUI::Key::RIGHT) && _currentTeam + 1 <= _coms.getConf()->getTeams().size()) {
+        _currentTeam++;
     }
 }
 
@@ -240,6 +262,7 @@ void GUI::Core::draw()
     this->drawEggs();
     this->drawPlayers();
     _module->disable3DMode();
+    if (_teamSelection) drawTeams();
     if (_map->selectionMode())
         this->drawCellDetails(_map->getCell(_map->getSelectionBlock()));
     _module->postDraw();
@@ -264,11 +287,15 @@ void GUI::Core::drawCellDetails(std::shared_ptr<ICell> cell)
     std::unordered_map<GUI::Object, int> stock;
     std::string                          type;
     Vector2i                             pos;
+    std::string playerInfo;
+    std::string level;
 
     if (_map->selectionType() == SelectionType::BLOCK) {
         stock = cell->getObjects();
         type  = "Cell";
         pos   = cell->getPos();
+        playerInfo = "";
+        level = "";
     }
     else {
         if (_coms.getConf()->getPlayers().find(_map->getPlayerId()) ==
@@ -279,6 +306,8 @@ void GUI::Core::drawCellDetails(std::shared_ptr<ICell> cell)
         stock = player->getInventory();
         type  = "Player";
         pos   = player->getPos();
+        playerInfo = std::to_string(player->getId()) + " - " + player->getTeamName();
+        level = "Level: " + std::to_string(player->getLevel());
     }
     _module->drawRectangle(
         (Vector2f){0, 0},
@@ -295,6 +324,18 @@ void GUI::Core::drawCellDetails(std::shared_ptr<ICell> cell)
         type,
         (Vector2f){static_cast<float>(_windowSize.x - type.length() * 10 - 15),
                    10},
+        20, GUI::C_Color::C_BLACK);
+
+    _module->drawText(
+        playerInfo,
+        (Vector2f){static_cast<float>(_windowSize.x - playerInfo.length() * 10 - 15),
+                   35},
+        20, GUI::C_Color::C_BLACK);
+
+    _module->drawText(
+        level,
+        (Vector2f){static_cast<float>(_windowSize.x - level.length() * 10 - 15),
+                   60},
         20, GUI::C_Color::C_BLACK);
 
     int index = 0;
@@ -344,6 +385,7 @@ void GUI::Core::drawEntities(std::shared_ptr<ICell> cell)
 
 void GUI::Core::drawPlayers()
 {
+    handleCharacterSelection();
     Actions  actions = _coms.getConf()->getActions();
     Vector3f offset  = {0, 0, 0};
     for (auto &player : _coms.getConf()->getPlayers()) {
@@ -389,29 +431,67 @@ void GUI::Core::drawPlayers()
         _module->animateModel(ModelEntity::GOLEM, player.second->getAnimation(),
                               player.second->getCurrentFrame());
         Vector3f groundSize = _module->getModelSize(ModelEntity::GRASS_BLOCK);
-        Vector3f finalPos   = {
+        Vector3f finalPos   (
             pos.x + offset.x +
                 _module->getModelSize(ModelEntity::GRASS_BLOCK).x / 2,
             pos.y + offset.y,
             pos.z + offset.z +
-                _module->getModelSize(ModelEntity::GRASS_BLOCK).x / 2};
-        handleCharacterSelection(finalPos, player.second->getId());
+                _module->getModelSize(ModelEntity::GRASS_BLOCK).x / 2);
         _module->drawModel(ModelEntity::GOLEM, finalPos,
                            _config.models[ModelEntity::GOLEM].scale,
                            _config.models[ModelEntity::GOLEM].rotation);
     }
 }
 
-void GUI::Core::handleCharacterSelection(Vector3f pos, int playerId)
+void GUI::Core::handleCharacterSelection()
 {
     if (_module->isMouseButtonPressed(GUI::Mouse::BUTTON_LEFT)) {
-        if (_module->isModelSelected(ModelEntity::GOLEM, pos,
-                                     _config.models[ModelEntity::GOLEM].scale,
-                                     _scene->getCamera())) {
-            _map->setSelectionMode(true, SelectionType::PLAYER, playerId);
+        for (auto &player : _coms.getConf()->getPlayers()) {
+            Vector3f position = _module->mousePosFromGrid(
+                player.second->getPos(),
+                _module->getModelSize(ModelEntity::GRASS_BLOCK).x, _map->getSize());
+            if (_module->isModelSelected(ModelEntity::GOLEM, position,
+                                         _config.models[ModelEntity::GOLEM].scale,
+                                         _scene->getCamera())) {
+                _map->setSelectionMode(true, SelectionType::PLAYER, player.second->getId());
+                return;
+            }
+            else {
+                _map->setSelectionMode(false, SelectionType::NONE, 0);
+            }
         }
-        else {
-            _map->setSelectionMode(false, SelectionType::NONE);
+    }
+}
+
+void GUI::Core::drawTeams()
+{
+    _module->drawRectangle(
+        (Vector2f){static_cast<float>(_windowSize.x - 650), 0},
+        (Vector2f){500, static_cast<float>(_windowSize.y)},
+        GUI::C_Color::C_BLACK);
+
+    if (_currentTeam == 0) {
+        _module->drawText(
+            "Select a team",
+            (Vector2f){static_cast<float>(_windowSize.x - 600), 10}, 20,
+            GUI::C_Color::C_WHITE);
+        return;
+    }
+
+    _module->drawText(
+        "Team name: " + _coms.getConf()->getTeams().at(_currentTeam - 1),
+        (Vector2f){static_cast<float>(_windowSize.x - 600), 10}, 20,
+        GUI::C_Color::C_WHITE);
+
+    float playerOffset = 30;
+    for (auto &player : _coms.getConf()->getPlayers()) {
+        if (player.second->getTeamName() == _coms.getConf()->getTeams().at(_currentTeam - 1)) {
+            _module->drawText(
+                std::to_string(player.second->getId()) + " (" + std::to_string(player.second->getPos().x) + ", " + std::to_string(player.second->getPos().y) + ")",
+                (Vector2f){static_cast<float>(_windowSize.x - 600),
+                           static_cast<float>(playerOffset + 10)},
+                20, GUI::C_Color::C_WHITE);
+            playerOffset += 30;
         }
     }
 }

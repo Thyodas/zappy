@@ -29,6 +29,7 @@ namespace GUI {
         private:
             void handleUserInput();
             void handleZoom();
+            void handleRotation();
             void handleSelection();
             void draw();
             void drawGround();
@@ -37,9 +38,11 @@ namespace GUI {
             void drawEntities(std::shared_ptr<ICell> cell);
             void drawPlayers();
             void drawEggs();
+            void drawTeams();
             void handleEndGame();
-            void handleCharacterSelection(Vector3f pos, int playerId);
+            void handleCharacterSelection();
             void handleConfigUpdate();
+            void handleTeamSelection();
             bool _running;
             GUI::Vector2i _windowSize;
             GUI::config _config;
@@ -51,7 +54,8 @@ namespace GUI {
             std::vector<GUI::ModelEntity> _models;
             bool _drawObjects;
             Coms _coms;
-            Model _modelSkybox;
+            unsigned int _currentTeam;
+            bool _teamSelection;
     };
 };  // namespace GUI
 
