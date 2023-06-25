@@ -29,6 +29,7 @@ namespace GUI {
         private:
             void handleUserInput();
             void handleZoom();
+            void handleRotation();
             void handleSelection();
             void draw();
             void drawGround();
