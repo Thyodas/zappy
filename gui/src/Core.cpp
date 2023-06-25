@@ -118,10 +118,10 @@ void GUI::Core::handleUserInput()
         _teamSelection = !_teamSelection;
         return;
     }
-    if (_map->selectionMode() &&
-        _map->selectionType() == GUI::SelectionType::BLOCK)
-        handleSelection();
-    else
+    if (_map->selectionMode() && !_teamSelection) {
+        if (_map->selectionType() == GUI::SelectionType::BLOCK)
+            handleSelection();
+    } else if (!_teamSelection)
         handleZoom();
     if (_module->isKeyReleased(GUI::Key::R)) {
         _map->setSelectionMode(!_map->selectionMode(),
@@ -457,7 +457,7 @@ void GUI::Core::drawTeams()
     for (auto &player : _coms.getConf()->getPlayers()) {
         if (player.second->getTeamName() == _coms.getConf()->getTeams().at(_currentTeam - 1)) {
             _module->drawText(
-                std::to_string(player.second->getId()) + "(" + std::to_string(player.second->getPos().x) + ", " + std::to_string(player.second->getPos().y) + ")",
+                std::to_string(player.second->getId()) + " (" + std::to_string(player.second->getPos().x) + ", " + std::to_string(player.second->getPos().y) + ")",
                 (Vector2f){static_cast<float>(_windowSize.x - 600),
                            static_cast<float>(playerOffset + 10)},
                 20, GUI::C_Color::C_WHITE);
