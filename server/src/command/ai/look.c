@@ -23,13 +23,6 @@ static void print_tile(zappy_t *zappy, connection_t *con, pos_t pos)
     assert(pos.y < zappy->map.height);
     assert(pos.x < zappy->map.width);
     map_cell_t *tile = &zappy->map.cells[pos.y][pos.x];
-    assert(tile->resource.food < zappy->resource_density.food);
-    assert(tile->resource.linemate < zappy->resource_density.linemate);
-    assert(tile->resource.deraumere < zappy->resource_density.deraumere);
-    assert(tile->resource.sibur < zappy->resource_density.sibur);
-    assert(tile->resource.mendiane < zappy->resource_density.mendiane);
-    assert(tile->resource.phiras < zappy->resource_density.phiras);
-    assert(tile->resource.thystame < zappy->resource_density.thystame);
     assert(tile->nb_players <= zappy->db.ai_vector.len);
     print_repeat(con, " player", tile->nb_players);
     print_repeat(con, " food", tile->resource.food);
