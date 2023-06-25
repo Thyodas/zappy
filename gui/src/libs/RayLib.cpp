@@ -26,6 +26,7 @@ GUI::RayLib::RayLib()
     _keys[GUI::Key::S]      = KeyboardKey::KEY_S;
     _keys[GUI::Key::D]      = KeyboardKey::KEY_D;
     _keys[GUI::Key::H]      = KeyboardKey::KEY_H;
+    _keys[GUI::Key::T]      = KeyboardKey::KEY_T;
 
     _mouseButtons[GUI::Mouse::BUTTON_LEFT]  = MOUSE_LEFT_BUTTON;
     _mouseButtons[GUI::Mouse::BUTTON_RIGHT] = MOUSE_RIGHT_BUTTON;

@@ -16,7 +16,9 @@ GUI::Core::Core(GUI::Args args)
       _scene(std::make_shared<Scene>()),
       _map(nullptr),
       _drawObjects(true),
-      _coms(args.machine, args.port)
+      _coms(args.machine, args.port),
+      _currentTeam(0),
+      _teamSelection(false)
 {
     IParser *parser = new Parser("config.cfg");
     _config         = parser->parseConfig();
@@ -111,6 +113,11 @@ void GUI::Core::handleUserInput()
 {
     _module->handleEvents();
     if (_module->isKeyPressed(GUI::Key::ESCAPE)) _running = false;
+    if (_teamSelection) handleTeamSelection();
+    if (_module->isKeyReleased(GUI::Key::T)) {
+        _teamSelection = !_teamSelection;
+        return;
+    }
     if (_map->selectionMode() &&
         _map->selectionType() == GUI::SelectionType::BLOCK)
         handleSelection();
@@ -128,6 +135,15 @@ void GUI::Core::handleUserInput()
     }
     if (_module->isKeyReleased(GUI::Key::H)) {
         _drawObjects = !_drawObjects;
+    }
+}
+
+void GUI::Core::handleTeamSelection()
+{
+    if (_module->isKeyReleased(GUI::Key::LEFT) && static_cast<int>(_currentTeam) - 1 >= 0) {
+        _currentTeam--;
+    } else if (_module->isKeyReleased(GUI::Key::RIGHT) && _currentTeam + 1 < _coms.getConf()->getTeams().size() - 1) {
+        _currentTeam++;
     }
 }
 
@@ -240,6 +256,7 @@ void GUI::Core::draw()
     this->drawEggs();
     this->drawPlayers();
     _module->disable3DMode();
+    if (_teamSelection) drawTeams();
     if (_map->selectionMode())
         this->drawCellDetails(_map->getCell(_map->getSelectionBlock()));
     _module->postDraw();
@@ -412,6 +429,39 @@ void GUI::Core::handleCharacterSelection(Vector3f pos, int playerId)
         }
         else {
             _map->setSelectionMode(false, SelectionType::NONE);
+        }
+    }
+}
+
+void GUI::Core::drawTeams()
+{
+    _module->drawRectangle(
+        (Vector2f){static_cast<float>(_windowSize.x - 650), 0},
+        (Vector2f){500, static_cast<float>(_windowSize.y)},
+        GUI::C_Color::C_BLACK);
+
+    if (_currentTeam == 0) {
+        _module->drawText(
+            "Select a team",
+            (Vector2f){static_cast<float>(_windowSize.x - 600), 10}, 20,
+            GUI::C_Color::C_WHITE);
+        return;
+    }
+
+    _module->drawText(
+        "Team name: " + _coms.getConf()->getTeams().at(_currentTeam - 1),
+        (Vector2f){static_cast<float>(_windowSize.x - 600), 10}, 20,
+        GUI::C_Color::C_WHITE);
+
+    float playerOffset = 30;
+    for (auto &player : _coms.getConf()->getPlayers()) {
+        if (player.second->getTeamName() == _coms.getConf()->getTeams().at(_currentTeam - 1)) {
+            _module->drawText(
+                std::to_string(player.second->getId()) + "(" + std::to_string(player.second->getPos().x) + ", " + std::to_string(player.second->getPos().y) + ")",
+                (Vector2f){static_cast<float>(_windowSize.x - 600),
+                           static_cast<float>(playerOffset + 10)},
+                20, GUI::C_Color::C_WHITE);
+            playerOffset += 30;
         }
     }
 }
