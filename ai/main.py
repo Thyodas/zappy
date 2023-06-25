@@ -1,6 +1,8 @@
 import argparse
 import client
 import decisionTree
+import time
+import logger
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Connect to a Zappy server.", add_help=False)
@@ -17,6 +19,24 @@ if __name__ == "__main__":
 
     while True:
         action = root.make_decision()
+        client.player.elasped_time = time.time() - client.player.last_broadcast
+        logger.info(client.player.elasped_time)
+        remaining_time = (client.DefaultTimeLimit.REGULAR_BROADCAST.value / client.player.frequency) - client.player.elasped_time
+        logger.info(remaining_time)
+        if remaining_time <= 0:
+            client.player.broadcast("I'm alive")
+            client.player.last_broadcast = time.time()
+            client.player.elasped_time = 0
+        if len(client.player.broadcast_queue) != 0:
+            message = client.player.broadcast_queue.pop(0)
+            client.player.broadcast(message)
+            client.player.broadcast_queue.clear()
+        # for message in client.player.broadcast_queue:
+        #     client.player.broadcast(message)
+        # for index, mates in enumerate(client.player.teammates):
+        #     if time.perf_counter() - mates.last_timestamp > (mates.last_timestamp + 1_000_000 * (client.DefaultTimeLimit.REGULAR_BROADCAST.value / client.player.frequency)) * 2:
+        #         client.player.teammates.pop(index)
+        logger.info(f"My team size is {client.player.team_size}")
         # try:
         #     print(action)
         # except KeyboardInterrupt:

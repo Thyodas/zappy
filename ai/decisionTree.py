@@ -2,6 +2,7 @@ import client
 from enum import Enum
 import utils
 import logger
+import time
 
 nb_players_needed_to_elevate = {
     1: 1,
@@ -180,7 +181,7 @@ def action_elevate():
 
 
 def action_broadcast_elevation_ready():
-    logger.info("I have enough resources and food to elevate")
+    logger.success(f"I have enough resources and food to elevate to level {client.player.player_info.score + 1}")
     if client.player.player_info.score == 1:
         action_set_objects_down()
         return action_elevate()
@@ -216,25 +217,48 @@ def action_win():
 
 def action_fork():
     logger.info("I'm reproducing")
-    data = client.player.fork_player()
-    if data == "ko":
-        logger.error("Failed to reproduce")
-        return "Failed to reproduce"
-    client.player.already_reproduced = True
+    nb_connections = 0
+    try:
+        nb_connections = int(client.player.get_team_slots())
+    except Exception as e:
+        nb_connections = int(client.player.receive(client.DefaultTimeLimit.CONNECT_NBR.value))
+    if nb_connections == 0:
+        data = client.player.add_slot()
+        if data == "ko":
+            logger.error("Failed to reproduce")
+            return data
+    client.player.fork()
+    #data = client.player.fork_player()
+    # if data == "ko":
+    #     logger.error("Failed to reproduce")
+    #     return "Failed to reproduce"
+    # client.player.already_reproduced = True
     logger.success("Reproduced sucessfully")
     return "Reproduced sucessfully"
-
 
 def is_level_8():
     return client.player.player_info.score == 8
 
+def received_hello():
+    client.player.elasped_time = time.time() - client.player.last_broadcast
+    remaining_time = ((client.DefaultTimeLimit.REGULAR_BROADCAST.value / client.player.frequency) - client.player.elasped_time * 2)
+    if remaining_time <= 0:
+        client.player.received_hello = True
+    return client.player.received_hello
+
+def action_wait():
+    logger.info("Waiting...")
+    return
 
 def is_team_full():
-    nb_connections = int(client.player.get_team_slots())
-    logger.info(f"Got {nb_connections} slots")
-    if client.player.already_reproduced:
-        return True
-    return nb_connections == 0
+    # nb_connections = 0
+    # try:
+    #     nb_connections = int(client.player.get_team_slots())
+    # except Exception as e:
+    #     nb_connections = int(client.player.receive())
+    # logger.info(f"Got {nb_connections} slots")
+    return client.player.team_size >= 6
+    #return nb_connections == 0
 
 
 def is_elevation_ready():
@@ -263,7 +287,6 @@ def enough_resources_to_elevate():
     inventory = client.player.inventory()
     if inventory is None:
         return False
-    print(client.player.player_info.score)
     resources = resources_for_level[client.player.player_info.score]
     if resources.linemate_count > inventory.linemate_count:
         return False
@@ -497,4 +520,5 @@ def init_decision_tree():
     leaf_elevation_underway = DecisionNode(is_elevation_underway, leaf_enough_food_to_help_elevate, leaf_is_lvl8)
 
     root = DecisionNode(is_broadcast_on, leaf_enough_food_to_elevate_solo, leaf_elevation_underway)
-    return root
+    waitingNode = DecisionNode(received_hello, root, ActionNode(action_wait))
+    return waitingNode
