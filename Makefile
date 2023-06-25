@@ -24,6 +24,8 @@ zappy_gui:
 	@printf "\e[48;5;196m                 COMPILING GUI                \e[0m\n"
 	@cmake $(GUI_DIR) -B ./build/$(GUI_DIR) && cmake --build ./build/$(GUI_DIR) -j --target all
 	@cp ./build/$(GUI_DIR)/$(GUI_NAME) .
+	@cp ./gui/config.cfg .
+	@cp -r ./gui/assets/ .
 
 zappy_ai:
 	@printf "\e[48;5;196m                 COMPILING AI                 \e[0m\n"
