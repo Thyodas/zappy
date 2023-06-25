@@ -361,6 +361,7 @@ void GUI::Core::drawEntities(std::shared_ptr<ICell> cell)
 
 void GUI::Core::drawPlayers()
 {
+    handleCharacterSelection();
     Actions  actions = _coms.getConf()->getActions();
     Vector3f offset  = {0, 0, 0};
     for (auto &player : _coms.getConf()->getPlayers()) {
@@ -406,29 +407,34 @@ void GUI::Core::drawPlayers()
         _module->animateModel(ModelEntity::GOLEM, player.second->getAnimation(),
                               player.second->getCurrentFrame());
         Vector3f groundSize = _module->getModelSize(ModelEntity::GRASS_BLOCK);
-        Vector3f finalPos   = {
+        Vector3f finalPos   (
             pos.x + offset.x +
                 _module->getModelSize(ModelEntity::GRASS_BLOCK).x / 2,
             pos.y + offset.y,
             pos.z + offset.z +
-                _module->getModelSize(ModelEntity::GRASS_BLOCK).x / 2};
-        handleCharacterSelection(finalPos, player.second->getId());
+                _module->getModelSize(ModelEntity::GRASS_BLOCK).x / 2);
         _module->drawModel(ModelEntity::GOLEM, finalPos,
                            _config.models[ModelEntity::GOLEM].scale,
                            _config.models[ModelEntity::GOLEM].rotation);
     }
 }
 
-void GUI::Core::handleCharacterSelection(Vector3f pos, int playerId)
+void GUI::Core::handleCharacterSelection()
 {
     if (_module->isMouseButtonPressed(GUI::Mouse::BUTTON_LEFT)) {
-        if (_module->isModelSelected(ModelEntity::GOLEM, pos,
-                                     _config.models[ModelEntity::GOLEM].scale,
-                                     _scene->getCamera())) {
-            _map->setSelectionMode(true, SelectionType::PLAYER, playerId);
-        }
-        else {
-            _map->setSelectionMode(false, SelectionType::NONE);
+        for (auto &player : _coms.getConf()->getPlayers()) {
+            Vector3f position = _module->mousePosFromGrid(
+                player.second->getPos(),
+                _module->getModelSize(ModelEntity::GRASS_BLOCK).x, _map->getSize());
+            if (_module->isModelSelected(ModelEntity::GOLEM, position,
+                                         _config.models[ModelEntity::GOLEM].scale,
+                                         _scene->getCamera())) {
+                _map->setSelectionMode(true, SelectionType::PLAYER, player.second->getId());
+                return;
+            }
+            else {
+                _map->setSelectionMode(false, SelectionType::NONE, 0);
+            }
         }
     }
 }

@@ -39,7 +39,7 @@ namespace GUI {
             void drawEggs();
             void drawTeams();
             void handleEndGame();
-            void handleCharacterSelection(Vector3f pos, int playerId);
+            void handleCharacterSelection();
             void handleConfigUpdate();
             void handleTeamSelection();
             bool _running;
