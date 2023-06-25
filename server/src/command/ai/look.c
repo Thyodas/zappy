@@ -74,11 +74,8 @@ static pos_t get_abs_pos(zappy_t *zappy, player_t *player, int32_t x,
 int ai_look(zappy_t *zappy, connection_t *con)
 {
     player_t *player = con->player;
+    send_response(con, "[", 1);
     print_tile(zappy, con, player->pos);
-    if (buffer_get_read_len(&con->res_buffer) > 0)
-        con->res_buffer.buffer[con->res_buffer.read_bytes] = '[';
-    else
-        send_response(con, "[", 1);
     for (int32_t lvl = 1; lvl <= (int32_t)player->level; ++lvl) {
         for (int32_t tile_x_shift = -lvl; tile_x_shift < 0; ++tile_x_shift) {
             send_response(con, ",", 1);
