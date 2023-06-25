@@ -5,6 +5,9 @@ import sys
 from dataclasses import dataclass, field
 from enum import Enum
 import time
+import uuid
+import logger
+
 
 class DefaultTimeLimit(Enum):
     FORWARD = 7
@@ -19,16 +22,18 @@ class DefaultTimeLimit(Enum):
     TAKE = 7
     SET = 7
     INCANTATION = 300
+    REGULAR_BROADCAST = 20
+
 
 @dataclass
-class Ressources:
-    FoodCount: int = 0
-    LinemateCount: int = 0
-    SiburCount: int = 0
-    PhirasCount: int = 0
-    MendianeCount: int = 0
-    ThystameCount: int = 0
-    DeraumerCount: int = 0
+class Resources:
+    food_count: int = 0
+    linemate_count: int = 0
+    sibur_count: int = 0
+    phiras_count: int = 0
+    mendiane_count: int = 0
+    thystame_count: int = 0
+    deraumer_count: int = 0
 
 
 @dataclass
@@ -36,14 +41,16 @@ class PlayerInfo:
     team: str = "Overflow"
     positionX: int = 0
     positionY: int = 0
-    score: int = 0
+    score: int = 1
+    uuid: str = str(uuid.uuid4())
     inventory: dict = field(default_factory=dict)
+    last_timestamp: int = -1
 
 
 @dataclass
 class Tile:
-    PlayerCount: int = 0
-    Ressources: Ressources = field(default_factory=Ressources)
+    player_count: int = 0
+    resources: Resources = field(default_factory=Resources)
 
 
 class ZappyClient:
@@ -52,26 +59,46 @@ class ZappyClient:
         self.name = name
         self.machine = machine
         self.client_socket = None
-        self.frequence = 100
+        self.frequency = 100
         self.clientNum = 0
         self.buffer = ""
         self.player_info: PlayerInfo = PlayerInfo()
+        self.teammates: list[PlayerInfo] = []
+        self.broadcast_queue: list[str] = []
+        self.broadcast_on = False
+        self.elevation_underway = False
+        self.leader = False
+        self.ready_to_elevate = False
+        self.incanting = False
+        self.nb_players_ready = 0
+        self.broadcastDirection = -1
+        self.already_broadcast = False
+        self.already_reproduced = False
+        self.received_hello = False
+        self.uuid_incanting = ""
+        self.next_broadcast = 0
+        self.team_size = 1
+        self.last_broadcast = 0
+        self.elasped_time = 0
 
     def connect(self):
         try:
-            print("Machine {} connected on port {}".format(self.machine, self.port))
+            logger.success("Machine {} connected on port {}".format(self.machine, self.port))
             self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.client_socket.connect((self.machine, self.port))
-            welcomeMsg = self.receive(0)
-            if welcomeMsg != "WELCOME":
+            welcome_msg = self.receive(0, "")
+            if welcome_msg != "WELCOME":
                 return
             self.send(self.name + "\n")
-            self.clientNum = int(self.receive(0))
-            print(f"Client number : {self.clientNum}")
-            positions = self.receive(0).split()
-            print(f"Starting positions : {positions}")
+            self.clientNum = int(self.receive(0, ""))
+            logger.info(f"Client number : {self.clientNum}")
+            positions = self.receive(0, "").split()
+            logger.info(f"Starting positions : {positions}")
             self.player_info.positionX = int(positions[0])
             self.player_info.positionY = int(positions[1])
+            self.broadcast("Hello")
+            self.next_broadcast = time.perf_counter() + (DefaultTimeLimit.REGULAR_BROADCAST.value / self.frequency)
+            self.last_broadcast = time.time()
         except Exception as e:
             print(f"Error connecting to the server: {e}")
             exit(1)
@@ -84,7 +111,63 @@ class ZappyClient:
             print("Message: " + message)
             exit(1)
 
-    def receive(self, timeLimit):
+    def handle_message(self, direction, text):
+        data_map = json.loads(text)
+        logger.info(f"Received broadcast from level {data_map['score']} player {data_map['uuid']} in team {data_map['team']} with message : {data_map['message']} in direction {direction}")
+        if data_map["message"] == "Help elevation" and data_map["team"] == self.player_info.team and data_map["score"] == self.player_info.score and data_map["uuid"] > self.uuid_incanting:
+            self.elevation_underway = True
+            self.broadcastDirection = direction
+            self.uuid_incanting = data_map["uuid"]
+            self.leader = False
+            if data_map["teamSize"] > self.team_size:
+                self.team_size = data_map["teamSize"]
+        if data_map["message"] == "Cancel" and data_map["team"] == self.player_info.team and data_map["score"] == self.player_info.score:
+            self.elevation_underway = False
+            self.ready_to_elevate = False
+            self.already_broadcast = False
+            self.broadcastDirection = -1
+            self.uuid_incanting = ""
+            if data_map["teamSize"] > self.team_size:
+                self.team_size = data_map["teamSize"]
+        if data_map["message"] == "I'm here" and data_map["team"] == self.player_info.team and data_map["score"] == self.player_info.score and self.leader:
+            self.nb_players_ready += 1
+            if data_map["teamSize"] > self.team_size:
+                self.team_size = data_map["teamSize"]
+        if data_map["message"] == "Ready" and data_map["team"] == self.player_info.team and data_map["score"] == self.player_info.score and self.elevation_underway:
+            self.ready_to_elevate = True
+            if data_map["teamSize"] > self.team_size:
+                self.team_size = data_map["teamSize"]
+        if data_map["message"] == "Hello" and data_map["team"] == self.player_info.team:
+            new_player_info = PlayerInfo()
+            new_player_info.team = self.player_info.team
+            new_player_info.last_timestamp = time.perf_counter()
+            new_player_info.uuid = data_map["uuid"]
+            self.teammates.append(new_player_info)
+            self.team_size = len(self.teammates)
+            if data_map["teamSize"] > self.team_size:
+                self.team_size = data_map["teamSize"]
+            self.broadcast_queue.append("Hello there")
+            #self.broadcast("Hello there")
+        if data_map["message"] == "I'm alive" and data_map["team"] == self.player_info.team:
+            for mates in self.teammates:
+                if mates.uuid == data_map["uuid"]:
+                    mates.last_timestamp = time.perf_counter()
+            if data_map["teamSize"] > self.team_size:
+                self.team_size = data_map["teamSize"]
+        if data_map["message"] == "Hello there" and data_map["team"] == self.player_info.team:
+            for mates in self.teammates:
+                if mates.uuid == data_map["uuid"]:
+                    return
+            new_player_info = PlayerInfo()
+            new_player_info.team = self.player_info.team
+            new_player_info.last_timestamp = time.perf_counter()
+            new_player_info.uuid = data_map["uuid"]
+            self.teammates.append(new_player_info)
+            self.received_hello = True
+            if data_map["teamSize"] > self.team_size:
+                self.team_size = data_map["teamSize"]
+
+    def receive(self, timeLimit, expected):
         data = ""
         delta = 0.01
         try:
@@ -93,23 +176,38 @@ class ZappyClient:
                 if self.buffer.endswith('\n'):
                     break
                 part = self.client_socket.recv(1024)
+                logger.info(f"Received info {part.decode('ascii')}")
                 if part:
                     self.buffer += part.decode('ascii')
                 else:
                     break
             end_time = time.time()
-            splitCommand = self.buffer.split("\n")
-            data = splitCommand[0]
-            if len(splitCommand) == 2:
-                self.buffer = ""
-            else:
-                self.buffer = self.buffer[len(data) + 1:]
+            split_command = self.buffer.split("\n")
+            data = split_command[0]
+            logger.info(f"Buffer {self.buffer}")
+            logger.info(f"Data {data}")
+            self.buffer = self.buffer[len(data) + 1:]
             elapsed_time = end_time - start_time
-            if timeLimit == 0:
-                return data
-            if elapsed_time + delta < timeLimit / self.frequence or elapsed_time - delta > timeLimit / self.frequence:
-                self.frequence = timeLimit / elapsed_time
-                print(f"Found a new frequence {self.frequence}")
+            if elapsed_time + delta < timeLimit / self.frequency or elapsed_time - delta > timeLimit / self.frequency:
+                if timeLimit != 0:
+                    self.frequency = timeLimit / elapsed_time
+                logger.warn(f"Found a new frequence {self.frequency}")
+            if data.startswith("message"):
+                data = data.strip()
+                K = int(data[8])
+                text = data[11:]
+                # data = data.strip()
+                # parts = data.split(',')
+                # K = int(parts[0].split()[1])
+                # text = parts[1].strip()
+                self.handle_message(K, text)
+                return self.receive(timeLimit, expected)
+            if not data.startswith(expected) and expected != "" and data != "ko":
+                logger.warn(f"Received unexpected {data}")
+                return self.receive(timeLimit, expected)
+            if data.startswith("dead"):
+                logger.error("I'm dead")
+                self.close()
         except Exception as e:
             print(f"Error receiving data: {e}")
         return data
@@ -121,96 +219,111 @@ class ZappyClient:
             print(f"Error closing the socket: {e}")
 
     def move_forward(self):
+        logger.info("Going forward")
         self.send('Forward\n')
-        return self.receive(DefaultTimeLimit.FORWARD.value)
+        return self.receive(DefaultTimeLimit.FORWARD.value, "ok")
 
     def turn_right(self):
+        logger.info("Going right")
         self.send('Right\n')
-        return self.receive(DefaultTimeLimit.RIGHT.value)
+        return self.receive(DefaultTimeLimit.RIGHT.value, "ok")
 
     def get_team_slots(self):
+        logger.info(f"{self.clientNum} Fetching team slots")
         self.send('Connect_nbr\n')
-        return self.receive().strip(DefaultTimeLimit.CONNECT_NBR.value)
+        return self.receive(DefaultTimeLimit.CONNECT_NBR.value, "")
 
-    def fork_player(self):
+    def add_slot(self):
+        logger.info(f"{self.clientNum} Forking")
         self.send('Fork\n')
-        response = self.receive(DefaultTimeLimit.FORK.value)
-        if response.strip() == "ok":
-            pid = os.fork()
-            if pid == 0:
-                os.execv(sys.executable, ['python'] + sys.argv)
+        response = self.receive(DefaultTimeLimit.FORK.value, "ok")
         return response
 
+    def fork(self):
+        pid = os.fork()
+        if pid == 0:
+            os.execv(sys.executable, ['python'] + sys.argv)
+
     def eject_players(self):
+        logger.info("Ejecting")
         self.send('Eject\n')
-        return self.receive(DefaultTimeLimit.EJECT.value)
+        return self.receive(DefaultTimeLimit.EJECT.value, "ok")
 
     def take_object(self, object_name):
+        logger.info(f"Taking object {object_name}")
         self.send(f'Take {object_name}\n')
-        return self.receive(DefaultTimeLimit.TAKE.value)
+        return self.receive(DefaultTimeLimit.TAKE.value, "ok")
 
     def set_object(self, object_name):
+        logger.info(f"Putting down object {object_name}")
         self.send(f'Set {object_name}\n')
-        return self.receive(DefaultTimeLimit.SET.value)
+        return self.receive(DefaultTimeLimit.SET.value, "ok")
 
     def start_incantation(self):
+        logger.success("Starting incantation")
         self.send('Incantation\n')
-        return self.receive(DefaultTimeLimit.INCANTATION.value)
+        data = self.receive(0, "Elevation")
+        logger.error(data)
+        if data != "Elevation underway":
+            logger.error("Error during incantation")
+            return "ko"
+        return self.receive(DefaultTimeLimit.INCANTATION.value, "Current")
 
     # Store the inventory in the player_info + return it
     def inventory(self):
-        try:
-            self.send('Inventory\n')
+        logger.info(f"{self.clientNum} Fetching inventory")
+        self.send('Inventory\n')
 
-            response = self.receive(DefaultTimeLimit.INVENTORY.value)
+        response = self.receive(DefaultTimeLimit.INVENTORY.value, "[")
+        logger.error(response)
 
-            response = response.strip('][')
-            response = ' '.join(response.split())
-            items = response.split(',')
+        response = response.strip('][')
+        response = ' '.join(response.split())
+        items = response.split(',')
 
-            inventory: Ressources = Ressources()
-            for item in items:
-                item = item.strip()
-                key_value = item.split(' ')
+        inventory: Resources = Resources()
+        for item in items:
+            item = item.strip()
+            key_value = item.split(' ')
 
-                key = key_value[0]
-                value = int(key_value[1])
+            key = key_value[0]
+            value = int(key_value[1])
 
-                if key == 'food':
-                    inventory.FoodCount = value
-                elif key == 'linemate':
-                    inventory.LinemateCount = value
-                elif key == 'deraumere':
-                    inventory.DeraumerCount = value
-                elif key == 'sibur':
-                    inventory.SiburCount = value
-                elif key == 'mendiane':
-                    inventory.MendianeCount = value
-                elif key == 'phiras':
-                    inventory.PhirasCount = value
-                elif key == 'thystame':
-                    inventory.ThystameCount = value
+            if key == 'food':
+                inventory.food_count = value
+            elif key == 'linemate':
+                inventory.linemate_count = value
+            elif key == 'deraumere':
+                inventory.deraumer_count = value
+            elif key == 'sibur':
+                inventory.sibur_count = value
+            elif key == 'mendiane':
+                inventory.mendiane_count = value
+            elif key == 'phiras':
+                inventory.phiras_count = value
+            elif key == 'thystame':
+                inventory.thystame_count = value
 
-            print("Inventory: " + str(inventory))
-            self.player_info.inventory = inventory
-            return inventory
-        except Exception as e:
-            print(f"Error getting inventory: {e}")
+        logger.info("Inventory: " + str(inventory))
+        self.player_info.inventory = inventory
+        return inventory
 
     def turn_left(self):
+        logger.info("Turning left")
         self.send('Left\n')
-        return self.receive(DefaultTimeLimit.LEFT.value)
+        return self.receive(DefaultTimeLimit.LEFT.value, "ok")
 
     def look_around(self):
+        logger.info(f"{self.clientNum} Looking around")
         try:
             self.send('Look\n')
-            response = self.receive(DefaultTimeLimit.LOOK.value)
+            response = self.receive(DefaultTimeLimit.LOOK.value, "[")
 
             response = response.strip('][')
             response = ' '.join(response.split())
             tiles = response.split(',')
 
-            tilesList: Tile = []
+            tiles_list: list[Tile] = []
 
             for tile_info in tiles:
                 tile_info = tile_info.strip()
@@ -219,37 +332,44 @@ class ZappyClient:
                 tile = Tile()
                 for item in items:
                     if item == 'player':
-                        tile.PlayerCount += 1
+                        tile.player_count += 1
                     elif item == 'food':
-                        tile.Ressources.FoodCount += 1
+                        tile.resources.food_count += 1
                     elif item == 'linemate':
-                        tile.Ressources.LinemateCount += 1
+                        tile.resources.linemate_count += 1
                     elif item == 'deraumere':
-                        tile.Ressources.DeraumerCount += 1
+                        tile.resources.deraumer_count += 1
                     elif item == 'sibur':
-                        tile.Ressources.SiburCount += 1
+                        tile.resources.sibur_count += 1
                     elif item == 'mendiane':
-                        tile.Ressources.MendianeCount += 1
+                        tile.resources.mendiane_count += 1
                     elif item == 'phiras':
-                        tile.Ressources.PhirasCount += 1
+                        tile.resources.phiras_count += 1
                     elif item == 'thystame':
-                        tile.Ressources.ThystameCount += 1
+                        tile.resources.thystame_count += 1
 
-                tilesList.append(tile)
+                tiles_list.append(tile)
 
-            return tilesList
+            logger.info(tiles_list)
+            return tiles_list
         except Exception as e:
             print(f"Error looking around: {e}")
 
     def broadcast(self, text):
-        self.send(formatBroadCastMessage(self.player_info, text))
-        return self.receive(DefaultTimeLimit.BROADCAST.value)
+        logger.info(f"Broadcasting : {text}")
+        self.send(format_broad_cast_message(self.player_info, text))
+        return self.receive(DefaultTimeLimit.BROADCAST.value, "ok")
 
-def formatBroadCastMessage(playerInfo: PlayerInfo, message: str) -> str:
+
+def format_broad_cast_message(player_info: PlayerInfo, message: str) -> str:
     struct = {
-        "playerInfo": playerInfo,
+        "team": player_info.team,
+        "uuid": player_info.uuid,
+        "score": player_info.score,
+        "teamSize": player.team_size,
         "message": message
     }
     return f'Broadcast {json.dumps(struct)}\n'
+
 
 player = ZappyClient(8008, "JEAN")

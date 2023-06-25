@@ -1,6 +1,8 @@
 import argparse
 import client
 import decisionTree
+import time
+import logger
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Connect to a Zappy server.", add_help=False)
@@ -13,17 +15,36 @@ if __name__ == "__main__":
     client.player = client.ZappyClient(port=args.port, name=args.name, machine=args.host)
     client.player.connect()
 
-    root = decisionTree.DecisionNode(decisionTree.is_front_clear, decisionTree.ActionNode(decisionTree.move_forward_action), decisionTree.ActionNode(decisionTree.turn_right_action))
+    root = decisionTree.init_decision_tree()
 
     while True:
         try:
             action = root.make_decision()
-            print(action)
-        except KeyboardInterrupt:
-            print("\nStopping the game...")
-            client.close()
-            break
         except Exception as e:
-            print(f"Error in game loop: {e}")
-            client.close()
-            break
+            logger.error(e)
+        client.player.elasped_time = time.time() - client.player.last_broadcast
+        remaining_time = (client.DefaultTimeLimit.REGULAR_BROADCAST.value / client.player.frequency) - client.player.elasped_time
+        # if remaining_time <= 0:
+        #     client.player.broadcast("I'm alive")
+        #     client.player.last_broadcast = time.time()
+        #     client.player.elasped_time = 0
+        if len(client.player.broadcast_queue) != 0:
+            message = client.player.broadcast_queue.pop(0)
+            client.player.broadcast(message)
+            client.player.broadcast_queue.clear()
+        # for message in client.player.broadcast_queue:
+        #     client.player.broadcast(message)
+        # for index, mates in enumerate(client.player.teammates):
+        #     if time.perf_counter() - mates.last_timestamp > (mates.last_timestamp + 1_000_000 * (client.DefaultTimeLimit.REGULAR_BROADCAST.value / client.player.frequency)) * 2:
+        #         client.player.teammates.pop(index)
+        logger.info(f"My team size is {client.player.team_size}")
+        # try:
+        #     print(action)
+        # except KeyboardInterrupt:
+        #     print("\nStopping the game...")
+        #     client.player.close()
+        #     break
+        # except Exception as e:
+        #     print(f"Error in game loop: {e}")
+        #     client.player.close()
+        #     break
