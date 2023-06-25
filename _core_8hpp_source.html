@@ -119,33 +119,37 @@ $(document).ready(function(){initNavTree('_core_8hpp_source.html',''); initResiz
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            <span class="keywordtype">void</span> handleUserInput();</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>            <span class="keywordtype">void</span> handleZoom();</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>            <span class="keywordtype">void</span> handleSelection();</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            <span class="keywordtype">void</span> draw();</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            <span class="keywordtype">void</span> drawGround();</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            <span class="keywordtype">void</span> drawSkybox();</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            <span class="keywordtype">void</span> drawCellDetails(std::shared_ptr&lt;ICell&gt; cell);</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            <span class="keywordtype">void</span> drawEntities(std::shared_ptr&lt;ICell&gt; cell);</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            <span class="keywordtype">void</span> drawPlayers();</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            <span class="keywordtype">void</span> drawEggs();</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            <span class="keywordtype">void</span> handleEndGame();</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            <span class="keywordtype">void</span> handleCharacterSelection(<a class="code hl_class" href="class_g_u_i_1_1_vector3f.html">Vector3f</a> pos, <span class="keywordtype">int</span> playerId);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            <span class="keywordtype">void</span> handleConfigUpdate();</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            <span class="keywordtype">bool</span> _running;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            <a class="code hl_class" href="class_g_u_i_1_1_vector2i.html">GUI::Vector2i</a> _windowSize;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            <a class="code hl_struct" href="struct_g_u_i_1_1config.html">GUI::config</a> _config;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            std::shared_ptr&lt;IGraphicalModule&gt; _module;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            std::shared_ptr&lt;Scene&gt; _scene;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            std::shared_ptr&lt;IMap&gt; _map;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            std::unordered_map&lt;GUI::Object, std::string&gt; _objectsMap;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            std::unordered_map&lt;GUI::Object, GUI::ModelEntity&gt; _objToModels;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            std::vector&lt;GUI::ModelEntity&gt; _models;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            <span class="keywordtype">bool</span> _drawObjects;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            <a class="code hl_class" href="class_g_u_i_1_1_coms.html">Coms</a> _coms;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            Model _modelSkybox;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    };</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>};  <span class="comment">// namespace GUI</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#endif </span><span class="comment">/* !CORE_HPP_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>            <span class="keywordtype">void</span> handleRotation();</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            <span class="keywordtype">void</span> handleSelection();</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            <span class="keywordtype">void</span> draw();</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            <span class="keywordtype">void</span> drawGround();</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            <span class="keywordtype">void</span> drawSkybox();</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            <span class="keywordtype">void</span> drawCellDetails(std::shared_ptr&lt;ICell&gt; cell);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            <span class="keywordtype">void</span> drawEntities(std::shared_ptr&lt;ICell&gt; cell);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            <span class="keywordtype">void</span> drawPlayers();</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            <span class="keywordtype">void</span> drawEggs();</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            <span class="keywordtype">void</span> drawTeams();</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            <span class="keywordtype">void</span> handleEndGame();</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            <span class="keywordtype">void</span> handleCharacterSelection();</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            <span class="keywordtype">void</span> handleConfigUpdate();</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            <span class="keywordtype">void</span> handleTeamSelection();</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            <span class="keywordtype">bool</span> _running;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            <a class="code hl_class" href="class_g_u_i_1_1_vector2i.html">GUI::Vector2i</a> _windowSize;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            <a class="code hl_struct" href="struct_g_u_i_1_1config.html">GUI::config</a> _config;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            std::shared_ptr&lt;IGraphicalModule&gt; _module;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            std::shared_ptr&lt;Scene&gt; _scene;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            std::shared_ptr&lt;IMap&gt; _map;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            std::unordered_map&lt;GUI::Object, std::string&gt; _objectsMap;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            std::unordered_map&lt;GUI::Object, GUI::ModelEntity&gt; _objToModels;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            std::vector&lt;GUI::ModelEntity&gt; _models;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            <span class="keywordtype">bool</span> _drawObjects;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            <a class="code hl_class" href="class_g_u_i_1_1_coms.html">Coms</a> _coms;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> _currentTeam;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            <span class="keywordtype">bool</span> _teamSelection;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    };</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>};  <span class="comment">// namespace GUI</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="preprocessor">#endif </span><span class="comment">/* !CORE_HPP_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="a_args_parser_8hpp_html"><div class="ttname"><a href="_args_parser_8hpp.html">ArgsParser.hpp</a></div></div>
 <div class="ttc" id="a_coms_8hpp_html"><div class="ttname"><a href="_coms_8hpp.html">Coms.hpp</a></div></div>
 <div class="ttc" id="a_graphical_factory_8hpp_html"><div class="ttname"><a href="_graphical_factory_8hpp.html">GraphicalFactory.hpp</a></div></div>
@@ -156,13 +160,12 @@ $(document).ready(function(){initNavTree('_core_8hpp_source.html',''); initResiz
 <div class="ttc" id="a_scene_8hpp_html"><div class="ttname"><a href="_scene_8hpp.html">Scene.hpp</a></div></div>
 <div class="ttc" id="aclass_g_u_i_1_1_coms_html"><div class="ttname"><a href="class_g_u_i_1_1_coms.html">GUI::Coms</a></div><div class="ttdef"><b>Definition:</b> Coms.hpp:25</div></div>
 <div class="ttc" id="aclass_g_u_i_1_1_core_html"><div class="ttname"><a href="class_g_u_i_1_1_core.html">GUI::Core</a></div><div class="ttdef"><b>Definition:</b> Core.hpp:23</div></div>
-<div class="ttc" id="aclass_g_u_i_1_1_core_html_a2c1d7d7eedd2182c85ded47f1920d3bb"><div class="ttname"><a href="class_g_u_i_1_1_core.html#a2c1d7d7eedd2182c85ded47f1920d3bb">GUI::Core::init</a></div><div class="ttdeci">void init(GUI::GraphicalLib lib, GUI::Vector2i windowSize)</div><div class="ttdef"><b>Definition:</b> Core.cpp:53</div></div>
+<div class="ttc" id="aclass_g_u_i_1_1_core_html_a2c1d7d7eedd2182c85ded47f1920d3bb"><div class="ttname"><a href="class_g_u_i_1_1_core.html#a2c1d7d7eedd2182c85ded47f1920d3bb">GUI::Core::init</a></div><div class="ttdeci">void init(GUI::GraphicalLib lib, GUI::Vector2i windowSize)</div><div class="ttdef"><b>Definition:</b> Core.cpp:55</div></div>
 <div class="ttc" id="aclass_g_u_i_1_1_core_html_a4dfafbbac0813061673f170f135c8cfb"><div class="ttname"><a href="class_g_u_i_1_1_core.html#a4dfafbbac0813061673f170f135c8cfb">GUI::Core::Core</a></div><div class="ttdeci">Core(GUI::Args args)</div><div class="ttdef"><b>Definition:</b> Core.cpp:14</div></div>
-<div class="ttc" id="aclass_g_u_i_1_1_core_html_acbc447c509913f1d87df4fef84f7a28d"><div class="ttname"><a href="class_g_u_i_1_1_core.html#acbc447c509913f1d87df4fef84f7a28d">GUI::Core::run</a></div><div class="ttdeci">void run()</div><div class="ttdef"><b>Definition:</b> Core.cpp:134</div></div>
-<div class="ttc" id="aclass_g_u_i_1_1_core_html_aee1e33e1fbdfb4ba4521b75757f5745e"><div class="ttname"><a href="class_g_u_i_1_1_core.html#aee1e33e1fbdfb4ba4521b75757f5745e">GUI::Core::~Core</a></div><div class="ttdeci">~Core()</div><div class="ttdef"><b>Definition:</b> Core.cpp:51</div></div>
+<div class="ttc" id="aclass_g_u_i_1_1_core_html_acbc447c509913f1d87df4fef84f7a28d"><div class="ttname"><a href="class_g_u_i_1_1_core.html#acbc447c509913f1d87df4fef84f7a28d">GUI::Core::run</a></div><div class="ttdeci">void run()</div><div class="ttdef"><b>Definition:</b> Core.cpp:156</div></div>
+<div class="ttc" id="aclass_g_u_i_1_1_core_html_aee1e33e1fbdfb4ba4521b75757f5745e"><div class="ttname"><a href="class_g_u_i_1_1_core.html#aee1e33e1fbdfb4ba4521b75757f5745e">GUI::Core::~Core</a></div><div class="ttdeci">~Core()</div><div class="ttdef"><b>Definition:</b> Core.cpp:53</div></div>
 <div class="ttc" id="aclass_g_u_i_1_1_i_core_html"><div class="ttname"><a href="class_g_u_i_1_1_i_core.html">GUI::ICore</a></div><div class="ttdef"><b>Definition:</b> ICore.hpp:14</div></div>
 <div class="ttc" id="aclass_g_u_i_1_1_vector2i_html"><div class="ttname"><a href="class_g_u_i_1_1_vector2i.html">GUI::Vector2i</a></div><div class="ttdef"><b>Definition:</b> Vector2i.hpp:12</div></div>
-<div class="ttc" id="aclass_g_u_i_1_1_vector3f_html"><div class="ttname"><a href="class_g_u_i_1_1_vector3f.html">GUI::Vector3f</a></div><div class="ttdef"><b>Definition:</b> Vector3f.hpp:12</div></div>
 <div class="ttc" id="anamespace_g_u_i_html"><div class="ttname"><a href="namespace_g_u_i.html">GUI</a></div><div class="ttdef"><b>Definition:</b> Actions.hpp:23</div></div>
 <div class="ttc" id="anamespace_g_u_i_html_a9706aa821c7100d5ddaefeb8f7d9f1db"><div class="ttname"><a href="namespace_g_u_i.html#a9706aa821c7100d5ddaefeb8f7d9f1db">GUI::GraphicalLib</a></div><div class="ttdeci">GraphicalLib</div><div class="ttdef"><b>Definition:</b> GraphicalFactory.hpp:18</div></div>
 <div class="ttc" id="anamespacemain_html_a10926d7b7053badc9647defe0abb8adc"><div class="ttname"><a href="namespacemain.html#a10926d7b7053badc9647defe0abb8adc">main.args</a></div><div class="ttdeci">args</div><div class="ttdef"><b>Definition:</b> main.py:19</div></div>

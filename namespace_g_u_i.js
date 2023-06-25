@@ -90,7 +90,8 @@ var namespace_g_u_i =
       [ "Q", "namespace_g_u_i.html#a789427a29b88f40c6d53622e3ade0988a7c36694b11770cfae7d26900554370ad", null ],
       [ "S", "namespace_g_u_i.html#a789427a29b88f40c6d53622e3ade0988a2cd237472cf5501cf67df0f70ec6a339", null ],
       [ "D", "namespace_g_u_i.html#a789427a29b88f40c6d53622e3ade0988a19d0c1f49d191b179dceb1d8d4782e1d", null ],
-      [ "H", "namespace_g_u_i.html#a789427a29b88f40c6d53622e3ade0988aa972e84ea0bcacbbba951109d471d973", null ]
+      [ "H", "namespace_g_u_i.html#a789427a29b88f40c6d53622e3ade0988aa972e84ea0bcacbbba951109d471d973", null ],
+      [ "T", "namespace_g_u_i.html#a789427a29b88f40c6d53622e3ade0988ad7ca57c4d2eda66dd5b01279c6fc373f", null ]
     ] ],
     [ "Mouse", "namespace_g_u_i.html#abb04830f24fc24df534ec0894c413d32", [
       [ "BUTTON_LEFT", "namespace_g_u_i.html#abb04830f24fc24df534ec0894c413d32a559271c3cc23f3361d9e8ab1d819808a", null ],

@@ -1,5 +1,7 @@
 var NAVTREEINDEX8 =
 {
+"tests_2buffer_8c.html#ae077ef01c9353cf51be2f903d1943f5f":[8,0,2,3,0,6],
+"tests_2buffer_8c.html#af946dcd84cbc0e7669061ff099790e15":[8,0,2,3,0,7],
 "timer_8c.html":[8,0,2,2,3,0,7],
 "timer_8c.html#ac012e9136e643065e57d02c7c4db1a73":[8,0,2,2,3,0,7,0],
 "tna_8c.html":[8,0,2,2,0,1,10],
