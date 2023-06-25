@@ -53,7 +53,6 @@ namespace GUI {
             std::vector<GUI::ModelEntity> _models;
             bool _drawObjects;
             Coms _coms;
-            Model _modelSkybox;
             unsigned int _currentTeam;
             bool _teamSelection;
     };

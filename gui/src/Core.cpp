@@ -142,7 +142,7 @@ void GUI::Core::handleTeamSelection()
 {
     if (_module->isKeyReleased(GUI::Key::LEFT) && static_cast<int>(_currentTeam) - 1 >= 0) {
         _currentTeam--;
-    } else if (_module->isKeyReleased(GUI::Key::RIGHT) && _currentTeam + 1 < _coms.getConf()->getTeams().size() - 1) {
+    } else if (_module->isKeyReleased(GUI::Key::RIGHT) && _currentTeam + 1 <= _coms.getConf()->getTeams().size()) {
         _currentTeam++;
     }
 }

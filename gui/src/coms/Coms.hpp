@@ -105,11 +105,6 @@ namespace GUI {
                 newPlayer->level = std::stoi(params[4]);
                 newPlayer->teamName = params[5].erase(params[5].size() - 1, 1);
 
-                auto teams = conf->getTeams();
-                if (std::find(teams.begin(), teams.end(), params[0]) == teams.end()) {
-                    conf->addTeam(params[0]);
-                }
-
                 conf->addPlayer(newPlayer->id, newPlayer);
             return conf;
         }
