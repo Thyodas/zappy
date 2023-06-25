@@ -14,6 +14,7 @@
     #include "IGraphicalModule.hpp"
     #include "RayLibCamera.hpp"
     #include <vector>
+    #include "rlgl.h"
 
 namespace GUI {
     struct ModelData {
@@ -38,6 +39,7 @@ namespace GUI {
             GUI::Vector2f getMousePosition();
             void loadModels(std::unordered_map<ModelEntity, modelConfig> models);
             void drawModel(ModelEntity model, Vector3f position, float scale, Vector3f rotation);
+            void drawModelCube(ModelEntity model, Vector3f position, float scale);
             void preDraw();
             void postDraw();
             GUI::Vector3f getModelSize(ModelEntity model);
@@ -53,6 +55,8 @@ namespace GUI {
             int getMaxFrame(ModelEntity model, AnimationType type);
             void rotateModel(ModelEntity model, Direction direction);
             bool isModelSelected(ModelEntity model, Vector3f position, float scale, std::shared_ptr<ICamera> camera);
+            void enableFaceCulling();
+            void disableFaceCulling();
         private:
             std::unordered_map<ModelEntity, ModelData> _models;
             std::unordered_map<GUI::Key, KeyboardKey> _keys;

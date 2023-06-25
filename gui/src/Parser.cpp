@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2023
 ** gui
 ** File description:
-** Parser
+** Parser.cpp
 */
 
 #include "Parser.hpp"
@@ -19,7 +19,8 @@ GUI::Parser::Parser(const std::string& path)
         {GUI::ModelEntity::MENDIANE, "mendiane"},
         {GUI::ModelEntity::PHIRAS, "phiras"},
         {GUI::ModelEntity::THYSTAME, "thystame"},
-        {GUI::ModelEntity::EGG, "egg"}
+        {GUI::ModelEntity::EGG, "egg"},
+        {GUI::ModelEntity::SKYBOX, "skybox"},
     };
 
     try {
@@ -38,8 +39,9 @@ GUI::Parser::~Parser()
 GUI::ModelEntity GUI::Parser::getModelEntity(const std::string& name)
 {
     for (auto &model : _models) {
-        if (model.second == name)
+        if (model.second == name) {
             return model.first;
+        }
     }
     throw std::runtime_error("Model not found.");
 }

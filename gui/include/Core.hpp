@@ -17,6 +17,7 @@
     #include "IMap.hpp"
     #include "Coms.hpp"
     #include "ArgsParser.hpp"
+    #include "Model.hpp"
 
 namespace GUI {
     class Core : public GUI::ICore {
@@ -31,6 +32,7 @@ namespace GUI {
             void handleSelection();
             void draw();
             void drawGround();
+            void drawSkybox();
             void drawCellDetails(std::shared_ptr<ICell> cell);
             void drawEntities(std::shared_ptr<ICell> cell);
             void drawPlayers();
@@ -49,6 +51,7 @@ namespace GUI {
             std::vector<GUI::ModelEntity> _models;
             bool _drawObjects;
             Coms _coms;
+            Model _modelSkybox;
     };
 };  // namespace GUI
 
