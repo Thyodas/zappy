@@ -13,6 +13,11 @@
 
 extern zappy_t *ZAPPY_DATA;
 
+/**
+ * Signal handler for SIGPIPE.
+ *
+ * @param nb - The signal number (unused).
+ */
 static void handle_sigpipe(__attribute__((unused)) int nb)
 {
     printf(LOG_WARNING("Caught SIGPIPE: '%s'. "
@@ -20,6 +25,12 @@ static void handle_sigpipe(__attribute__((unused)) int nb)
         "Socket will be safely closed.\n"), strerror(errno));
 }
 
+/**
+ * Frees the allocated memory and resources used by the zappy_t data structure.
+ *
+ * @param data - The zappy_t data structure to be freed.
+ * @return 0 on success, or an error code if an error occurs.
+ */
 int free_zappy(zappy_t *data)
 {
     connection_vector_t *cons = &data->db.connection_vector;
@@ -43,6 +54,11 @@ int free_zappy(zappy_t *data)
     return 0;
 }
 
+/**
+ * Signal handler for SIGINT.
+ *
+ * @param nb - The signal number (unused).
+ */
 static void handle_sigint(__attribute__((unused)) int nb)
 {
     printf("\n" LOG_INFO("Server stopping.\n"));
@@ -50,6 +66,9 @@ static void handle_sigint(__attribute__((unused)) int nb)
     exit(0);
 }
 
+/**
+ * Sets up signal handlers for SIGPIPE and SIGINT.
+ */
 void signal_handler(void)
 {
     struct sigaction sa_sigpipe = {

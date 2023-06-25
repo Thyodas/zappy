@@ -70,6 +70,12 @@ int parse_number_print_error(uint32_t *parsed_nb, const char *to_parse)
     return 0;
 }
 
+/**
+ * Constrains an angle value to the range [0, 360) degrees.
+ *
+ * @param x - The angle value to constrain.
+ * @return The constrained angle value.
+ */
 double constrain_angle(double x)
 {
     x = fmod(x,360);

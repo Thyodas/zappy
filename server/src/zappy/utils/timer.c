@@ -8,6 +8,12 @@
 #include <sys/time.h>
 #include <stdint.h>
 
+/**
+ * Add a specified number of microseconds to a timeval structure.
+ *
+ * @param time - Pointer to the timeval structure.
+ * @param useconds - The number of microseconds to add.
+ */
 void timer_add_useconds(struct timeval *time, uint64_t useconds)
 {
     if (useconds == 0)

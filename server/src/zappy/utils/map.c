@@ -9,6 +9,14 @@
 #include "obj/player.h"
 #include "utils.h"
 
+/**
+ * Allows a player to take an object from the current map cell and add it to their inventory.
+ *
+ * @param zappy - The zappy_t data structure.
+ * @param player - The player taking the object.
+ * @param object - The type of object to take.
+ * @return 0 on success, 1 on failure.
+ */
 int zappy_map_player_take_object(zappy_t *zappy, player_t *player,
     resource_type_t object)
 {
@@ -23,6 +31,14 @@ int zappy_map_player_take_object(zappy_t *zappy, player_t *player,
     return 0;
 }
 
+/**
+ * Allows a player to set an object from their inventory onto the current map cell.
+ *
+ * @param zappy - The zappy_t data structure.
+ * @param player - The player setting the object.
+ * @param object - The type of object to set.
+ * @return 0 on success, 1 on failure.
+ */
 int zappy_map_player_set_object(zappy_t *zappy, player_t *player,
     resource_type_t object)
 {

@@ -63,6 +63,13 @@ int zappy_remove_player(zappy_t *zappy, player_t *player)
     return 0;
 }
 
+/**
+ * Moves a player in the Zappy game to the specified direction.
+ *
+ * @param zappy - The Zappy data structure.
+ * @param player - The player to move.
+ * @param direction - The direction to move the player.
+ */
 void zappy_move_player(zappy_t *zappy, player_t *player,
     orientation_t direction)
 {
@@ -87,12 +94,26 @@ void zappy_move_player(zappy_t *zappy, player_t *player,
     player->pos = new_pos;
 }
 
+/**
+ * Turns a player in the Zappy game to the specified direction.
+ *
+ * @param zappy - The Zappy data structure.
+ * @param player - The player to turn.
+ * @param direction - The direction to turn the player.
+ */
 void zappy_turn_player(__attribute__((unused))zappy_t *zappy, player_t *player,
     orientation_t direction)
 {
     player->orientation = direction;
 }
 
+/**
+ * Attempts to make a player in the Zappy game eat food.
+ *
+ * @param zappy - The Zappy data structure.
+ * @param player - The player to eat food.
+ * @return 1 if the player is unable to eat food (food inventory is empty or not enough time has passed since the last eat), 0 otherwise.
+ */
 int zappy_player_try_eat_food(zappy_t *zappy, player_t *player)
 {
     struct timeval current_timestamp;

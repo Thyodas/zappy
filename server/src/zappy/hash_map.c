@@ -45,6 +45,14 @@ static const ENTRY resource_names[] = {
     {"thystame",  (void *)THYSTAME},
 };
 
+/**
+ * Initializes a hash map with the given commands/entries.
+ *
+ * @param map - The struct hsearch_data representing the hash map.
+ * @param commands - The array of entries/commands to insert into the hash map.
+ * @param nb_entry - The number of entries/commands in the array.
+ * @return 0 on success, or 1 if an error occurs during hash map creation.
+ */
 static int init_hash_map(struct hsearch_data *map, const ENTRY commands[],
     size_t nb_entry)
 {
@@ -60,6 +68,12 @@ static int init_hash_map(struct hsearch_data *map, const ENTRY commands[],
     return 0;
 }
 
+/**
+ * Initializes all hash maps used in the zappy_t data structure, including the GUI command map, AI command map, and resource name map.
+ *
+ * @param zappy - The zappy_t data structure.
+ * @return 0 on success, or 1 if an error occurs during hash map initialization.
+ */
 int init_all_hash_maps(zappy_t *zappy)
 {
     if (init_hash_map(&zappy->gui_cmd_map, gui_commands,

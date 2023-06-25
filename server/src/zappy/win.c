@@ -8,6 +8,11 @@
 #include "data.h"
 #include "command.h"
 
+/**
+ * Checks if the game has ended and performs necessary actions.
+ *
+ * @param zappy - The zappy_t struct representing the game state.
+*/
 void check_end_game(zappy_t *zappy)
 {
     if (zappy->winning_team == NULL)
@@ -30,11 +35,22 @@ void check_end_game(zappy_t *zappy)
     }
 }
 
+/**
+ * Sets the winning team for the game.
+ *
+ * @param zappy - The zappy_t struct representing the game state.
+ * @param team - The team that has won the game.
+ */
 void set_winning_team(zappy_t *zappy, team_t *team)
 {
     zappy->winning_team = team;
 }
 
+/**
+ * Checks if any team has met the winning condition and updates the winning team accordingly.
+ *
+ * @param zappy - The zappy_t struct representing the game state.
+ */
 void check_win_condition(zappy_t *zappy)
 {
     team_t *team;

@@ -31,6 +31,9 @@ server.zip
 ai/__pycache__/
 
 assets/
-
 config.cfg
 .vscode/
+
+server/unit_tests
+
+*.cmake

@@ -40,6 +40,12 @@ void handle_event_new_connection(zappy_t *data)
         ntohs(con->p_address.sin_port));
 }
 
+/**
+ * Handles an error event on a client connection.
+ *
+ * @param data - The zappy_t data structure.
+ * @param con - The connection on which the error occurred.
+ */
 void handle_event_connection_error(zappy_t *data, connection_t *con)
 {
     printf(LOG_WARNING("Error on connection from [%s:%hu].\n"),

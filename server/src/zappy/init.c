@@ -19,6 +19,11 @@ int load_database(database_t *db);
 int parse_arguments(zappy_t *data, int argc, char **argv);
 int free_zappy(zappy_t *data);
 
+/**
+ * Initializes the database within the zappy_t data structure.
+ *
+ * @param data - The zappy_t data structure.
+ */
 static void init_database(zappy_t *data)
 {
     database_t *db = &data->db;
@@ -30,6 +35,11 @@ static void init_database(zappy_t *data)
     vector_init(vectorize(&db->ai_vector), sizeof(player_t));
 }
 
+/**
+ * Initializes the resource density based on the map size within the zappy_t data structure.
+ *
+ * @param data - The zappy_t data structure.
+ */
 static void init_resource_density(zappy_t *data)
 {
     uint32_t size = data->map.height * data->map.width;
@@ -44,6 +54,12 @@ static void init_resource_density(zappy_t *data)
     };
 }
 
+/**
+ * Initializes the zappy_t data structure with default values and initializes the database and hash maps.
+ *
+ * @param data - The zappy_t data structure.
+ * @return 0 on success, or 1 if an error occurs during hash map initialization.
+ */
 static int init_data(zappy_t *data)
 {
     *data = (zappy_t){
@@ -61,6 +77,12 @@ static int init_data(zappy_t *data)
     return 0;
 }
 
+/**
+ * Initializes the default values for the zappy_t data structure, including the map, resource density,
+ * default teams, and the graphic team.
+ *
+ * @param data - The zappy_t data structure.
+ */
 void init_default_values(zappy_t *data)
 {
     init_map(&data->map, data->width, data->height);
@@ -76,6 +98,14 @@ void init_default_values(zappy_t *data)
         create_team(GRAPHIC_TEAM_NAME));
 }
 
+/**
+ * Initializes the zappy_t data structure, parses command-line arguments, sets up the server, starts the hub,
+ * and performs cleanup after the hub has finished.
+ *
+ * @param argc - The number of command-line arguments.
+ * @param argv - The array of command-line arguments.
+ * @return 0 on success, or 84 if an error occurs.
+ */
 int init_zappy(int argc, char **argv)
 {
     zappy_t zappy;

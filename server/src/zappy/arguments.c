@@ -22,6 +22,14 @@ static const struct option long_options[] = {
     {0, 0, 0, 0}
 };
 
+/**
+ * Parses and handles a team name argument.
+ *
+ * @param data - The zappy_t data structure.
+ * @param team_name_mode - Indicates if the team name mode is active.
+ * @param name - The name of the team.
+ * @return 0 on success, 1 on failure.
+ */
 int parse_team(zappy_t *data, bool team_name_mode, const char *name)
 {
     if (!team_name_mode) {
@@ -45,6 +53,14 @@ int parse_team(zappy_t *data, bool team_name_mode, const char *name)
     return 0;
 }
 
+/**
+ * Handles the options provided as command-line arguments.
+ *
+ * @param data - The zappy_t data structure.
+ * @param c - The option character.
+ * @param team_name_mode - Pointer to the team name mode flag.
+ * @return 0 on success, 1 on failure.
+ */
 int handle_options(zappy_t *data, int c, bool *team_name_mode)
 {
     switch (c) {
@@ -69,6 +85,12 @@ int handle_options(zappy_t *data, int c, bool *team_name_mode)
     }
 }
 
+/**
+ * Configures the teams in the zappy_t data structure by adding them to the zappy data structure.
+ *
+ * @param data - The zappy_t data structure.
+ * @return 0 on success, 1 on failure.
+ */
 static int configure_teams(zappy_t *data)
 {
     team_t *team;
@@ -81,6 +103,12 @@ static int configure_teams(zappy_t *data)
     return 0;
 }
 
+/**
+ * Validates the parsed arguments in the zappy_t data structure.
+ *
+ * @param data - The zappy_t data structure.
+ * @return 0 on success, 1 on failure.
+ */
 static int validate_arguments(zappy_t *data)
 {
     if (configure_teams(data))

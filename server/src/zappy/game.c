@@ -10,12 +10,22 @@
 #include "utils.h"
 #include "command.h"
 
+/**
+ * Announces the winning team of the game.
+ *
+ * @param zappy - The zappy_t data structure.
+ */
 void announce_winners(zappy_t *zappy)
 {
     printf(LOG_INFO("Team '%s' won the game!\n"), zappy->winning_team->name);
     printf(LOG_INFO("Server stopping.\n"));
 }
 
+/**
+ * Checks the food level of each AI player and handles their death if they run out of food.
+ *
+ * @param zappy - The zappy_t data structure.
+ */
 void check_player_food(zappy_t *zappy)
 {
     player_t *player;
@@ -30,6 +40,11 @@ void check_player_food(zappy_t *zappy)
     }
 }
 
+/**
+ * Removes dead players from the game and their corresponding connections.
+ *
+ * @param zappy - The zappy_t data structure.
+ */
 void remove_dead_players(zappy_t *zappy)
 {
     connection_t *con;
@@ -47,6 +62,14 @@ void remove_dead_players(zappy_t *zappy)
     }
 }
 
+/**
+ * Broadcasts the changes in a map cell to all clients if the cell contents have changed.
+ *
+ * @param zappy - The zappy_t data structure.
+ * @param cell_a - Pointer to the original map cell.
+ * @param cell_b - Pointer to the updated map cell.
+ * @param pos - The position of the cell in the map.
+ */
 static void broadcast_cell_changes(zappy_t *zappy, map_cell_t *cell_a,
     map_cell_t *cell_b, pos_t pos)
 {
@@ -54,6 +77,11 @@ static void broadcast_cell_changes(zappy_t *zappy, map_cell_t *cell_a,
         server_bct(zappy, pos);
 }
 
+/**
+ * Checks if it is time to spawn new resources on the map and distributes them accordingly.
+ *
+ * @param zappy - The zappy_t data structure.
+ */
 void check_resource_spawn(zappy_t *zappy)
 {
     if (!(gettimeofday(&zappy->current_timestamp, NULL) == 0 &&

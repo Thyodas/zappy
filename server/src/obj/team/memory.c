@@ -58,6 +58,17 @@ int team_add_egg(team_t *team, egg_t *egg)
     return 0;
 }
 
+/**
+ * Free memory allocated for a team structure.
+ *
+ * This function frees the memory allocated for a team structure, including
+ * its associated player and egg vectors. It releases the memory used by the
+ * player and egg vectors using the `vector_free` function, and frees the
+ * memory used by the team's name string using the `free` function. Finally,
+ * it frees the memory used by the team structure itself.
+ *
+ * @param team - The team structure to free.
+ */
 void free_team(team_t *team)
 {
     vector_free(vectorize(&team->player_vector));
