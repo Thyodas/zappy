@@ -70,7 +70,7 @@ class ZappyClient:
         self.leader = False
         self.ready_to_elevate = False
         self.incanting = False
-        self.nb_players_ready = 0
+        self.nb_players_ready = 1
         self.broadcastDirection = -1
         self.already_broadcast = False
         self.already_reproduced = False
@@ -114,23 +114,31 @@ class ZappyClient:
     def handle_message(self, direction, text):
         data_map = json.loads(text)
         logger.info(f"Received broadcast from level {data_map['score']} player {data_map['uuid']} in team {data_map['team']} with message : {data_map['message']} in direction {direction}")
-        if data_map["message"] == "Help elevation" and data_map["team"] == self.player_info.team and data_map["score"] == self.player_info.score and data_map["uuid"] > self.uuid_incanting:
+        if data_map["message"] == "Help elevation" and data_map["team"] == self.player_info.team and data_map["score"] == self.player_info.score and data_map["uuid"] >= self.uuid_incanting and not self.already_broadcast:
+            logger.success("Received informations, updating direction")
             self.elevation_underway = True
             self.broadcastDirection = direction
             self.uuid_incanting = data_map["uuid"]
             self.leader = False
             if data_map["teamSize"] > self.team_size:
                 self.team_size = data_map["teamSize"]
-        if data_map["message"] == "Cancel" and data_map["team"] == self.player_info.team and data_map["score"] == self.player_info.score:
+        if data_map["message"] == "Cancel" and data_map["team"] == self.player_info.team and data_map["score"] == self.player_info.score and data_map["uuid"] == self.uuid_incanting:
+            logger.error("Received a cancel")
+            self.broadcast_on = False
+            self.incanting = False
+            self.uuid_incanting = ""
+            self.leader = False
             self.elevation_underway = False
             self.ready_to_elevate = False
+            self.incanting = False
+            self.nb_players_ready = 1
             self.already_broadcast = False
-            self.broadcastDirection = -1
             self.uuid_incanting = ""
             if data_map["teamSize"] > self.team_size:
                 self.team_size = data_map["teamSize"]
         if data_map["message"] == "I'm here" and data_map["team"] == self.player_info.team and data_map["score"] == self.player_info.score and self.leader:
             self.nb_players_ready += 1
+            logger.warn("There is another player ready")
             if data_map["teamSize"] > self.team_size:
                 self.team_size = data_map["teamSize"]
         if data_map["message"] == "Ready" and data_map["team"] == self.player_info.team and data_map["score"] == self.player_info.score and self.elevation_underway:
@@ -176,7 +184,6 @@ class ZappyClient:
                 if self.buffer.endswith('\n'):
                     break
                 part = self.client_socket.recv(1024)
-                logger.info(f"Received info {part.decode('ascii')}")
                 if part:
                     self.buffer += part.decode('ascii')
                 else:
@@ -184,14 +191,8 @@ class ZappyClient:
             end_time = time.time()
             split_command = self.buffer.split("\n")
             data = split_command[0]
-            logger.info(f"Buffer {self.buffer}")
-            logger.info(f"Data {data}")
             self.buffer = self.buffer[len(data) + 1:]
             elapsed_time = end_time - start_time
-            if elapsed_time + delta < timeLimit / self.frequency or elapsed_time - delta > timeLimit / self.frequency:
-                if timeLimit != 0:
-                    self.frequency = timeLimit / elapsed_time
-                logger.warn(f"Found a new frequence {self.frequency}")
             if data.startswith("message"):
                 data = data.strip()
                 K = int(data[8])
@@ -202,19 +203,23 @@ class ZappyClient:
                 # text = parts[1].strip()
                 self.handle_message(K, text)
                 return self.receive(timeLimit, expected)
-            if not data.startswith(expected) and expected != "" and data != "ko":
-                logger.warn(f"Received unexpected {data}")
-                return self.receive(timeLimit, expected)
             if data.startswith("dead"):
                 logger.error("I'm dead")
                 self.close()
+            if elapsed_time + delta < timeLimit / self.frequency or elapsed_time - delta > timeLimit / self.frequency:
+                if timeLimit != 0:
+                    self.frequency = timeLimit / elapsed_time
+                logger.warn(f"Found a new frequence {self.frequency}")
+            if not data.startswith(expected) and expected != "" and data != "ko":
+                logger.warn(f"Received unexpected {data}")
+                return self.receive(timeLimit, expected)
         except Exception as e:
             print(f"Error receiving data: {e}")
         return data
 
     def close(self):
         try:
-            self.client_socket.close()
+            sys.exit(0)
         except Exception as e:
             print(f"Error closing the socket: {e}")
 
@@ -263,7 +268,6 @@ class ZappyClient:
         logger.success("Starting incantation")
         self.send('Incantation\n')
         data = self.receive(0, "Elevation")
-        logger.error(data)
         if data != "Elevation underway":
             logger.error("Error during incantation")
             return "ko"
@@ -275,7 +279,6 @@ class ZappyClient:
         self.send('Inventory\n')
 
         response = self.receive(DefaultTimeLimit.INVENTORY.value, "[")
-        logger.error(response)
 
         response = response.strip('][')
         response = ' '.join(response.split())

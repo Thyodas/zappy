@@ -65,26 +65,6 @@ static void cell_distribute_resources(resource_t *quantity, map_cell_t *cell)
 }
 
 /**
- * Distribute resources to a row of map cells.
- *
- * This function distributes resources to a row of map cells based on the
- * specified quantity and density values. It iterates over each cell in the
- * row and calls the `cell_distribute_resources` function to distribute the
- * resources to the cell.
- *
- * @param map - The map structure.
- * @param quantity - The quantity of each resource to distribute.
- * @param row - The array of map cells representing the row.
- */
-static void row_distribute_resources(map_t *map, resource_t *quantity,
-    map_cell_t *row)
-{
-    for (uint32_t x = 0; x < map->width; ++x) {
-        cell_distribute_resources(quantity, &row[x]);
-    }
-}
-
-/**
  * Remove the resources that have already been distributed.
  *
  * This function removes the resources that have already been distributed on
@@ -128,12 +108,14 @@ static void remove_already_distributed(map_t *map, resource_t *quantity)
 void map_distribute_resources(map_t *map, resource_t *density)
 {
     resource_t quantity = *density;
+    uint32_t rand_x;
+    uint32_t rand_y;
     remove_already_distributed(map, &quantity);
     while (quantity.food || quantity.linemate || quantity.deraumere
         || quantity.sibur || quantity.mendiane || quantity.phiras
         || quantity.thystame) {
-        for (uint32_t y = 0 ; y < map->height ; ++y) {
-            row_distribute_resources(map, &quantity, map->cells[y]);
-        }
+        rand_x = rand() % map->width;
+        rand_y = rand() % map->height;
+        cell_distribute_resources(&quantity, &map->cells[rand_y][rand_x]);
     }
 }

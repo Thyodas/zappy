@@ -141,11 +141,13 @@ def is_broadcast_on():
 
 
 def enough_food_to_elevate():
+    logger.info("Checking if I have enough food to elevate")
     inventory = client.player.inventory()
     if inventory is None:
         return False
-    if inventory.food_count * 126 <= client.DefaultTimeLimit.INCANTATION.value / client.player.frequency:
+    if inventory.food_count * 126 <= client.DefaultTimeLimit.INCANTATION.value * 1.2:
         return False
+    logger.info("I have enough food")
     return True
 
 
@@ -153,7 +155,7 @@ def enough_food_to_fork():
     inventory = client.player.inventory()
     if inventory is None:
         return False
-    if inventory.food_count * 126 <= client.DefaultTimeLimit.FORK.value / client.player.frequency:
+    if inventory.food_count * 126 <= client.DefaultTimeLimit.FORK.value * 1.5:
         return False
     return True
 
@@ -163,6 +165,7 @@ def is_elevation_underway():
 
 
 def enough_player_to_elevate():
+    logger.warn(f"There is {client.player.nb_players_ready} ready")
     return client.player.nb_players_ready >= nb_players_needed_to_elevate[client.player.player_info.score]
 
 
@@ -178,17 +181,26 @@ def action_elevate():
     client.player.broadcast_on = False
     client.player.incanting = False
     client.player.uuid_incanting = ""
+    client.player.leader = False
+    client.player.elevation_underway = False
+    client.player.ready_to_elevate = False
+    client.player.incanting = False
+    client.player.nb_players_ready = 1
+    client.player.already_broadcast = False
+    client.player.broadcast("Cancel")
 
 
 def action_broadcast_elevation_ready():
     logger.success(f"I have enough resources and food to elevate to level {client.player.player_info.score + 1}")
     if client.player.player_info.score == 1:
+        client.player.leader = True
         action_set_objects_down()
         return action_elevate()
     client.player.broadcast("Help elevation")
     client.player.uuid_incanting = client.player.player_info.uuid
     client.player.leader = True
-    client.player.nb_players_ready += 1
+    #client.player.nb_players_ready += 1
+    client.player.broadcast_on = True
 
 
 def action_look_for_food():
@@ -224,7 +236,7 @@ def action_fork():
     try:
         nb_connections = int(client.player.get_team_slots())
     except Exception as e:
-        nb_connections = int(client.player.receive(client.DefaultTimeLimit.CONNECT_NBR.value))
+        nb_connections = int(client.player.receive(client.DefaultTimeLimit.CONNECT_NBR.value, ""))
     if nb_connections == 0:
         data = client.player.add_slot()
         if data == "ko":
@@ -270,7 +282,10 @@ def is_elevation_ready():
 
 
 def enough_resources_on_tile():
+    logger.info("Checking if there is enough ressources on the tile")
     tiles = client.player.look_around()
+    if tiles[0].resources.food_count > 0:
+        client.player.take_object("food ")
     resources = resources_for_level[client.player.player_info.score]
     if resources.linemate_count > tiles[0].resources.linemate_count:
         return False
@@ -284,10 +299,13 @@ def enough_resources_on_tile():
         return False
     if resources.deraumer_count > tiles[0].resources.deraumer_count:
         return False
+    logger.info("There is enough ressources")
     return True
 
 
 def enough_resources_to_elevate():
+    if client.player.already_broadcast:
+        return True
     inventory = client.player.inventory()
     if inventory is None:
         return False
@@ -311,7 +329,7 @@ def action_look_for_food_and_cancel_broad():
     logger.error("I'm cancelling the elevation because i don't have enough food")
     client.player.broadcast_on = False
     client.player.leader = False
-    client.player.nb_players_ready = 0
+    client.player.nb_players_ready = 1
     client.player.ready_to_elevate = False
     client.player.broadcast("Cancel")
     action_look_for_food()
@@ -328,6 +346,8 @@ def look_for_linemate():
             break
     if go_index == 0:
         client.player.take_object("linemate")
+        if tiles[0].resources.food_count > 0:
+            client.player.take_object("food")
         return
     if go_index == -1:
         client.player.move_forward()
@@ -353,6 +373,8 @@ def look_for_deraumer():
             break
     if go_index == 0:
         client.player.take_object("deraumere")
+        if tiles[0].resources.food_count > 0:
+            client.player.take_object("food")
         return
     if go_index == -1:
         client.player.move_forward()
@@ -378,6 +400,8 @@ def look_for_mendiane():
             break
     if go_index == 0:
         client.player.take_object("mendiane")
+        if tiles[0].resources.food_count > 0:
+            client.player.take_object("food")
         return
     if go_index == -1:
         client.player.move_forward()
@@ -403,6 +427,8 @@ def look_for_phiras():
             break
     if go_index == 0:
         client.player.take_object("phiras")
+        if tiles[0].resources.food_count > 0:
+            client.player.take_object("food")
         return
     if go_index == -1:
         client.player.move_forward()
@@ -428,6 +454,8 @@ def look_for_sibur():
             break
     if go_index == 0:
         client.player.take_object("sibur")
+        if tiles[0].resources.food_count > 0:
+            client.player.take_object("food")
         return
     if go_index == -1:
         client.player.move_forward()
@@ -453,6 +481,8 @@ def look_for_thystame():
             break
     if go_index == 0:
         client.player.take_object("thystame")
+        if tiles[0].resources.food_count > 0:
+            client.player.take_object("food")
         return
     if go_index == -1:
         client.player.move_forward()
@@ -505,7 +535,7 @@ def action_set_objects_down():
     logger.info("I'm putting object down")
     client.player.set_object("linemate")
     if client.player.player_info.score == 2 or client.player.player_info.score >= 4:
-        client.player.set_object("deraumer")
+        client.player.set_object("deraumere")
     if client.player.player_info.score >= 2:
         client.player.set_object("sibur")
     if client.player.player_info.score == 5 or client.player.player_info.score == 7:
@@ -514,11 +544,28 @@ def action_set_objects_down():
         client.player.set_object("phiras")
     if client.player.player_info.score == 7:
         client.player.set_object("thystame")
+    logger.success("I'm now waiting for the elevation")
+    if not client.player.leader:
+        client.player.receive(300, "Elevation")
+        logger.success("Elevation underway...")
+        client.player.receive(300, "Current")
+        client.player.player_info.score += 1
+        logger.success(f"I leveled up ! I'm now level {client.player.player_info.score }")
+        client.player.broadcast_on = False
+        client.player.incanting = False
+        client.player.uuid_incanting = ""
+        client.player.leader = False
+        client.player.elevation_underway = False
+        client.player.ready_to_elevate = False
+        client.player.incanting = False
+        client.player.nb_players_ready = 1
+        client.player.already_broadcast = False
 
 
 def move_toward_broadcast():
-    logger.info(f"I'm moving toward broadcast with direction {client.player.broadcastDirection}")
+    logger.success(f"I'm moving toward broadcast with direction {client.player.broadcastDirection}")
     if client.player.broadcastDirection == -1:
+        logger.warn("Waiting for updated direction...")
         return
     if client.player.broadcastDirection == 1 or client.player.broadcastDirection == 2 or client.player.broadcastDirection == 8:
         client.player.move_forward()
@@ -547,6 +594,9 @@ def action_tell_others_to_elevate():
     client.player.ready_to_elevate = True
     action_set_objects_down()
 
+def wait():
+    logger.info("I'm waiting...")
+
 
 def init_decision_tree():
     leaf_enough_players = DecisionNode(enough_player_to_elevate, ActionNode(action_tell_others_to_elevate), ActionNode(action_broadcast_elevation_ready))
@@ -558,9 +608,9 @@ def init_decision_tree():
     leaf_enough_resources_to_start_elevate = DecisionNode(enough_resources_to_elevate, ActionNode(action_broadcast_elevation_ready), ActionNode(action_look_for_resources_to_elevate))
     leaf_enough_food_to_start_elevate = DecisionNode(enough_food_to_elevate, leaf_enough_resources_to_start_elevate, ActionNode(action_look_for_food))
     leaf_connect_nbr = DecisionNode(is_team_full, leaf_enough_food_to_start_elevate, leaf_enough_food_to_fork)
-    leaf_is_lvl8 = DecisionNode(is_level_8, None, leaf_connect_nbr)
+    leaf_is_lvl8 = DecisionNode(is_level_8, ActionNode(wait), leaf_connect_nbr)
 
-    leaf_elevation_ready = DecisionNode(is_elevation_ready, ActionNode(action_set_objects_down), None)
+    leaf_elevation_ready = DecisionNode(is_elevation_ready, ActionNode(action_set_objects_down), ActionNode(wait))
     leaf_already_broadcasted = DecisionNode(already_broadcasted, leaf_elevation_ready, ActionNode(tell_leader_ready))
     leaf_on_the_tile_to_elevate = DecisionNode(is_on_the_tile, leaf_already_broadcasted, ActionNode(move_toward_broadcast))
     leaf_enough_resources_to_help_elevate = DecisionNode(enough_resources_to_elevate, leaf_on_the_tile_to_elevate, ActionNode(action_look_for_resources_to_elevate))

@@ -3,8 +3,14 @@ import client
 import decisionTree
 import time
 import logger
+import sys
+import signal
+
+def signal_handler(sig, frame):
+    sys.exit(0)
 
 if __name__ == "__main__":
+    signal.signal(signal.SIGINT, signal_handler)
     parser = argparse.ArgumentParser(description="Connect to a Zappy server.", add_help=False)
     parser.add_argument('-p', '--port', type=int, required=True, help="The port number.")
     parser.add_argument('-n', '--name', required=True, help="The name of the team.")
@@ -38,12 +44,12 @@ if __name__ == "__main__":
         #     if time.perf_counter() - mates.last_timestamp > (mates.last_timestamp + 1_000_000 * (client.DefaultTimeLimit.REGULAR_BROADCAST.value / client.player.frequency)) * 2:
         #         client.player.teammates.pop(index)
         logger.info(f"My team size is {client.player.team_size}")
-        # try:
-        #     print(action)
-        # except KeyboardInterrupt:
-        #     print("\nStopping the game...")
-        #     client.player.close()
-        #     break
+        try:
+            print(action)
+        except KeyboardInterrupt:
+            print("\nStopping the game...")
+            client.player.close()
+            break
         # except Exception as e:
         #     print(f"Error in game loop: {e}")
         #     client.player.close()
