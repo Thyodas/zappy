@@ -42,7 +42,7 @@ The client can send up to 10 requests in a row without any response from the ser
 
 There should not be any blockage when the clients are stopped, nor in any phase of the game. The time unit is seconds. An action’s execution time is calculated with the following formula: action / f, where f is an integer representing the reciprocal (multiplicative inverse) of time unit. For instance, if f=1, “forward” takes 7 / 1 = 7 seconds. By default, f=100.
 
-## Commands
+## AI Commands
 
 Each player responds to the following actions:
 
@@ -63,3 +63,59 @@ Each player responds to the following actions:
 | Start incantation | Incantation | 300/f | Elevation underway. Current level: k or ko |
 
 All commands are transmitted through a character string that ends with a new line.
+
+## GUI/Server Commands
+Here's the commands and their meanings formatted into tables in Markdown:
+
+## Symbols
+
+| SYMBOL | MEANING                                |
+| ------ | -------------------------------------- |
+| X      | Width or horizontal position           |
+| Y      | Height or vertical position            |
+| q0     | Resource 0 (food) quantity             |
+| q1     | Resource 1 (linemate) quantity         |
+| q2     | Resource 2 (deraumere) quantity        |
+| q3     | Resource 3 (sibur) quantity            |
+| q4     | Resource 4 (mendiane) quantity         |
+| q5     | Resource 5 (phiras) quantity           |
+| q6     | Resource 6 (thystame) quantity         |
+| n      | Player number                          |
+| O      | Orientation: 1(N), 2(E), 3(S), 4(W)    |
+| L      | Player or incantation level            |
+| e      | Egg number                             |
+| T      | Time unit                              |
+| N      | Name of the team                       |
+| R      | Incantation result                     |
+| M      | Message                                |
+| i      | Resource number                        |
+
+## Server-Client Commands
+
+| SERVER COMMAND      | CLIENT COMMAND | DETAILS                             |
+| ------------------- | -------------- | ----------------------------------- |
+| msz X Y\n           | msz\n          | Map size                            |
+| bct X Y q0 q1 q2 q3 q4 q5 q6\n | bct X Y\n | Content of a tile                |
+| bct X Y q0 q1 q2 q3 q4 q5 q6\n | * nbr_tiles mct\n | Content of the map (all the tiles) |
+| tna N\n             | * nbr_teams tna\n | Name of all the teams             |
+| pnw #n X Y O L N\n | - | Connection of a new player                  |
+| ppo n X Y O\n       | ppo #n\n | Player’s position                    |
+| plv n L\n           | plv #n\n | Player’s level                       |
+| pin n X Y q0 q1 q2 q3 q4 q5 q6\n | pin #n\n | Player’s inventory              |
+| pex n\n             | - | Expulsion                              |
+| pbc n M\n           | - | Broadcast                              |
+| pic X Y L n n . . . \n | - | Start of an incantation (by the first player) |
+| pie X Y R\n         | - | End of an incantation                   |
+| pfk n\n             | - | Egg laying by the player                |
+| pdr n i\n           | - | Resource dropping                      |
+| pgt n i\n           | - | Resource collecting                    |
+| pdi n\n             | - | Death of a player                       |
+| enw e n X Y\n       | - | An egg was laid by a player            |
+| ebo e\n             | - | Player connection for an egg           |
+| edi e\n             | - | Death of an egg                        |
+| sgt T\n             | sgt\n | Time unit request                     |
+| sst T\n             | sst T\n | Time unit modification               |
+| seg N\n             | - | End of game                            |
+| smg M\n             | - | Message from the server                |
+| suc\n               | - | Unknown command                        |
+| sbp\n               | - | Command parameter                      |
