@@ -18,15 +18,16 @@ if __name__ == "__main__":
     root = decisionTree.init_decision_tree()
 
     while True:
-        action = root.make_decision()
+        try:
+            action = root.make_decision()
+        except Exception as e:
+            logger.error(e)
         client.player.elasped_time = time.time() - client.player.last_broadcast
-        logger.info(client.player.elasped_time)
         remaining_time = (client.DefaultTimeLimit.REGULAR_BROADCAST.value / client.player.frequency) - client.player.elasped_time
-        logger.info(remaining_time)
-        if remaining_time <= 0:
-            client.player.broadcast("I'm alive")
-            client.player.last_broadcast = time.time()
-            client.player.elasped_time = 0
+        # if remaining_time <= 0:
+        #     client.player.broadcast("I'm alive")
+        #     client.player.last_broadcast = time.time()
+        #     client.player.elasped_time = 0
         if len(client.player.broadcast_queue) != 0:
             message = client.player.broadcast_queue.pop(0)
             client.player.broadcast(message)

@@ -86,13 +86,13 @@ class ZappyClient:
             logger.success("Machine {} connected on port {}".format(self.machine, self.port))
             self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.client_socket.connect((self.machine, self.port))
-            welcome_msg = self.receive(0)
+            welcome_msg = self.receive(0, "")
             if welcome_msg != "WELCOME":
                 return
             self.send(self.name + "\n")
-            self.clientNum = int(self.receive(0))
+            self.clientNum = int(self.receive(0, ""))
             logger.info(f"Client number : {self.clientNum}")
-            positions = self.receive(0).split()
+            positions = self.receive(0, "").split()
             logger.info(f"Starting positions : {positions}")
             self.player_info.positionX = int(positions[0])
             self.player_info.positionY = int(positions[1])
@@ -113,7 +113,7 @@ class ZappyClient:
 
     def handle_message(self, direction, text):
         data_map = json.loads(text)
-        logger.info(f"Received broadcast from level {data_map['score']} player {data_map['uuid']} in team {data_map['team']} with message : {data_map['message']}")
+        logger.info(f"Received broadcast from level {data_map['score']} player {data_map['uuid']} in team {data_map['team']} with message : {data_map['message']} in direction {direction}")
         if data_map["message"] == "Help elevation" and data_map["team"] == self.player_info.team and data_map["score"] == self.player_info.score and data_map["uuid"] > self.uuid_incanting:
             self.elevation_underway = True
             self.broadcastDirection = direction
@@ -149,14 +149,14 @@ class ZappyClient:
             self.broadcast_queue.append("Hello there")
             #self.broadcast("Hello there")
         if data_map["message"] == "I'm alive" and data_map["team"] == self.player_info.team:
-            for player in self.teammates:
-                if player.uuid == data_map["uuid"]:
-                    player.last_timestamp = time.perf_counter()
+            for mates in self.teammates:
+                if mates.uuid == data_map["uuid"]:
+                    mates.last_timestamp = time.perf_counter()
             if data_map["teamSize"] > self.team_size:
                 self.team_size = data_map["teamSize"]
         if data_map["message"] == "Hello there" and data_map["team"] == self.player_info.team:
-            for player in self.teammates:
-                if player.uuid == data_map["uuid"]:
+            for mates in self.teammates:
+                if mates.uuid == data_map["uuid"]:
                     return
             new_player_info = PlayerInfo()
             new_player_info.team = self.player_info.team
@@ -167,7 +167,7 @@ class ZappyClient:
             if data_map["teamSize"] > self.team_size:
                 self.team_size = data_map["teamSize"]
 
-    def receive(self, timeLimit):
+    def receive(self, timeLimit, expected):
         data = ""
         delta = 0.01
         try:
@@ -176,6 +176,7 @@ class ZappyClient:
                 if self.buffer.endswith('\n'):
                     break
                 part = self.client_socket.recv(1024)
+                logger.info(f"Received info {part.decode('ascii')}")
                 if part:
                     self.buffer += part.decode('ascii')
                 else:
@@ -183,16 +184,13 @@ class ZappyClient:
             end_time = time.time()
             split_command = self.buffer.split("\n")
             data = split_command[0]
-
-            if len(split_command) == 2:
-                self.buffer = ""
-            else:
-                self.buffer = self.buffer[len(data) + 1:]
+            logger.info(f"Buffer {self.buffer}")
+            logger.info(f"Data {data}")
+            self.buffer = self.buffer[len(data) + 1:]
             elapsed_time = end_time - start_time
-            if timeLimit == 0:
-                return data
             if elapsed_time + delta < timeLimit / self.frequency or elapsed_time - delta > timeLimit / self.frequency:
-                self.frequency = timeLimit / elapsed_time
+                if timeLimit != 0:
+                    self.frequency = timeLimit / elapsed_time
                 logger.warn(f"Found a new frequence {self.frequency}")
             if data.startswith("message"):
                 data = data.strip()
@@ -203,7 +201,10 @@ class ZappyClient:
                 # K = int(parts[0].split()[1])
                 # text = parts[1].strip()
                 self.handle_message(K, text)
-                return self.receive(timeLimit)
+                return self.receive(timeLimit, expected)
+            if not data.startswith(expected) and expected != "" and data != "ko":
+                logger.warn(f"Received unexpected {data}")
+                return self.receive(timeLimit, expected)
             if data.startswith("dead"):
                 logger.error("I'm dead")
                 self.close()
@@ -220,22 +221,22 @@ class ZappyClient:
     def move_forward(self):
         logger.info("Going forward")
         self.send('Forward\n')
-        return self.receive(DefaultTimeLimit.FORWARD.value)
+        return self.receive(DefaultTimeLimit.FORWARD.value, "ok")
 
     def turn_right(self):
         logger.info("Going right")
         self.send('Right\n')
-        return self.receive(DefaultTimeLimit.RIGHT.value)
+        return self.receive(DefaultTimeLimit.RIGHT.value, "ok")
 
     def get_team_slots(self):
         logger.info(f"{self.clientNum} Fetching team slots")
         self.send('Connect_nbr\n')
-        return self.receive(DefaultTimeLimit.CONNECT_NBR.value)
+        return self.receive(DefaultTimeLimit.CONNECT_NBR.value, "")
 
     def add_slot(self):
         logger.info(f"{self.clientNum} Forking")
         self.send('Fork\n')
-        response = self.receive(DefaultTimeLimit.FORK.value)
+        response = self.receive(DefaultTimeLimit.FORK.value, "ok")
         return response
 
     def fork(self):
@@ -246,34 +247,35 @@ class ZappyClient:
     def eject_players(self):
         logger.info("Ejecting")
         self.send('Eject\n')
-        return self.receive(DefaultTimeLimit.EJECT.value)
+        return self.receive(DefaultTimeLimit.EJECT.value, "ok")
 
     def take_object(self, object_name):
         logger.info(f"Taking object {object_name}")
         self.send(f'Take {object_name}\n')
-        return self.receive(DefaultTimeLimit.TAKE.value)
+        return self.receive(DefaultTimeLimit.TAKE.value, "ok")
 
     def set_object(self, object_name):
         logger.info(f"Putting down object {object_name}")
         self.send(f'Set {object_name}\n')
-        return self.receive(DefaultTimeLimit.SET.value)
+        return self.receive(DefaultTimeLimit.SET.value, "ok")
 
     def start_incantation(self):
         logger.success("Starting incantation")
         self.send('Incantation\n')
-        data = self.receive(0)
+        data = self.receive(0, "Elevation")
         logger.error(data)
         if data != "Elevation underway":
             logger.error("Error during incantation")
             return "ko"
-        return self.receive(DefaultTimeLimit.INCANTATION.value)
+        return self.receive(DefaultTimeLimit.INCANTATION.value, "Current")
 
     # Store the inventory in the player_info + return it
     def inventory(self):
         logger.info(f"{self.clientNum} Fetching inventory")
         self.send('Inventory\n')
 
-        response = self.receive(DefaultTimeLimit.INVENTORY.value)
+        response = self.receive(DefaultTimeLimit.INVENTORY.value, "[")
+        logger.error(response)
 
         response = response.strip('][')
         response = ' '.join(response.split())
@@ -309,13 +311,13 @@ class ZappyClient:
     def turn_left(self):
         logger.info("Turning left")
         self.send('Left\n')
-        return self.receive(DefaultTimeLimit.LEFT.value)
+        return self.receive(DefaultTimeLimit.LEFT.value, "ok")
 
     def look_around(self):
         logger.info(f"{self.clientNum} Looking around")
         try:
             self.send('Look\n')
-            response = self.receive(DefaultTimeLimit.LOOK.value)
+            response = self.receive(DefaultTimeLimit.LOOK.value, "[")
 
             response = response.strip('][')
             response = ' '.join(response.split())
@@ -356,7 +358,7 @@ class ZappyClient:
     def broadcast(self, text):
         logger.info(f"Broadcasting : {text}")
         self.send(format_broad_cast_message(self.player_info, text))
-        return self.receive(DefaultTimeLimit.BROADCAST.value)
+        return self.receive(DefaultTimeLimit.BROADCAST.value, "ok")
 
 
 def format_broad_cast_message(player_info: PlayerInfo, message: str) -> str:

@@ -194,13 +194,16 @@ def action_broadcast_elevation_ready():
 def action_look_for_food():
     logger.info("I'm looking for food")
     tiles = client.player.look_around()
-    go_index = 0
+    go_index = -1
     for index, tile in enumerate(tiles):
         if tile.resources.food_count > 0:
             go_index = index
+            logger.info(f"Found food at index {go_index}!")
             break
     if go_index == 0:
         client.player.take_object("food")
+    if go_index == -1:
+        client.player.move_forward()
     direction = utils.fill_action_queue(go_index, client.player.player_info.score)
     client.player.move_forward()
     if direction == 1:
@@ -514,7 +517,7 @@ def action_set_objects_down():
 
 
 def move_toward_broadcast():
-    logger.info("I'm moving toward broadcast")
+    logger.info(f"I'm moving toward broadcast with direction {client.player.broadcastDirection}")
     if client.player.broadcastDirection == -1:
         return
     if client.player.broadcastDirection == 1 or client.player.broadcastDirection == 2 or client.player.broadcastDirection == 8:
