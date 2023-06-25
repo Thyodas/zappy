@@ -26,7 +26,8 @@ namespace GUI {
         MENDIANE,
         PHIRAS,
         THYSTAME,
-        EGG
+        EGG,
+        SKYBOX
     };
 
     /*

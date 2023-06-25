@@ -60,6 +60,7 @@ namespace GUI {
             virtual ~IGraphicalModule() = default;
             virtual void loadModels(std::unordered_map<ModelEntity, modelConfig> models) = 0;
             virtual void drawModel(ModelEntity model, Vector3f position, float scale, Vector3f rotation) = 0;
+            virtual void drawModelCube(ModelEntity model, Vector3f position, float scale) = 0;
             virtual void clear(C_Color color) = 0;
             virtual void init(GUI::Vector2i size) = 0;
             virtual void close() = 0;
@@ -83,7 +84,9 @@ namespace GUI {
             virtual int getMaxFrame(ModelEntity model, AnimationType type) = 0;
             virtual void rotateModel(ModelEntity model, Direction direction) = 0;
             virtual bool isModelSelected(ModelEntity model, Vector3f position, float scale, std::shared_ptr<ICamera> camera) = 0;
-    };
+            virtual void enableFaceCulling() = 0;
+            virtual void disableFaceCulling() = 0;
+        };
 };
 
 #endif /* !IGRAPHICALMODULE_HPP_ */
