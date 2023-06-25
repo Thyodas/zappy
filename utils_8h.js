@@ -1,0 +1,25 @@
+var utils_8h =
+[
+    [ "RANGE", "utils_8h.html#ab827fdd81a3a152d4a314e851ed26bfd", null ],
+    [ "RANGE2", "utils_8h.html#a973c4e330dc94dff3a2f7783b3488464", null ],
+    [ "zappy_add_player", "utils_8h.html#a54745c5d30dd0f9cf212788ed9468a3f", null ],
+    [ "zappy_remove_player", "utils_8h.html#a8847341b0905e5286c78a3a231cd3cae", null ],
+    [ "zappy_move_player", "utils_8h.html#a8f6d335b7059dda14819a7fe65eddf3d", null ],
+    [ "zappy_turn_player", "utils_8h.html#a830322e21d55bff3887b8326eb231f94", null ],
+    [ "zappy_player_try_eat_food", "utils_8h.html#ada524a49c78027e48632a045171b2ef2", null ],
+    [ "zappy_map_player_take_object", "utils_8h.html#ac69cbf0b9691c6a4c9d97cd23d7d672e", null ],
+    [ "zappy_map_player_set_object", "utils_8h.html#a76908c6d2982968a424091d03ea1ae59", null ],
+    [ "zappy_add_team", "utils_8h.html#a5d79d910e63df4df95e9248eb13d0eef", null ],
+    [ "zappy_add_egg", "utils_8h.html#a28db1c31c25175f8db7c8379d7d09205", null ],
+    [ "zappy_remove_egg", "utils_8h.html#a1e5337dfa9fdb5758db6865f84af3754", null ],
+    [ "zappy_player_hatch_egg", "utils_8h.html#a80a572598a3fb72910e601382b2e014f", null ],
+    [ "zappy_resolve_resource_name", "utils_8h.html#a17453cf55d07600e7b24d3613871222e", null ],
+    [ "split_str_to_array", "utils_8h.html#a5af353a288728eeb8dbe621f3c12818f", null ],
+    [ "count_occurrence", "utils_8h.html#ad1a9d6531f9704e8ae27dfa3a5da882d", null ],
+    [ "parse_number", "utils_8h.html#ae46a45a4dd71a3372767b89037994baf", null ],
+    [ "parse_number_print_error", "utils_8h.html#af58a6af96b5d5cdb4f9959a893d631d0", null ],
+    [ "constrain_angle", "utils_8h.html#ac5e73b67db1347a4e931b7ae877f60c6", null ],
+    [ "timer_add_useconds", "utils_8h.html#ac012e9136e643065e57d02c7c4db1a73", null ],
+    [ "set_winning_team", "utils_8h.html#a3d927cb799bdd9d2fb8f277fcd0670e7", null ],
+    [ "check_win_condition", "utils_8h.html#a21f89581ac81fa00a7ae4b0f94d5da33", null ]
+];

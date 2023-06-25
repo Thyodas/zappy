@@ -1,0 +1,23 @@
+var searchData=
+[
+  ['read_5fbytes_0',['read_bytes',['../structstring__buffer__s.html#af55210b4b9b2d8aaa1102b66ad9cc6e4',1,'string_buffer_s']]],
+  ['readfds_1',['readfds',['../structzappy__s.html#a3b46ff7f01ca6eb41052cff988789a70',1,'zappy_s']]],
+  ['ready_5fto_5felevate_2',['ready_to_elevate',['../classclient_1_1_zappy_client.html#ad7c4a0c789521aee12073649b3944867',1,'client::ZappyClient']]],
+  ['received_5fhello_3',['received_hello',['../classclient_1_1_zappy_client.html#a80c832ebc024b8efe4828fd5fffb8063',1,'client::ZappyClient']]],
+  ['regular_5fbroadcast_4',['REGULAR_BROADCAST',['../classclient_1_1_default_time_limit.html#a3db991df563d2e657b9ca999ad52ba1f',1,'client::DefaultTimeLimit']]],
+  ['remaining_5ftime_5',['remaining_time',['../namespacemain.html#a299cb84fbd52067d344f676a1c1394e3',1,'main']]],
+  ['req_5fbuffer_6',['req_buffer',['../structconnection__s.html#a05601287bfa9a8485c446f0666eeccd3',1,'connection_s']]],
+  ['required_7',['required',['../namespacemain.html#a1344c1e698a1e688c7ae0828f75d5a48',1,'main']]],
+  ['res_5fbuffer_8',['res_buffer',['../structconnection__s.html#a0f6ea7172ccf3bdfb3070bef0085c524',1,'connection_s']]],
+  ['resource_9',['resource',['../structmap__cell__t.html#a7fd41953f18c87a02e04a7758ea49a58',1,'map_cell_t']]],
+  ['resource_5farray_10',['resource_array',['../unionresource__s.html#aac8be810d80b8de7d68c405b5b38e8e9',1,'resource_s']]],
+  ['resource_5favailability_11',['resource_availability',['../structincantation__data__s.html#a8b9ec74a792923e12f38079d656e66e3',1,'incantation_data_s']]],
+  ['resource_5fdensity_12',['resource_density',['../structzappy__s.html#a5d52c5f5cf6e88a5d9032854cefb16f7',1,'zappy_s']]],
+  ['resource_5fname_5fmap_13',['resource_name_map',['../structzappy__s.html#adfe20734a45b45852d4e5b4239f395e4',1,'zappy_s']]],
+  ['resource_5fspawn_5fstart_5ftime_14',['resource_spawn_start_time',['../structzappy__s.html#a98fb86a174aef41e30e7601734173c0f',1,'zappy_s']]],
+  ['resources_15',['Resources',['../classclient_1_1_tile.html#ad7cbfb66cc98d75758df86e25b0d1c42',1,'client::Tile']]],
+  ['resources_5ffor_5flevel_16',['resources_for_level',['../namespacedecision_tree.html#a058ec8292499b4449d46b313393ae9cc',1,'decisionTree']]],
+  ['right_17',['RIGHT',['../classclient_1_1_default_time_limit.html#a83aa0f565bfd121f80b27e20c8b0654b',1,'client::DefaultTimeLimit']]],
+  ['root_18',['root',['../namespacemain.html#aa698d1260ba54f169d55a5630f0f0aa3',1,'main']]],
+  ['rotation_19',['rotation',['../struct_g_u_i_1_1_model_data.html#a627a11436cb7536f36e21f479a3e7321',1,'GUI::ModelData::rotation()'],['../struct_g_u_i_1_1model_config.html#ae7c612e079818ffd1a50db2984a068ed',1,'GUI::modelConfig::rotation()']]]
+];
