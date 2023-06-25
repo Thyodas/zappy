@@ -22,7 +22,8 @@ zappy_server:
 
 zappy_gui:
 	@printf "\e[48;5;196m                 COMPILING GUI                \e[0m\n"
-	#@make -C $(CLIENT_DIR) all && cp -f $(CLIENT_DIR)/$(CLIENT_NAME) .
+	@cmake $(GUI_DIR) -B ./build/$(GUI_DIR) && cmake --build ./build/$(GUI_DIR) -j --target all
+	@cp ./build/$(GUI_DIR)/$(GUI_NAME) .
 
 zappy_ai:
 	@printf "\e[48;5;196m                 COMPILING AI                 \e[0m\n"
