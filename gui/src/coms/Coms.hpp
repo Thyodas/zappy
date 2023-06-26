@@ -189,7 +189,7 @@ namespace GUI {
         }
 
         static std::shared_ptr<IConfig> playerBroadcast(const std::shared_ptr<IConfig> &conf, const std::string &answer) {
-            if (!verifyNbParam(answer, 2)) return conf;
+            // if (!verifyNbParam(answer, 2)) return conf;
                 std::string tmp;
                 std::stringstream ss(answer);
                 std::vector<std::string> params;

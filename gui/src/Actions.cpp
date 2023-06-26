@@ -163,12 +163,12 @@ GUI::AnimationType GUI::Actions::c_die(std::shared_ptr<IPlayer> &player, ActionD
 
 GUI::AnimationType GUI::Actions::c_broadcast(std::shared_ptr<IPlayer> &player, ActionData &data, [[maybe_unused]] std::shared_ptr<ICell>& cell, [[maybe_unused]] std::map<int, std::shared_ptr<IPlayer>>& players, double now)
 {
-    if (player->getAnimation() != ANIM_SCREAM)
-        player->setAnimation(ANIM_SCREAM);
+    if (player->getAnimation() != ANIM_TPOSE)
+        player->setAnimation(ANIM_TPOSE);
     double elapsed = now - data.getTimestamp();
 
     if (elapsed < _actionsTime[BROADCAST] * 1000) {
-        return ANIM_SCREAM;
+        return ANIM_TPOSE;
     } else {
         player->setAnimation(ANIM_IDLE);
         return AnimationType::ANIM_END;
